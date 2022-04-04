@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Cuadro de mando</title>
+</head>
+
+<header>
+    <div id="search-bar">
+        <img src="../assets/lupa.png" id="lupa" />
+        <input class="search-box" placeholder="Pulsa / para buscar">
+    </div>
+
+    <div id="user-name">
+        <img src="../assets/user.png" id="user-icon" />
+        <p class="user">Nombre</p>
+        <button id="btn-Desplegar"><img src="../assets/desplegar.png"></button>
+    </div>
+</header>
+
+<body>
+
+    <div class="right-bar">
+        <h1 class="title">Cuadro de mando</h1>
+        <div id="devices-group">
+            <div class="devices">
+                <div class="device-title">
+                    <h2>Device Distribution</h2>
+                    <p class="total"> (Total) </p>
+                </div>
+                <div id="distribution">
+                    <ul>
+                        <li class="out">Out</li>
+                        <li class="in">In</li>
+                    </ul>
+                    <svg class="grafica">
+                        <circle cx="55" cy="55" r="49"></circle>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="devices" id="out">
+                <div class="device-title">
+                    <h2>Device Out</h2>
+                    <select class="dias">
+                        <option value="1">1 día</option>
+                        <option value="2">2 días</option>
+                        <option value="3">3 días</option>
+                        <option value="4">4 días</option>
+                        <option value="5">5 días</option>
+                    </select>
+                </div>
+                <p class="no">1</p>
+            </div>
+
+            <div class="devices" id="in">
+                <div class="device-title">
+                    <h2>Device In</h2>
+                    <select class="dias">
+                        <option value="1">1 día</option>
+                        <option value="2">2 días</option>
+                        <option value="3">3 días</option>
+                        <option value="4">4 días</option>
+                        <option value="5">5 días</option>
+                    </select>
+                </div>
+                <p class="no">0</p>
+                <p id="null-data">Sin datos</p>
+            </div>
+        </div>
+        <h3 class="fondo">IBM - CO</h3>
+
+    </div>
+</body>
+
+</html>

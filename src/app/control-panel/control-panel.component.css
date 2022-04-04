@@ -1,0 +1,190 @@
+*, *:before, *:after{
+    box-sizing: inherit;
+}
+
+header {
+    vertical-align: middle;
+}
+
+html {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+.title {
+    text-align: left;
+    padding: 15px;
+}
+
+.user {
+    text-align: right;
+    margin-left: 5px;
+    font-size: 20;
+    padding-left: 8px;
+    border: none;
+    color: black;
+    display: inline-block;
+}
+
+#user-name {
+    box-sizing: content-box;
+    margin-left: 10px;
+    margin-right: 10px;
+    float: right;
+    font-size: 18px;
+}
+
+#search-bar{
+    box-sizing: content-box;
+    display: inline-block;
+    border-radius: 50px;
+    margin-left: 10px;
+    padding: 5px 25px 5px 10px;
+    background-color: rgb(238, 238, 238);
+}
+
+.search-box {
+    height: 30px;
+    width: 200px;
+    margin-left: 5px;
+    font-size: 15px;
+    padding-left: 10px;
+    background-color: rgb(238, 238, 238);
+    border-radius: 15px;
+    border: none;
+    color: black;
+    overflow: hidden;
+    display: inline-block;
+}
+
+#lupa{
+    box-sizing: border-box;
+    padding: 3px 0 3px 0;
+    width: 25px;
+    vertical-align: middle;
+}
+
+#user-icon{
+    box-sizing: border-box;
+    padding: 3px 0 7px 0;
+    width: 30px;
+    vertical-align: middle;
+}
+
+#btn-Desplegar{
+    align-items: center;
+    margin-top: 5px;
+    margin-left: 15px;
+    padding: 3px 0 6px 0;
+    width: 15;
+    height: 10;
+    vertical-align: middle;
+    border: none;
+    background-color: transparent;
+}
+
+::placeholder {
+    color: rgb(153, 150, 150);
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.right-bar {
+    background-color: rgb(238, 238, 238);
+    border-radius: 15px;
+}
+
+#devices-group {
+    display: flex;
+    width: 100%;
+}
+
+.devices {
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px;
+    background-color: white;
+    width: 33.33%;
+    overflow: hidden;
+    display: inline-block;
+}
+
+ul {
+    list-style: none;
+    font-size:20px;
+}
+
+ul li.out::before {
+    content: "\2022";
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    font-size: 25px;
+}
+
+ul li.in::before {
+    content: "\2022";
+    color: green;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    font-size: 25px;
+}
+
+#distribution {
+    display: flex;
+    width: 100%;
+}
+
+.total {
+    margin-left: 150px;
+    margin-top: 25px;
+    font-size: 18px;
+}
+
+.device-title {
+    display: flex;
+    width: 100%;
+}
+
+.grafica {
+    margin-left: 250px;
+}
+
+svg circle {
+    fill:none;
+    stroke-width: 10;
+    stroke: #000;
+}
+
+.dias {
+    font-size: 18px;
+    border-radius: 3px;
+    margin-left: 225px;
+    margin-top: 15px;
+    font-size: 18px;
+    width: 80px;
+    height: 35px;
+}
+
+.no{
+    font-size: 55px;
+    margin-top: 5px;
+}
+
+#null-data {
+    font-size: 18px;
+    margin-top: -25px;
+}
+
+.fondo {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    color: rgb(153, 150, 150);
+}
