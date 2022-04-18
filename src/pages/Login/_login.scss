@@ -1,0 +1,21 @@
+.loginTitle{
+  @include carbon--type-style('productive-heading-05');
+  @include carbon--font-weight('semibold');
+
+  padding-top: $layout-02;
+  padding-bottom: $layout-03;
+  padding-left: $layout-02;
+}
+
+.loginInstructions{
+  @include carbon--type-style('productive-heading-03');
+  padding-left: $layout-02;
+  
+}
+
+.textinput{
+  padding-left: $layout-02;
+  padding-top: $spacing-04;
+  padding-bottom: $spacing-04;
+  width: 300px;
+}

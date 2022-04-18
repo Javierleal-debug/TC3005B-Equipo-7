@@ -1,3 +1,8 @@
+@import 'carbon-components/scss/globals/scss/vendor/@carbon/type/scss/font-family.scss';
+@import 'carbon-components/scss/globals/scss/vendor/@carbon/layout/scss/breakpoint.scss';
+@import 'carbon-components/scss/globals/scss/typography.scss';
+@import 'carbon-components/scss/globals/scss/vars.scss';
+
 @import './components/header/header';
 @import './pages/Devices/devices';
 @import './pages/LandingPage/landing-page';
