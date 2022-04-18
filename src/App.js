@@ -6,6 +6,7 @@ import { Content } from '@carbon/react'
 import Header from './components/header'
 import LandingPage from './pages/LandingPage/LandingPage'
 import Devices from './pages/Devices/Devices'
+import Login from './pages/Login'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/devices" element={<Devices />} />
+          <Route exact path="/login" element={<Login />} />
         </Routes>
       </Content>
     </>
