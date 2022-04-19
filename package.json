@@ -25,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "rm -rf ./build && yarn build && cf push -f manifest.yml"
+    "deploy": "yarn build && cf push -f manifest.yml"
   },
   "eslintConfig": {
     "extends": [

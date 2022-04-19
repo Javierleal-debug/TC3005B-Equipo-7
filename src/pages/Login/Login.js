@@ -18,11 +18,6 @@ function signIn(){
   const authConf = {
     Headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Access-Control-Allow-Origin":"*",
-        'Access-Control-Allow-Credentials':'true',
-        'Access-Control-Allow-Methods': "POST, GET, OPTIONS",
-        'Access-Control-Allow-Headers': 'X-PINGOTHER',
-        'Access-Control-Max-Age': "1728000"
     }
   };
   console.log("hola 1")

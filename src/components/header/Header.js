@@ -36,6 +36,11 @@ const TutorialHeader = () => (
             Devices
           </HeaderMenuItem>
         </HeaderNavigation>
+        <HeaderNavigation aria-label="Device Loans">
+          <HeaderMenuItem element={Link} to="/login">
+            Login
+          </HeaderMenuItem>
+        </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
           expanded={isSideNavExpanded}
