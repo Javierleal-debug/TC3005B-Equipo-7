@@ -32,11 +32,14 @@ const TutorialHeader = () => (
           Periferal Loans
         </HeaderName>
         <HeaderNavigation aria-label="Periferal Loans">
-          <HeaderMenuItem element={Link} to="/devices">
-            Devices
-          </HeaderMenuItem>
           <HeaderMenuItem element={Link} to="/login">
             Login
+          </HeaderMenuItem>
+          <HeaderMenuItem element={Link} to="/dashboard">
+            Dashboard
+          </HeaderMenuItem>
+          <HeaderMenuItem element={Link} to="/devices">
+            Devices
           </HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
