@@ -21,7 +21,7 @@ import { Apps, Notification, User } from '@carbon/icons-react'
 const TutorialHeader = () => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-      <Header aria-label="Device Loans">
+      <Header aria-label="Periferal Loans">
         <SkipToContent />
         <HeaderMenuButton
           aria-label="Open menu"
@@ -29,9 +29,9 @@ const TutorialHeader = () => (
           isActive={isSideNavExpanded}
         />
         <HeaderName href="/" prefix="IBM">
-          Device Loans
+          Periferal Loans
         </HeaderName>
-        <HeaderNavigation aria-label="Device Loans">
+        <HeaderNavigation aria-label="Periferal Loans">
           <HeaderMenuItem element={Link} to="/devices">
             Devices
           </HeaderMenuItem>
