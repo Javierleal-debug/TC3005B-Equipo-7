@@ -35,8 +35,6 @@ const TutorialHeader = () => (
           <HeaderMenuItem element={Link} to="/devices">
             Devices
           </HeaderMenuItem>
-        </HeaderNavigation>
-        <HeaderNavigation aria-label="Device Loans">
           <HeaderMenuItem element={Link} to="/login">
             Login
           </HeaderMenuItem>
