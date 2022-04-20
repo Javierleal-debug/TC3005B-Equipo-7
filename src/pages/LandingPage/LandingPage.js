@@ -4,9 +4,9 @@ import { Grid, Column } from 'carbon-components-react'
 
 const LandingPage = () => {
   return (
-    <Grid fullWidth className="home-banner">
-      <Column sm={16} md={16} lg={16}>
-        <h1>Device Loans</h1>
+    <Grid className="home-banner">
+      <Column sm={4} md={8} lg={16} className="page-title-block">
+        <h1>Periferal Loans</h1>
       </Column>
     </Grid>
   )

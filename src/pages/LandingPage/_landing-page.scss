@@ -1,7 +1,20 @@
 @use '@carbon/layout';
 
+@import '@carbon/type/scss/scale';
+
 .home-banner {
-  background-color: rgb(193, 193, 193);
+  padding: 0;
+}
+
+.page-title-block {
   padding-top: layout.$spacing-06;
   padding-bottom: layout.$spacing-13;
+
+  h1 {
+    @include carbon--type-scale(12);
+  }
+}
+
+.action-block {
+  padding-top: layout.$spacing-06;
 }

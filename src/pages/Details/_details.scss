@@ -1,0 +1,37 @@
+@use '@carbon/layout';
+@use '@carbon/colors';
+
+.page-content {
+  padding-top: layout.$spacing-04 * 4;
+  padding-bottom: layout.$spacing-04 * 6;
+}
+
+.actions-dropdown {
+  margin: layout.$spacing-06 0;
+}
+
+.qr-code-area {
+  padding: layout.$spacing-06 0;
+}
+
+.qr-code-area p {
+  margin-bottom: layout.$spacing-04;
+}
+
+.icon-padding {
+  padding: 0;
+  padding-left: 5px;
+}
+
+.icon-padding svg {
+  position: relative;
+  top: 8px;
+}
+
+svg.icon-check {
+  fill: #198038;
+}
+
+svg.icon-fail {
+  fill: #da1e28;
+}
