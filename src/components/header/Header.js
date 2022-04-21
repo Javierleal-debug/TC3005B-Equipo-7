@@ -29,7 +29,7 @@ const TutorialHeader = () => (
           isActive={isSideNavExpanded}
         />
         <HeaderName href="/" prefix="IBM">
-          Periferal Loans
+          Peripheral Loans
         </HeaderName>
         <HeaderNavigation aria-label="Periferal Loans">
           <HeaderMenuItem element={Link} to="/login">
