@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import QRCode from 'react-qr-code'
 
 // mock data
@@ -12,11 +12,13 @@ import {
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
+  StructuredListInput,
   Button,
+  ButtonSet,
   Dropdown,
 } from 'carbon-components-react'
 
-import { Edit, Play, CheckmarkFilled, Misuse } from '@carbon/icons-react'
+import { Edit, Play, CheckmarkFilled, Misuse, Save } from '@carbon/icons-react'
 
 const actionDropdownItems = ['Acción A', 'Acción B', 'Acción C']
 
@@ -28,6 +30,11 @@ const statusIcon = (status) =>
   )
 
 const Details = () => {
+  const [onEditMode, setOnEditMode] = useState(false)
+
+  const enableEditMode = () => setOnEditMode(true)
+  const disableEditMode = () => setOnEditMode(false)
+
   return (
     <>
       <Grid className="page-content">
@@ -41,12 +48,19 @@ const Details = () => {
             aria-label="Dropdown"
             className="actions-dropdown"
           />
-          <Button renderIcon={Play} className="button-icon">
-            Ejecutar acción
-          </Button>
-          <Button renderIcon={Edit} kind="secondary" className="button-icon">
-            Editar
-          </Button>
+          <ButtonSet stacked>
+            <Button
+              renderIcon={Edit}
+              disabled={onEditMode}
+              kind={'secondary'}
+              onClick={enableEditMode}
+            >
+              Editar
+            </Button>
+            <Button renderIcon={Play} disabled={onEditMode}>
+              Ejecutar acción
+            </Button>
+          </ButtonSet>
           <div className="qr-code-area">
             <p>Número serial (QR)</p>
             <QRCode value={mockDevice.serialNumber} size={200} />
@@ -101,6 +115,19 @@ const Details = () => {
               </StructuredListRow>
             </StructuredListBody>
           </StructuredListWrapper>
+          <ButtonSet className="edit-mode-button-set">
+            <Button
+              onClick={disableEditMode}
+              renderIcon={Misuse}
+              disabled={!onEditMode}
+              kind="secondary"
+            >
+              Cancelar
+            </Button>
+            <Button renderIcon={Save} disabled={!onEditMode} kind="primary">
+              Guardar
+            </Button>
+          </ButtonSet>
         </Column>
       </Grid>
     </>

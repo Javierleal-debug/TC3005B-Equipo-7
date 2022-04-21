@@ -1,7 +1,7 @@
 import './App.scss'
 import { Routes, Route } from 'react-router-dom'
 
-import { Content } from '@carbon/react'
+import { Content, Theme } from 'carbon-components-react'
 
 import Header from './components/header'
 import LandingPage from './pages/LandingPage/LandingPage'
@@ -13,7 +13,9 @@ import Dashboard from './pages/Dashboard'
 function App() {
   return (
     <>
-      <Header />
+      <Theme>
+        <Header />
+      </Theme>
       <Content className="page-area">
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
