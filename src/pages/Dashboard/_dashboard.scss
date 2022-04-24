@@ -1,0 +1,35 @@
+@import "https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed|IBM+Plex+Sans:400,600&display=swap";
+@import "https://unpkg.com/carbon-components/css/carbon-components.min.css";
+
+.titleDashboard {
+    font-size: 20px;
+}
+
+.bodyDashboard {
+    margin-top: 2%;
+}
+
+.dropwdownDays {
+    margin-top: 5%;
+
+}
+
+.devices {
+    background-color: aliceblue;
+    border-radius: 15px;
+    border: 1px solid;
+}
+
+.titleDevices {
+    padding: 10%;
+
+}
+
+.chartDevices {
+  padding: 3%;
+}
+
+.numberDevicesOut {
+    font-size: 30px;
+    padding: 15%;
+}
