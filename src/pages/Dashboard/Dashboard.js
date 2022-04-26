@@ -73,7 +73,11 @@ const Dashboard = () => {
               />
             </DatePicker>
             <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
-              <FormLabel className="numberDevices">1</FormLabel>
+              <Grid>
+                <Column sm={4} className="numberDevices">
+                  1
+                </Column>
+              </Grid>
             </AspectRatio>
           </AspectRatio>
         </Column>
