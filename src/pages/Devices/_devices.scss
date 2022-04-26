@@ -18,3 +18,12 @@
   color: #0f62fe;
   font-weight: bold;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(14,86,226);
+  text-decoration: underline;
+}

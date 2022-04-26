@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 
 import {
   Button,
@@ -19,7 +21,7 @@ import {
   TableSelectRow
 } from 'carbon-components-react';
 
-import { CheckmarkFilled, Misuse, TrashCan, Save, Download } from '@carbon/icons-react'
+import { CheckmarkFilled, Misuse, TrashCan} from '@carbon/icons-react'
 
 const rows = [
   {
@@ -133,6 +135,9 @@ const Devices = () => {
         }else if(cell.value === false){
           return <div><Misuse className="icon-fail"/></div>
         }else {
+          if("type" === cell.id.split(":")[1]){
+            return <a href="/details">{cell.value}</a>
+          }
           return cell.value;
         }
       }
@@ -165,18 +170,6 @@ const Devices = () => {
                     onClick={batchActionClick(selectedRows)}>
                     Delete
                   </TableBatchAction>
-                  <TableBatchAction
-                    renderIcon={Save}
-                    iconDescription="Save the selected rows"
-                    onClick={batchActionClick(selectedRows)}>
-                    Save
-                  </TableBatchAction>
-                  <TableBatchAction
-                    renderIcon={Download}
-                    iconDescription="Download the selected rows"
-                    onClick={batchActionClick(selectedRows)}>
-                    Download
-                  </TableBatchAction>
                 </TableBatchActions>
                 <TableToolbarContent>
                   <TableToolbarSearch onChange={onInputChange} />
@@ -205,7 +198,6 @@ const Devices = () => {
                           </TableCell>
                         ))}
                       </TableRow>
-                      
                     </React.Fragment>
                   ))}
                 </TableBody>
