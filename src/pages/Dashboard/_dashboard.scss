@@ -1,35 +1,46 @@
-@import "https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed|IBM+Plex+Sans:400,600&display=swap";
-@import "https://unpkg.com/carbon-components/css/carbon-components.min.css";
+@import 'https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed|IBM+Plex+Sans:400,600&display=swap';
+@import 'https://unpkg.com/carbon-components/css/carbon-components.min.css';
 
 .titleDashboard {
-    font-size: 20px;
+  font-size: 25px;
+  padding-top: 1%;
+  padding-left: 2%;
 }
 
 .bodyDashboard {
-    margin-top: 2%;
+  margin-top: 2%;
 }
 
-.dropwdownDays {
-    margin-top: 5%;
-
+.datepicker {
+  align-items: center;
+  padding-top: 2%;
 }
 
 .devices {
-    background-color: aliceblue;
-    border-radius: 15px;
-    border: 1px solid;
+  background-color: #f4f4f4;
+  border-radius: 15px;
+  border: 1px solid;
+  border-color: #bababa;
 }
 
 .titleDevices {
-    padding: 10%;
-
+  padding: 5%;
+  font-size: 20px;
 }
 
 .chartDevices {
   padding: 3%;
 }
 
-.numberDevicesOut {
-    font-size: 30px;
-    padding: 15%;
+.infoDevices {
+  padding: 15%;
+}
+
+.numberDevices {
+  font-size: 30px;
+}
+
+.infoIn {
+  padding-top: 5%;
+  font-size: 15px;
 }
