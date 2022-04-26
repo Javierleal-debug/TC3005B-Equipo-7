@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import QRCode from 'react-qr-code'
+// import { useParams } from 'react-router-dom'
 
 import DeviceStructuredTable from './components/DeviceStructuredTable'
 import DeviceForm from './components/DeviceForm'
@@ -17,13 +18,15 @@ import {
 } from 'carbon-components-react'
 import { Edit, Play } from '@carbon/icons-react'
 
-const actionDropdownItems = ['Acción A', 'Acción B', 'Acción C']
+const actionDropdownItems = ['Lend', 'Acción B', 'Acción C']
 
 const Details = () => {
   const [onEditMode, setOnEditMode] = useState(false)
 
   const enableEditMode = () => setOnEditMode(true)
   const disableEditMode = () => setOnEditMode(false)
+
+  // const { serial } = useParams()
 
   return (
     <>
