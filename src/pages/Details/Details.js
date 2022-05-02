@@ -32,12 +32,12 @@ const Details = () => {
     <>
       <Grid className="page-content">
         <Column sm={4} md={8} lg={4} className="actions-block">
-          <h1>Device details view</h1>
+          <h1>Detalles del dispositivo</h1>
           <Dropdown
             id="dropdown-actions"
             items={actionDropdownItems}
-            titleText="Actions"
-            label="Select"
+            titleText="Acciones"
+            label="Seleccionar"
             aria-label="Dropdown"
             className="actions-dropdown"
           />
@@ -48,14 +48,14 @@ const Details = () => {
               kind={'secondary'}
               onClick={enableEditMode}
             >
-              Edit
+              Editar
             </Button>
             <Button renderIcon={Play} disabled={onEditMode}>
-              Run action
+              Ejecutar acción
             </Button>
           </ButtonSet>
           <div className="qr-code-area">
-            <p>Serial number (QR)</p>
+            <p>Número serial (QR)</p>
             <QRCode value={mockDevice.serialNumber} size={200} />
           </div>
         </Column>
