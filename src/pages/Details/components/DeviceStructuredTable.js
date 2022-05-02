@@ -23,20 +23,20 @@ const DeviceStructuredTable = ({ device }) => {
       <StructuredListHead>
         <StructuredListRow head tabIndex={0}>
           <StructuredListCell head>Spec</StructuredListCell>
-          <StructuredListCell head>Valor</StructuredListCell>
+          <StructuredListCell head>Value</StructuredListCell>
         </StructuredListRow>
       </StructuredListHead>
       <StructuredListBody>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Tipo de dispositivo</StructuredListCell>
+          <StructuredListCell>Device type</StructuredListCell>
           <StructuredListCell>{device.type}</StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Marca</StructuredListCell>
+          <StructuredListCell>Brand</StructuredListCell>
           <StructuredListCell>{device.brand}</StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Modelo</StructuredListCell>
+          <StructuredListCell>Model</StructuredListCell>
           <StructuredListCell>{device.model}</StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
@@ -44,19 +44,19 @@ const DeviceStructuredTable = ({ device }) => {
           <StructuredListCell>{device.serialNumber}</StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Condiciones aceptadas</StructuredListCell>
+          <StructuredListCell>Accepted Conditions</StructuredListCell>
           <StructuredListCell className="icon-padding">
             {statusIcon(device.acceptedConditions)}
           </StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>¿Está dentro?</StructuredListCell>
+          <StructuredListCell>Is inside?</StructuredListCell>
           <StructuredListCell className="icon-padding">
             {statusIcon(device.isInside)}
           </StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Autorización de seguridad</StructuredListCell>
+          <StructuredListCell>Security Authorization</StructuredListCell>
           <StructuredListCell className="icon-padding">
             {statusIcon(device.securityAuthorization)}
           </StructuredListCell>

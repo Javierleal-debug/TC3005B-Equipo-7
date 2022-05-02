@@ -14,23 +14,22 @@ const DeviceForm = ({ device, disableEditMode }) => {
   return (
     <Form>
       <Stack gap={4}>
-        <p>Solo cambiarán los datos cuyo campo haya sido llenado.</p>
-        <TextInput placeholder={device.type} labelText="Tipo (nombre)" />
-        <TextInput placeholder={device.brand} labelText="Marca" />
-        <TextInput placeholder={device.model} labelText="Modelo" />
+        <TextInput placeholder={device.type} labelText="Type" />
+        <TextInput placeholder={device.brand} labelText="Brand" />
+        <TextInput placeholder={device.model} labelText="Model" />
         <ButtonSet className="edit-mode-button-set">
           <Button
             onClick={disableEditMode}
             renderIcon={Misuse}
             kind="secondary"
           >
-            Cancelar
+            Cancel
           </Button>
           <Button onClick={disableEditMode} renderIcon={TrashCan} kind="danger">
-            Eliminar dispositivo
+            Delete
           </Button>
           <Button renderIcon={Save} kind="primary" type="submit">
-            Guardar
+            Save
           </Button>
         </ButtonSet>
       </Stack>
