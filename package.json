@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-=======
     "@carbon/charts": "^0.57.0",
->>>>>>> e61ef8ea0660b568892b09e8d33ec8f5b2ca1f93
     "@carbon/charts-react": "^0.57.0",
     "@carbon/icons-react": "^11.1.0",
     "@carbon/styles": "^1.1.0",

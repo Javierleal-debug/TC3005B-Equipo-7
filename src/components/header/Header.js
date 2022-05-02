@@ -41,7 +41,7 @@ const TutorialHeader = () => (
           <HeaderMenuItem element={Link} to="/devices">
             Devices
           </HeaderMenuItem>
-          <HeaderMenuItem element={Link} to="/details">
+          <HeaderMenuItem element={Link} to="/devices/sampleserialnumber">
             Device details
           </HeaderMenuItem>
         </HeaderNavigation>
