@@ -1,0 +1,30 @@
+[
+  {
+    "key": "type",
+    "header": "Type"
+  },
+  {
+    "key": "brand",
+    "header": "Brand"
+  },
+  {
+    "key": "model",
+    "header": "Model"
+  },
+  {
+    "key": "serialNumber",
+    "header": "Serial"
+  },
+  {
+    "key": "acceptedConditions",
+    "header": "Accepted Conditions"
+  },
+  {
+    "key": "isInside",
+    "header": "Is Inside?"
+  },
+  {
+    "key": "securityAuthorization",
+    "header": "Security Authorization"
+  }
+]

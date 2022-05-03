@@ -41,9 +41,6 @@ const TutorialHeader = () => (
           <HeaderMenuItem element={Link} to="/devices">
             Devices
           </HeaderMenuItem>
-          <HeaderMenuItem element={Link} to="/devices/sampleserialnumber">
-            Device details
-          </HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
