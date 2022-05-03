@@ -33,11 +33,11 @@ const Devices = () => {
   let itemsPerPage = 10;
   let pageNumber = 1;
   
-  const loadRows = () => {
-    let firstItemIndex = (itemsPerPage)*(pageNumber-1);
-    let lastItemIndex = itemsPerPage*pageNumber;
+  const loadRows = (firstItemIndex = (itemsPerPage)*(pageNumber-1), lastItemIndex = itemsPerPage*pageNumber) => {
+    /*let firstItemIndex = (itemsPerPage)*(pageNumber-1);
+    let lastItemIndex = itemsPerPage*pageNumber;*/
     if(lastItemIndex > devices.length){
-      lastItemIndex = devices.length
+      lastItemIndex = devices.length;
     }
     const subArray = devices.slice(firstItemIndex,lastItemIndex);
 
@@ -53,27 +53,26 @@ const Devices = () => {
       }
     };
 
-    axios
-      .get("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestRowData)
-      .then(({ data }) => {
-        for (var i=0; i<data.length; i++){
-          var newRow = {
-            id: (i+1).toString(),
-            type: data[i][0],
-            brand: data[i][1],
-            model: data[i][2],
-            serialNumber: data[i][3],
-            acceptedConditions: data[i][4]==='true'? true: false,
-            isInside: data[i][5]==='true'? true: false,
-            securityAuthorization: data[i][6]==='true'? true: false
-          }
-          devices[i] = newRow;
+    axios.get("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestRowData)
+    .then(({ data }) => {
+      for (var i=0; i<data.length; i++){
+        var newRow = {
+          id: (i+1).toString(),
+          type: data[i][0],
+          brand: data[i][1],
+          model: data[i][2],
+          serialNumber: data[i][3],
+          acceptedConditions: data[i][4]==='true'? true: false,
+          isInside: data[i][5]==='true'? true: false,
+          securityAuthorization: data[i][6]==='true'? true: false
         }
-        loadRows();
-      });
+        devices[i] = newRow;
+      }
+      loadRows();
+    });
   }
 
-  useEffect(() => getItemsRequest(),[]);
+  useEffect(() => {getItemsRequest()},[]);
 
   function handleChangeItemsPerPage(event){
     itemsPerPage = event.pageSize;
@@ -82,6 +81,26 @@ const Devices = () => {
   }
 
   const batchActionClick = (selectedRows) => {
+    let serialNumbers = [];
+    selectedRows.forEach((i)=>{
+      let serialNumber = i.cells[3].value;
+      serialNumbers.push(serialNumber);
+    });
+    console.log(serialNumbers);
+
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'));
+    var requestData = {
+      headers: {
+        'x-access-token': `${userInfo["accessToken"]}`
+      },
+      data: {
+        array: serialNumbers
+      }
+    };
+    axios.delete("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestData)
+    .then(({ data }) => {
+      window.location.pathname="/devices";
+    });
   }
 
   const createCellOfType = (cell, row) => {
@@ -130,13 +149,13 @@ const Devices = () => {
                 <TableBatchAction
                   renderIcon={TrashCan}
                   iconDescription="Delete the selected rows"
-                  onClick={batchActionClick(selectedRows)}>
+                  onClick={()=>{batchActionClick(selectedRows)}}>
                   Delete
                 </TableBatchAction>
               </TableBatchActions>
 
               <TableToolbarContent>
-                <TableToolbarSearch onChange={onInputChange} />
+                <TableToolbarSearch onChange={onInputChange}/>
                 <Button /*onClick={action('Button click')}*/>New Device</Button>
               </TableToolbarContent>
             </TableToolbar>
