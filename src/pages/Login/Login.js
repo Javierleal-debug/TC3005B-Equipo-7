@@ -25,7 +25,7 @@ function signIn(){
       console.log(json.accessToken);
       if (json.accessToken){
         localStorage.setItem('UserInfo',JSON.stringify(json));
-        window.location.pathname="/devices";
+        
       }else{
         alert("Wrong user or password");
       }

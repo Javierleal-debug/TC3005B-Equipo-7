@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter,HashRouter } from 'react-router-dom'
 import './index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
@@ -10,11 +10,11 @@ import { GlobalTheme } from 'carbon-components-react'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   //<React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <GlobalTheme>
         <App />
       </GlobalTheme>
-    </BrowserRouter>
+      </HashRouter>
   //</React.StrictMode>
 )
 

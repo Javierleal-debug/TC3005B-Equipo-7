@@ -1,2 +1,2 @@
 root: build
-location_include: includes/*.conf
+location_include: /nginx/conf/includes/*.conf

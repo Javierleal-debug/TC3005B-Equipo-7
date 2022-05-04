@@ -110,7 +110,7 @@ const Devices = () => {
       return <div><Misuse className="icon-fail"/></div>
     }else { 
       if("type" === cell.id.split(":")[1]){
-        var pathString = "/devices/" + row.cells[3].value;
+        var pathString = "#/devices/" + row.cells[3].value;
         return <a href={pathString}>{cell.value}</a>
       }
       return cell.value;

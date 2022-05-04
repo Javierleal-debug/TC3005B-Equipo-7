@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/devices" element={<Devices />} />
-          <Route exact path="/devices/:serial" element={<Details />} />
+          <Route exact path="/devices/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
         </Routes>

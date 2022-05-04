@@ -20,6 +20,7 @@ import {
 } from 'carbon-components-react'
 import { Edit, Play } from '@carbon/icons-react'
 import SkeletonStructure from './components/SkeletonStructure'
+import { useParams } from 'react-router-dom';
 
 const actionDropdownItems = ['Lend', 'Acción B', 'Acción C']
 
@@ -31,20 +32,24 @@ const Details = () => {
   const enableEditMode = () => setOnEditMode(true)
   const disableEditMode = () => setOnEditMode(false)
 
-  // const { serial } = useParams()
+   const { serialNumber } = useParams();
 
   const getItemRequest = () => {
-    const serialNumber = window.location.pathname.split('/').slice(-1)[0];
+    
+    //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
+    console.log(serialNumber);
     setIsDataLoading(true);
-    let requestRowData = {
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'));
+    var requestRowData = {
       headers: {
-        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwiaWF0IjoxNjUxNTE0NTQ3LCJleHAiOjE2NTE2MDA5NDd9.GlcjaPBv1C9tNTJn1UVcVdehyf1nb0tKjcnLY3TqCM0'
+        'x-access-token': `${userInfo["accessToken"]}`
       }
     };
 
     axios
-      .get(`http://localhost:3001/peripheral/${serialNumber}`, requestRowData)
+      .get(`https://peripheralsloanbackend.mybluemix.net/peripheral/${serialNumber}`, requestRowData)
       .then(({ data }) => {
+        console.log(data);
         mockDevice = {
           type: data[0],
           brand: data[1],
