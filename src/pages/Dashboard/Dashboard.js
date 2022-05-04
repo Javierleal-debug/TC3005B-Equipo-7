@@ -7,11 +7,9 @@ import {
   AspectRatio,
   Grid,
   Column,
-  Dropdown,
 } from 'carbon-components-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
-import './_dashboard.scss'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
@@ -25,6 +23,15 @@ const data = [
     value: 428,
   },
 ]
+
+function getDate() {
+  const date = new Date()
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+
+  return month + '/' + day + '/' + year
+}
 
 const options = {
   resizable: true,
@@ -48,11 +55,16 @@ const Dashboard = () => {
               <FormLabel className="titleDevices">
                 Devices Distribution
               </FormLabel>
-              <DatePicker className="datepicker" datePickerType="single">
+              <DatePicker
+                className="datepicker"
+                datePickerType="single"
+                maxDate={getDate()}
+              >
                 <DatePickerInput
-                  placeholder="mm/dd/yyyy"
                   id="date-picker-single"
                   size="sm"
+                  value={getDate()}
+                  placeholder="mm/dd/yyyy"
                 />
               </DatePicker>
             </div>
@@ -65,11 +77,16 @@ const Dashboard = () => {
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
             <FormLabel className="titleDevices">Devices Out</FormLabel>
-            <DatePicker className="datepicker" datePickerType="single">
+            <DatePicker
+              className="datepicker"
+              datePickerType="single"
+              maxDate={getDate()}
+            >
               <DatePickerInput
-                placeholder="mm/dd/yyyy"
                 id="date-picker-single"
                 size="sm"
+                value={getDate()}
+                placeholder="mm/dd/yyyy"
               />
             </DatePicker>
             <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
@@ -84,11 +101,16 @@ const Dashboard = () => {
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
             <FormLabel className="titleDevices">Devices In</FormLabel>
-            <DatePicker className="datepicker" datePickerType="single">
+            <DatePicker
+              className="datepicker"
+              datePickerType="single"
+              maxDate={getDate()}
+            >
               <DatePickerInput
-                placeholder="mm/dd/yyyy"
                 id="date-picker-single"
                 size="sm"
+                value={getDate()}
+                placeholder="mm/dd/yyyy"
               />
             </DatePicker>
             <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
@@ -97,7 +119,7 @@ const Dashboard = () => {
                   0
                 </Column>
                 <Column sm={4} className="infoIn">
-                  Sin datos
+                  No data
                 </Column>
               </Grid>
             </AspectRatio>
@@ -107,5 +129,5 @@ const Dashboard = () => {
     </div>
   )
 }
-
+console.log(getDate())
 export default Dashboard
