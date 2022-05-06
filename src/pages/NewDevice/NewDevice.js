@@ -56,7 +56,7 @@ const NewDevice = () => {
     
     axios.post("http://localhost:3001/peripheral", requestData, requestHeaders)
     .then(({ data }) => {
-      window.location.pathname="/devices";
+      window.location.hash="/devices";
     }).catch(error => {
       console.error(`There was an error!`, error);
     });

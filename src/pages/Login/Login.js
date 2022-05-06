@@ -1,5 +1,6 @@
 import { Button, Form,TextInput } from 'carbon-components-react'
 import React from 'react'
+import {Link,useHref,useNavigate} from 'react-router-dom'
 
 
 
@@ -25,9 +26,10 @@ function signIn(){
       console.log(json.accessToken);
       if (json.accessToken){
         localStorage.setItem('UserInfo',JSON.stringify(json));
-        
+        window.location.hash="/devices"
       }else{
         alert("Wrong user or password");
+        
       }
     });
 }

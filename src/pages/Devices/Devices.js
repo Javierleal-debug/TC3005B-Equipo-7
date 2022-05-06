@@ -76,7 +76,7 @@ const Devices = () => {
     });
   }
 
-  useEffect(() => {getItemsRequest()},[]);
+  useEffect(() => {getItemsRequest()},[]); //funcion que corre al cargar la pagina, despues de mostrar lo que está en el return
 
   function handleChangeItemsPerPage(event){
     itemsPerPage = event.pageSize;
@@ -104,7 +104,7 @@ const Devices = () => {
     };
     axios.delete("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestData)
     .then(({ data }) => {
-      window.location.pathname="#/devices";
+      window.location.hash="/devices";
     });
   }
 
