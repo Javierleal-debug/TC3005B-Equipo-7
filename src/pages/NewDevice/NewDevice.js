@@ -77,7 +77,7 @@ const NewDevice = () => {
                 <Button
                   renderIcon={Misuse}
                   kind="secondary"
-                  href="/devices"
+                  href="#/devices"
                 >
                   Cancel
                 </Button>

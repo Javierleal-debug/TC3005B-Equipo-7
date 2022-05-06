@@ -104,7 +104,7 @@ const Devices = () => {
     };
     axios.delete("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestData)
     .then(({ data }) => {
-      window.location.hash="/devices";
+      window.location.reload();
     });
   }
 
