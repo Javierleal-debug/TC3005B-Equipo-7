@@ -104,7 +104,7 @@ const Devices = () => {
     };
     axios.delete("https://peripheralsloanbackend.mybluemix.net/peripheral/", requestData)
     .then(({ data }) => {
-      window.location.pathname="/devices";
+      window.location.pathname="#/devices";
     });
   }
 
@@ -115,7 +115,7 @@ const Devices = () => {
       return <div><Misuse className="icon-fail"/></div>
     }else { 
       if("type" === cell.id.split(":")[1]){
-        var pathString = "/devices/" + row.cells[3].value;
+        var pathString = "#/devices/" + row.cells[3].value;
         return <a href={pathString}>{cell.value}</a>
       }
       return cell.value;
@@ -173,7 +173,7 @@ const Devices = () => {
                   onInputChange(event);
                 }}/>
                 <Button 
-                  href="/devices/new-device" 
+                  href="#/devices/new-device"
                   renderIcon={MobileAdd}
                 >
                   New Device</Button>
