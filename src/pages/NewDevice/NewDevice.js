@@ -54,7 +54,7 @@ const NewDevice = () => {
       }
     }
     
-    axios.post("http://localhost:3001/peripheral", requestData, requestHeaders)
+    axios.post("https://peripheralsloanbackend.mybluemix.net/peripheral", requestData, requestHeaders)
     .then(({ data }) => {
       window.location.hash="/devices";
     }).catch(error => {
