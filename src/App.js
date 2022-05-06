@@ -9,6 +9,7 @@ import Devices from './pages/Devices/Devices'
 import Login from './pages/Login'
 import Details from './pages/Details/Details'
 import Dashboard from './pages/Dashboard'
+import NewDevice from './pages/NewDevice/NewDevice'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/devices/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/devices/new-device" element={<NewDevice />} />
         </Routes>
       </Content>
     </>

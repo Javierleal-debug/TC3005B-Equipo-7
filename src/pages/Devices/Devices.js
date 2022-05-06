@@ -1,7 +1,7 @@
 import axios from "axios";
 import tableHeaders from './headers.json'
 import React, { useState, useEffect } from "react";
-import { CheckmarkFilled, Misuse, TrashCan} from '@carbon/icons-react'
+import { CheckmarkFilled, Misuse, TrashCan, MobileAdd} from '@carbon/icons-react'
 import {
   Button,
   DataTableSkeleton,
@@ -28,10 +28,14 @@ const devices = [{}];
 
 const Devices = () => {
   const [loadingData, setLoadingData] = useState(true);
+  const [searchingData, setSearchingData] = useState(false);
+
   const [rows, setRows] = useState(null);
   const headers = tableHeaders;
+
   let itemsPerPage = 10;
   let pageNumber = 1;
+  const [pageConfig, setPageConfig] = useState([itemsPerPage, pageNumber]);
   
   const loadRows = (firstItemIndex = (itemsPerPage)*(pageNumber-1), lastItemIndex = itemsPerPage*pageNumber) => {
     /*let firstItemIndex = (itemsPerPage)*(pageNumber-1);
@@ -77,6 +81,7 @@ const Devices = () => {
   function handleChangeItemsPerPage(event){
     itemsPerPage = event.pageSize;
     pageNumber = event.page;
+    setPageConfig([itemsPerPage, pageNumber]);
     loadRows();
   }
 
@@ -110,7 +115,7 @@ const Devices = () => {
       return <div><Misuse className="icon-fail"/></div>
     }else { 
       if("type" === cell.id.split(":")[1]){
-        var pathString = "#/devices/" + row.cells[3].value;
+        var pathString = "/devices/" + row.cells[3].value;
         return <a href={pathString}>{cell.value}</a>
       }
       return cell.value;
@@ -155,8 +160,23 @@ const Devices = () => {
               </TableBatchActions>
 
               <TableToolbarContent>
-                <TableToolbarSearch onChange={onInputChange}/>
-                <Button /*onClick={action('Button click')}*/>New Device</Button>
+                <TableToolbarSearch onChange={(event)=>{
+                  if(event.target.value === ""){
+                    itemsPerPage = pageConfig[0];
+                    pageNumber = pageConfig[1];
+                    setSearchingData(false);
+                    loadRows();
+                  }else{
+                    setSearchingData(true);
+                    loadRows(0,devices.length);
+                  }
+                  onInputChange(event);
+                }}/>
+                <Button 
+                  href="/devices/new-device" 
+                  renderIcon={MobileAdd}
+                >
+                  New Device</Button>
               </TableToolbarContent>
             </TableToolbar>
 
@@ -164,7 +184,7 @@ const Devices = () => {
               <TableHead>
                 <TableRow>
                   <TableSelectAll {...getSelectionProps()} />
-                  {headers.map((header, i) => (
+                  {headers.map((header) => (
                     <TableHeader key={header.key} {...getHeaderProps({ header })}>
                       <div className='table-header'>{header.header}</div>
                     </TableHeader>
@@ -187,17 +207,19 @@ const Devices = () => {
                 ))}
               </TableBody>
             </Table>
-            <Pagination
-              backwardText="Previous page"
-              forwardText="Next page"
-              itemsPerPageText="Items per page:"
-              onChange={handleChangeItemsPerPage}
-              page={pageNumber}
-              pageSize={itemsPerPage}
-              pageSizes={[10,20,30,40,50,100]}
-              size="md"
-              totalItems={devices.length}
-            />
+            {searchingData? ()=>{}:
+              <Pagination
+                backwardText="Previous page"
+                forwardText="Next page"
+                itemsPerPageText="Items per page:"
+                onChange={handleChangeItemsPerPage}
+                page={pageConfig[1]}
+                pageSize={pageConfig[0]}
+                pageSizes={[10,20,30,40,50,100]}
+                size="md"
+                totalItems={devices.length}
+              />
+            }
           </TableContainer>
         )}
       />
