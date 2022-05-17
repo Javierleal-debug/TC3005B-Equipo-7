@@ -96,7 +96,7 @@ const Details = () => {
           </ButtonSet>
           <div className="qr-code-area">
             <p>Serial number (QR)</p>
-            <QRCode value={perpheralData.serialNumber} size={200} />
+            <QRCode value={`https://peripheral-loans-equipo7.mybluemix.net/#/devices/${serialNumber}`} size={200} />
           </div>
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
