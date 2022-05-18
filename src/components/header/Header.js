@@ -16,7 +16,12 @@ import {
   HeaderSideNavItems,
 } from 'carbon-components-react'
 
-import { Apps, Notification, User } from '@carbon/icons-react'
+import { Apps, Notification, User , Logout} from '@carbon/icons-react'
+
+function LogOut(){
+    localStorage.removeItem('UserInfo');
+    window.location.hash = '/login';
+}
 
 const TutorialHeader = () => (
   <HeaderContainer
@@ -31,7 +36,7 @@ const TutorialHeader = () => (
         <HeaderName href="/" prefix="IBM">
           Peripheral Loans
         </HeaderName>
-        <HeaderNavigation aria-label="Periferal Loans">
+        <HeaderNavigation aria-label="Peripheral Loans">
           <HeaderMenuItem element={Link} to="/dashboard">
             Dashboard
           </HeaderMenuItem>
@@ -59,8 +64,8 @@ const TutorialHeader = () => (
           <HeaderGlobalAction aria-label="Account">
             <User size={20} />
           </HeaderGlobalAction>
-          <HeaderGlobalAction aria-label="Apps">
-            <Apps size={20} />
+          <HeaderGlobalAction aria-label="Logout" onClick={LogOut}>
+            <Logout size={20} />
           </HeaderGlobalAction>
         </HeaderGlobalBar>
       </Header>
