@@ -8,19 +8,14 @@ import DeviceForm from './components/DeviceForm'
 import axios from 'axios'
 
 // mock data
-import mockDevice from '../../mock_data/device.json'
+import device from '../../mock_data/device.json'
 
 // Carbon Styling
-import {
-  Grid,
-  Column,
-  Button,
-  ButtonSet,
-  Dropdown,
-} from 'carbon-components-react'
-import { Edit, Play } from '@carbon/icons-react'
+import { Grid, Column, Button, ButtonSet } from 'carbon-components-react'
+import { Edit, Play, Friendship, Undo } from '@carbon/icons-react'
 import SkeletonStructure from './components/SkeletonStructure'
 import { useParams } from 'react-router-dom'
+import StatusStructuredTable from './components/StatusStructuredTable'
 
 function checkAuth() {
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
@@ -41,12 +36,10 @@ function checkAuth() {
     })
 }
 
-const actionDropdownItems = ['Lend', 'Acción B', 'Acción C']
-
 const Details = () => {
   const [onEditMode, setOnEditMode] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
-  const [perpheralData, setPerpheralData] = useState(mockDevice)
+  const [peripheralData, setperipheralData] = useState(device)
 
   const enableEditMode = () => setOnEditMode(true)
   const disableEditMode = () => setOnEditMode(false)
@@ -75,7 +68,7 @@ const Details = () => {
       )
       .then(({ data }) => {
         console.log(data)
-        mockDevice = {
+        device = {
           type: data[0],
           brand: data[1],
           model: data[2],
@@ -83,14 +76,18 @@ const Details = () => {
           acceptedConditions: data[4] === 'true' ? true : false,
           isInside: data[5] === 'true' ? true : false,
           securityAuthorization: data[6] === 'true' ? true : false,
+          isAvailable: true,
+          currentUser: 'Fulano De Ibm',
+          location: 'Area A',
         }
-        setPerpheralData(mockDevice)
+        setperipheralData(device)
         setIsDataLoading(false)
       })
   }
 
   useEffect(() => {
     getItemRequest()
+    // eslint-disable-next-line
   }, [])
 
   return isDataLoading ? (
@@ -99,16 +96,30 @@ const Details = () => {
     <>
       <Grid className="page-content">
         <Column sm={4} md={8} lg={4} className="actions-block">
-          <h1>Device details view</h1>
-          <Dropdown
-            id="dropdown-actions"
-            items={actionDropdownItems}
-            titleText="Actions"
-            label="Select"
-            aria-label="Dropdown"
-            className="actions-dropdown"
-          />
+          <h1>{peripheralData.model}</h1>
           <ButtonSet stacked>
+            {peripheralData.isAvailable ? (
+              <Button
+                renderIcon={Friendship}
+                disabled={onEditMode}
+                onClick={() => {
+                  setperipheralData({ ...peripheralData, isAvailable: false })
+                }}
+              >
+                Lend
+              </Button>
+            ) : (
+              <Button
+                renderIcon={Undo}
+                disabled={onEditMode}
+                onClick={() => {
+                  setperipheralData({ ...peripheralData, isAvailable: true })
+                }}
+              >
+                Return
+              </Button>
+            )}
+
             <Button
               renderIcon={Edit}
               disabled={onEditMode}
@@ -117,12 +128,9 @@ const Details = () => {
             >
               Edit
             </Button>
-            <Button renderIcon={Play} disabled={onEditMode}>
-              Run action
-            </Button>
           </ButtonSet>
           <div className="qr-code-area">
-            <p>Serial number (QR)</p>
+            <p>QR Code</p>
             <QRCode
               value={`https://peripheral-loans-equipo7.mybluemix.net/#/devices/${serialNumber}`}
               size={200}
@@ -132,11 +140,14 @@ const Details = () => {
         <Column sm={4} md={8} lg={12} className="table-block">
           {onEditMode ? (
             <DeviceForm
-              device={perpheralData}
+              device={peripheralData}
               disableEditMode={disableEditMode}
             />
           ) : (
-            <DeviceStructuredTable device={perpheralData} />
+            <>
+              <StatusStructuredTable device={peripheralData} />
+              <DeviceStructuredTable device={peripheralData} />
+            </>
           )}
         </Column>
       </Grid>

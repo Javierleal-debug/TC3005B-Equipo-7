@@ -10,13 +10,6 @@ import {
 
 import { CheckmarkFilled, Misuse } from '@carbon/icons-react'
 
-const statusIcon = (status) =>
-  status ? (
-    <CheckmarkFilled size={20} className="icon-check" />
-  ) : (
-    <Misuse size={20} className="icon-fail" />
-  )
-
 const DeviceStructuredTable = ({ device }) => {
   return (
     <StructuredListWrapper aria-label="Product details list">
@@ -42,24 +35,6 @@ const DeviceStructuredTable = ({ device }) => {
         <StructuredListRow tabIndex={0}>
           <StructuredListCell>Serial</StructuredListCell>
           <StructuredListCell>{device.serialNumber}</StructuredListCell>
-        </StructuredListRow>
-        <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Accepted Conditions</StructuredListCell>
-          <StructuredListCell className="icon-padding">
-            {statusIcon(device.acceptedConditions)}
-          </StructuredListCell>
-        </StructuredListRow>
-        <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Is inside?</StructuredListCell>
-          <StructuredListCell className="icon-padding">
-            {statusIcon(device.isInside)}
-          </StructuredListCell>
-        </StructuredListRow>
-        <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Security Authorization</StructuredListCell>
-          <StructuredListCell className="icon-padding">
-            {statusIcon(device.securityAuthorization)}
-          </StructuredListCell>
         </StructuredListRow>
       </StructuredListBody>
     </StructuredListWrapper>
