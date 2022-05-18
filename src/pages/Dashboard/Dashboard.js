@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   FormLabel,
   DatePicker,
@@ -10,6 +10,8 @@ import {
 } from 'carbon-components-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
+
+import { checkAuth } from '../../util'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
@@ -45,6 +47,14 @@ const options = {
 }
 
 const Dashboard = () => {
+  useEffect(() => {
+    try {
+      checkAuth()
+    } catch (e) {
+      window.location.hash = '/login'
+    }
+  }, [])
+
   return (
     <div>
       <Tile className="titleDashboard">Cuadro de Mando</Tile>

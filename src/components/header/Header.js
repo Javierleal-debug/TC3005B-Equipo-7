@@ -32,9 +32,6 @@ const TutorialHeader = () => (
           Peripheral Loans
         </HeaderName>
         <HeaderNavigation aria-label="Periferal Loans">
-          <HeaderMenuItem element={Link} to="/login">
-            Login
-          </HeaderMenuItem>
           <HeaderMenuItem element={Link} to="/dashboard">
             Dashboard
           </HeaderMenuItem>
