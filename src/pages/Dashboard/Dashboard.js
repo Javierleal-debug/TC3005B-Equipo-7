@@ -57,7 +57,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Tile className="titleDashboard">Cuadro de Mando</Tile>
+      <Tile className="titleDashboard">Dashboard</Tile>
       <Grid className="bodyDashboard">
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
