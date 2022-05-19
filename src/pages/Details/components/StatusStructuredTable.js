@@ -10,6 +10,8 @@ import {
 
 import { CheckmarkFilled, Misuse } from '@carbon/icons-react'
 
+import { useUserType } from '../../../global-context'
+
 const statusIcon = (status) =>
   status ? (
     <CheckmarkFilled size={20} className="icon-check" />
@@ -18,6 +20,8 @@ const statusIcon = (status) =>
   )
 
 const StatusStructuredTable = ({ device }) => {
+  const { userType } = useUserType()
+
   return (
     <StructuredListWrapper aria-label="Product details list">
       <StructuredListHead>
@@ -32,10 +36,12 @@ const StatusStructuredTable = ({ device }) => {
             {device.isAvailable ? 'Available' : 'Unavailable'}{' '}
           </StructuredListCell>
         </StructuredListRow>
-        <StructuredListRow tabIndex={0}>
-          <StructuredListCell>Current User</StructuredListCell>
-          <StructuredListCell>{device.currentUser}</StructuredListCell>
-        </StructuredListRow>
+        {(userType === 'focal' || userType === 'security') && (
+          <StructuredListRow tabIndex={0}>
+            <StructuredListCell>Current User</StructuredListCell>
+            <StructuredListCell>{device.currentUser}</StructuredListCell>
+          </StructuredListRow>
+        )}
         <StructuredListRow tabIndex={0}>
           <StructuredListCell>Location</StructuredListCell>
           <StructuredListCell>{device.location}</StructuredListCell>
