@@ -79,9 +79,15 @@ const Details = () => {
           acceptedConditions: data[4] === 'true' ? true : false,
           isInside: data[5] === 'true' ? true : false,
           securityAuthorization: data[6] === 'true' ? true : false,
-          isAvailable: true,
-          currentUser: 'Fulano De Ibm',
-          location: 'Area A',
+          isAvailable: (data[4]===false && data[5]===true && data[6]===false) ? true : false ,
+          employeeName: data[7],
+          employeeEmail: data[8],
+          employeeSerial: data[9],
+          employeeArea: data[10],
+          mngrName: data[11],
+          mngrEmail: data[12],
+          date: data[13],
+          comment: data[14]
         }
         setperipheralData(device)
         setIsDataLoading(false)
@@ -179,8 +185,8 @@ const Details = () => {
             />
           ) : (
             <>
-              <StatusStructuredTable device={peripheralData} />
               <DeviceStructuredTable device={peripheralData} />
+              <StatusStructuredTable device={peripheralData} />
             </>
           )}
         </Column>
