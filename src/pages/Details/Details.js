@@ -139,13 +139,31 @@ const ResetDevicePopUp = ({ open, setOpen }) => (
   </Modal>
 )
 
+const LendDevicePopUp = ({ open, setOpen, submit }) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Lend"
+    primaryButtonText="Accept"
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
+  >
+    <p>
+      By clicking the "Accept" button, you confirm that you have given this
+      device to the requisitor.
+    </p>
+  </Modal>
+)
+
 const Details = () => {
   const [onEditMode, setOnEditMode] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
   const [peripheralData, setperipheralData] = useState(device)
   const [requestPopUpOpen, setRequestPopUpOpen] = useState(false)
   const [resetDevicePopUpOpen, setResetDevicePopUpOpen] = useState(false)
-  const [requisitorNotification, setRequisitorNotification] = useState({})
+  const [lendDevicePopUpOpen, setLendDevicePopUpOpen] = useState(false)
 
   // const enableEditMode = () => setOnEditMode(true)
   const disableEditMode = () => setOnEditMode(false)
@@ -184,7 +202,7 @@ const Details = () => {
           acceptedConditions: data[4] === 'true' ? true : false,
           isInside: data[5] === 'true' ? true : false,
           securityAuthorization: data[6] === 'true' ? true : false,
-          // ----- TEMPORARY (to be discussed) -----
+          // ----- TENTATIVO -----
           isAvailable: true,
           currentUser: 'Fulano De Ibm',
           location: 'Area A',
@@ -228,12 +246,24 @@ const Details = () => {
 
     // good
     setRequestPopUpOpen(false)
-    setRequisitorNotification({
-      title: 'Request confirmed',
-      subtitle: 'Please contact your corresponding focal to get your device.',
-      timeout: 5,
-      iconDescription: 'Close',
+  }
+
+  const postLoanConfirmation = () => {
+    // Posts confirmation to loan a device after it was requested
+    // Changes to peripheral data:
+    //    isRequested: false
+    //    requestedBy: ""
+    //    isAvailable: false
+    //    currentUser: user
+
+    setperipheralData({
+      ...peripheralData,
+      isRequested: false,
+      requestedBy: '',
+      isAvailable: false,
     })
+
+    setLendDevicePopUpOpen(false)
   }
 
   useEffect(() => {
@@ -246,26 +276,28 @@ const Details = () => {
       case 'focal':
         return (
           <ButtonSet stacked>
-            {peripheralData.isAvailable ? (
+            {peripheralData.isRequested ? (
               <Button
                 renderIcon={Friendship}
-                disabled={onEditMode}
-                onClick={() => {
-                  setperipheralData({ ...peripheralData, isAvailable: false })
-                }}
+                onClick={() => setLendDevicePopUpOpen(true)}
               >
                 Lend
               </Button>
             ) : (
-              <Button
-                renderIcon={Undo}
-                disabled={onEditMode}
-                onClick={() => {
-                  setperipheralData({ ...peripheralData, isAvailable: true })
-                }}
-              >
-                Return
-              </Button>
+              !peripheralData.isAvailable && (
+                <Button
+                  renderIcon={Undo}
+                  disabled={onEditMode}
+                  onClick={() => {
+                    setperipheralData({
+                      ...peripheralData,
+                      isAvailable: true,
+                    })
+                  }}
+                >
+                  Return
+                </Button>
+              )
             )}
 
             {/*<Button
@@ -308,9 +340,7 @@ const Details = () => {
       case 'security':
         return (
           <ButtonSet stacked>
-            <Button renderIcon={Exit} disabled={!peripheralData.isAvailable}>
-              Authorize exit
-            </Button>
+            <Button renderIcon={Exit}>Authorize exit</Button>
           </ButtonSet>
         )
       default:
@@ -332,7 +362,11 @@ const Details = () => {
         open={resetDevicePopUpOpen}
         setOpen={setResetDevicePopUpOpen}
       />
-      {/* Toasts */}
+      <LendDevicePopUp
+        open={lendDevicePopUpOpen}
+        setOpen={setLendDevicePopUpOpen}
+        submit={postLoanConfirmation}
+      />
 
       <Grid className="page-content">
         <Column sm={4} md={8} lg={4} className="actions-block">
@@ -348,7 +382,7 @@ const Details = () => {
           </div>
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
-          {peripheralData.isRequested && (
+          {peripheralData.isRequested && userType === 'focal' && (
             <InlineNotification
               kind="info"
               iconDescription="describes the close button"
@@ -364,6 +398,25 @@ const Details = () => {
               style={{ minWidth: '100%' }}
             />
           )}
+          {
+            /* Warning: also depends on authentication */
+            peripheralData.isRequested && userType === 'requisitor' && (
+              <InlineNotification
+                kind="success"
+                iconDescription="Close"
+                subtitle={
+                  <span>
+                    The device {peripheralData.serialNumber} has been assigned
+                    to you. Contact the corresponding focal to get the device.
+                  </span>
+                }
+                title="Request confirmed"
+                lowContrast
+                hideCloseButton
+                style={{ minWidth: '100%' }}
+              />
+            )
+          }
           {onEditMode ? (
             <DeviceForm
               device={peripheralData}
