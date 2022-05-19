@@ -138,7 +138,7 @@ const LendDevicePopUp = ({ open, setOpen, submit }) => (
     onRequestSubmit={submit}
   >
     <p>
-      By clicking the "Accept" button, you confirm that you have given this
+      By clicking the "Accept" button, you confirm that you have granted this
       device to the requisitor.
     </p>
   </Modal>
