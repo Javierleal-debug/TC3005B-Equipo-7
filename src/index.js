@@ -1,20 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter,HashRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
 import './index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 import { GlobalTheme } from 'carbon-components-react'
+import { UserTypeProvider } from './global-context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   //<React.StrictMode>
-    <HashRouter>
-      <GlobalTheme>
+  <HashRouter>
+    <GlobalTheme>
+      <UserTypeProvider>
         <App />
-      </GlobalTheme>
-      </HashRouter>
+      </UserTypeProvider>
+    </GlobalTheme>
+  </HashRouter>
   //</React.StrictMode>
 )
 

@@ -12,10 +12,11 @@ import device from '../../mock_data/device.json'
 
 // Carbon Styling
 import { Grid, Column, Button, ButtonSet } from 'carbon-components-react'
-import { Edit, Play, Friendship, Undo } from '@carbon/icons-react'
+import { Edit, Exit, Friendship, Undo } from '@carbon/icons-react'
 import SkeletonStructure from './components/SkeletonStructure'
 import { useParams } from 'react-router-dom'
 import StatusStructuredTable from './components/StatusStructuredTable'
+import { useUserType } from '../../global-context'
 
 function checkAuth() {
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
@@ -43,6 +44,8 @@ const Details = () => {
 
   const enableEditMode = () => setOnEditMode(true)
   const disableEditMode = () => setOnEditMode(false)
+
+  const { userType } = useUserType()
 
   const { serialNumber } = useParams()
 
@@ -90,13 +93,10 @@ const Details = () => {
     // eslint-disable-next-line
   }, [])
 
-  return isDataLoading ? (
-    <SkeletonStructure />
-  ) : (
-    <>
-      <Grid className="page-content">
-        <Column sm={4} md={8} lg={4} className="actions-block">
-          <h1>{peripheralData.model}</h1>
+  const actionsBlock = () => {
+    switch (userType) {
+      case 'focal':
+        return (
           <ButtonSet stacked>
             {peripheralData.isAvailable ? (
               <Button
@@ -129,6 +129,40 @@ const Details = () => {
               Edit
             </Button>
           </ButtonSet>
+        )
+      case 'requisitor':
+        return (
+          <ButtonSet stacked>
+            <Button
+              renderIcon={Friendship}
+              disabled={!peripheralData.isAvailable}
+            >
+              Request
+            </Button>
+          </ButtonSet>
+        )
+      case 'security':
+        return (
+          <ButtonSet stacked>
+            <Button renderIcon={Exit} disabled={!peripheralData.isAvailable}>
+              Authorize exit
+            </Button>
+          </ButtonSet>
+        )
+      default:
+        break
+    }
+  }
+
+  return isDataLoading ? (
+    <SkeletonStructure />
+  ) : (
+    <>
+      <Grid className="page-content">
+        <Column sm={4} md={8} lg={4} className="actions-block">
+          <h1>{peripheralData.model}</h1>
+          {actionsBlock()}
+
           <div className="qr-code-area">
             <p>QR Code</p>
             <QRCode

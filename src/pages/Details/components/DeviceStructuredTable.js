@@ -8,8 +8,6 @@ import {
   StructuredListBody,
 } from 'carbon-components-react'
 
-import { CheckmarkFilled, Misuse } from '@carbon/icons-react'
-
 const DeviceStructuredTable = ({ device }) => {
   return (
     <StructuredListWrapper aria-label="Product details list">
