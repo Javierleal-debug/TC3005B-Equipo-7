@@ -35,25 +35,11 @@ import { useParams } from 'react-router-dom'
 import StatusStructuredTable from './components/StatusStructuredTable'
 import { useUserType } from '../../global-context'
 
-function checkAuth() {
-  var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-  fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-access-token': `${userInfo['accessToken']}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(json.accessToken)
-      if (json.access) {
-      } else {
-        window.location.hash = '/login'
-      }
-    })
-}
+import { checkAuth } from '../../util'
 
+/*
+  PopUps
+*/
 const RequestDevicePopUp = ({ open, setOpen, submit }) => (
   <Modal
     open={open}
@@ -106,7 +92,7 @@ const RequestDevicePopUp = ({ open, setOpen, submit }) => (
   </Modal>
 )
 
-const ResetDevicePopUp = ({ open, setOpen }) => (
+const ResetDevicePopUp = ({ open, setOpen, submit }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -115,6 +101,7 @@ const ResetDevicePopUp = ({ open, setOpen }) => (
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
   >
     <p>
       Resetting a device cancels any request, takes ownership away from any
@@ -130,7 +117,7 @@ const ResetDevicePopUp = ({ open, setOpen }) => (
       titleText="Area (leave blank to use corresponding default area)"
     />
     <TextArea
-      labelText="Comments"
+      labelText="Comments (optional)"
       helperText="Please add comments on why this device is being reset."
       cols={50}
       rows={4}
@@ -157,16 +144,74 @@ const LendDevicePopUp = ({ open, setOpen, submit }) => (
   </Modal>
 )
 
+const DeleteDevicePopUp = ({ open, setOpen, submit }) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Delete"
+    primaryButtonText="Delete"
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
+    danger
+  >
+    <p>
+      By clicking "Delete", you understand that this device will no longer be
+      visible to users.
+    </p>
+    <TextArea
+      labelText="Comments (optional)"
+      helperText="Please add comments on why this device is being deleted."
+      cols={50}
+      rows={4}
+      id="text-area-1"
+    />
+  </Modal>
+)
+
+const ReturnDevicePopUp = ({ open, setOpen, submit }) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Return"
+    primaryButtonText="Accept"
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
+  >
+    <p>
+      By clicking "Accept", you confirm that the user has returned the device to
+      its corresponding location in campus.
+    </p>
+    <p>After this action, the device will become available to other users.</p>
+    <TextArea
+      labelText="Comments (optional)"
+      helperText="Please add any related comments."
+      cols={50}
+      rows={4}
+      id="text-area-1"
+    />
+  </Modal>
+)
+
+/* 
+Page 
+*/
 const Details = () => {
-  const [onEditMode, setOnEditMode] = useState(false)
+  // States
+  // const [onEditMode, setOnEditMode] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
   const [peripheralData, setperipheralData] = useState(device)
   const [requestPopUpOpen, setRequestPopUpOpen] = useState(false)
   const [resetDevicePopUpOpen, setResetDevicePopUpOpen] = useState(false)
   const [lendDevicePopUpOpen, setLendDevicePopUpOpen] = useState(false)
+  const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
+  const [returnDevicePopUpOpen, setReturnDevicePopUpOpen] = useState(false)
 
   // const enableEditMode = () => setOnEditMode(true)
-  const disableEditMode = () => setOnEditMode(false)
+  // const disableEditMode = () => setOnEditMode(false)
 
   const { userType } = useUserType()
 
@@ -176,6 +221,7 @@ const Details = () => {
     checkAuth()
   }, [])
 
+  // API Calls
   const getItemRequest = () => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
     console.log(serialNumber)
@@ -229,11 +275,15 @@ const Details = () => {
 
   const postDeviceLoanRequest = () => {
     // Posts request to loan a device
-    // Changes to peripheral data:
+    // Checks that the following is true:
+    //    !isRequested
+    //    isAvailable
+    // Makes this changes to peripheral data:
     //    isRequested: true
     //    requestedBy: "Employee Name"
     //    isAvailable: false
     //    acceptedConditions: true
+    // Creates a record in the history table
 
     // mock functionality:
     setperipheralData({
@@ -250,12 +300,18 @@ const Details = () => {
 
   const postLoanConfirmation = () => {
     // Posts confirmation to loan a device after it was requested
-    // Changes to peripheral data:
+    // Checks that the following is true:
+    //    acceptedConditions
+    //    isRequested
+    //    isAvailable
+    // Makes this changes to peripheral data:
     //    isRequested: false
     //    requestedBy: ""
     //    isAvailable: false
     //    currentUser: user
+    // Creates a record in the history table
 
+    // Mock functionality:
     setperipheralData({
       ...peripheralData,
       isRequested: false,
@@ -266,11 +322,73 @@ const Details = () => {
     setLendDevicePopUpOpen(false)
   }
 
+  const postDeviceReset = () => {
+    // Resets device
+
+    // Makes this changes to peripheral data:
+    //    isRequested: false
+    //    requestedBy: ""
+    //    isAvailable: true
+    //    currentUser: none
+    //    area: default if blank or specified in dropdown
+    //    acceptedConditions: false
+    //    securityAuthorization: false
+
+    // Creates a record in the history table with the provided comments
+
+    // Mock functionality:
+    setperipheralData({
+      ...peripheralData,
+      isRequested: false,
+      requestedBy: '',
+      isAvailable: true,
+      acceptedConditions: false,
+    })
+
+    setResetDevicePopUpOpen(false)
+  }
+
+  const postDeleteDevice = () => {
+    // Makes device invisible
+    // Checks the following is true:
+    //    isAvailable
+    //    !isRequested
+    // Makes this changes to peripheral data:
+    //    isVisible: false
+
+    // Creates a record in the history table with the provided comments
+
+    setDeleteDevicePopUpOpen(false)
+  }
+
+  const postReturnDevice = () => {
+    // Returns device back to IBM
+
+    // Makes this changes to peripheral data:
+    //    isAvailable: true
+    //    currentUser: none
+    //    area: default area of manager who received
+    //    acceptedConditions: false
+    //    securityAuthorization: false
+
+    // Creates a record in the history table with the provided comments
+
+    // Mock functionality:
+    setperipheralData({
+      ...peripheralData,
+      isAvailable: true,
+      acceptedConditions: false,
+    })
+
+    setReturnDevicePopUpOpen(false)
+  }
+
   useEffect(() => {
     getItemRequest()
     // eslint-disable-next-line
   }, [])
 
+  // Buttons
   const actionsBlock = () => {
     switch (userType) {
       case 'focal':
@@ -287,13 +405,7 @@ const Details = () => {
               !peripheralData.isAvailable && (
                 <Button
                   renderIcon={Undo}
-                  disabled={onEditMode}
-                  onClick={() => {
-                    setperipheralData({
-                      ...peripheralData,
-                      isAvailable: true,
-                    })
-                  }}
+                  onClick={() => setReturnDevicePopUpOpen(true)}
                 >
                   Return
                 </Button>
@@ -311,7 +423,6 @@ const Details = () => {
 
             <Button
               renderIcon={Reset}
-              disabled={onEditMode}
               kind={'secondary'}
               onClick={() => {
                 setResetDevicePopUpOpen(true)
@@ -320,7 +431,11 @@ const Details = () => {
               Reset
             </Button>
 
-            <Button renderIcon={TrashCan} disabled={onEditMode} kind={'danger'}>
+            <Button
+              renderIcon={TrashCan}
+              kind={'danger'}
+              onClick={() => setDeleteDevicePopUpOpen(true)}
+            >
               Delete
             </Button>
           </ButtonSet>
@@ -348,6 +463,7 @@ const Details = () => {
     }
   }
 
+  // Main component
   return isDataLoading ? (
     <SkeletonStructure />
   ) : (
@@ -361,11 +477,22 @@ const Details = () => {
       <ResetDevicePopUp
         open={resetDevicePopUpOpen}
         setOpen={setResetDevicePopUpOpen}
+        submit={postDeviceReset}
       />
       <LendDevicePopUp
         open={lendDevicePopUpOpen}
         setOpen={setLendDevicePopUpOpen}
         submit={postLoanConfirmation}
+      />
+      <DeleteDevicePopUp
+        open={deleteDevicePopUpOpen}
+        setOpen={setDeleteDevicePopUpOpen}
+        submit={postDeleteDevice}
+      />
+      <ReturnDevicePopUp
+        open={returnDevicePopUpOpen}
+        setOpen={setReturnDevicePopUpOpen}
+        submit={postReturnDevice}
       />
 
       <Grid className="page-content">
@@ -417,7 +544,7 @@ const Details = () => {
               />
             )
           }
-          {onEditMode ? (
+          {/*onEditMode ? (
             <DeviceForm
               device={peripheralData}
               disableEditMode={disableEditMode}
@@ -427,7 +554,9 @@ const Details = () => {
               <DeviceStructuredTable device={peripheralData} />
               <StatusStructuredTable device={peripheralData} />
             </>
-          )}
+          )*/}
+          <DeviceStructuredTable device={peripheralData} />
+          <StatusStructuredTable device={peripheralData} />
         </Column>
       </Grid>
     </>
