@@ -160,6 +160,10 @@ const Devices = () => {
       return (
         <div><Tag renderIcon={FlagFilled} size='md' className='icon-warning'>{cell.value}</Tag></div>
       )
+    }else if(cell.value === "Invalid") {
+      return (
+        <div><Tag renderIcon={FlagFilled} size='md' className='icon-invalid'>{cell.value}</Tag></div>
+      )
     } else if(cell.value === "") {
       return (<div>No one</div>)
     } else {

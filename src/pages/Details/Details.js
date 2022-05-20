@@ -221,6 +221,16 @@ const Details = () => {
     checkAuth()
   }, [])
 
+  const getDeviceStatus = (conditions, inside, security) => {
+    if(conditions === 'false' && inside === 'true' && security === 'false'){
+      return "Available";
+    }else if(conditions === 'true' && inside === 'true' && security === 'false'){
+      return "Requested";
+    }else if(conditions === 'true' && inside === 'false' && security === 'true'){
+      return "Borrowed";
+    }else {return "Invalid";} 
+  }
+
   // API Calls
   const getItemRequest = () => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
