@@ -332,7 +332,7 @@ const Details = () => {
     getItemRequest(true)
   }
 
-  const postLoanConfirmation = () => {
+  const postLoanConfirmation = async () => {
     // Posts confirmation to loan a device after it was requested
     // Checks that the following is true:
     //    isRequested
@@ -345,13 +345,35 @@ const Details = () => {
     //    acceptedConditions: true
     // Creates a record in the history table
 
-    // Mock functionality:
-    setperipheralData({
-      ...peripheralData,
-      isRequested: false,
-      requestedBy: '',
-      isAvailable: false,
-    })
+    var myHeaders = new Headers()
+    myHeaders.append(
+      'x-access-token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
+    )
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+    var urlencoded = new URLSearchParams()
+    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      let response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/loan',
+        requestOptions
+      )
+      let responseJSON = await response.json()
+      console.log(responseJSON.message)
+    } catch (e) {
+      console.log(e)
+    }
+
+    getItemRequest()
 
     setLendDevicePopUpOpen(false)
   }
@@ -373,20 +395,40 @@ const Details = () => {
     /**
      * API Request Device
      */
+    var myHeaders = new Headers()
+    myHeaders.append(
+      'x-access-token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
+    )
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
-    // Mock functionality:
-    setperipheralData({
-      ...peripheralData,
-      isRequested: false,
-      requestedBy: '',
-      isAvailable: true,
-      acceptedConditions: false,
-    })
+    var urlencoded = new URLSearchParams()
+    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/reset',
+        requestOptions
+      )
+      const responseJSON = await response.json()
+      console.log(responseJSON.message)
+    } catch (e) {
+      console.log(e)
+    }
+
+    getItemRequest()
 
     setResetDevicePopUpOpen(false)
   }
 
-  const postDeleteDevice = () => {
+  const postDeleteDevice = async () => {
     // Makes device invisible
     // Checks the following is true:
     //    isAvailable
@@ -396,7 +438,37 @@ const Details = () => {
 
     // Creates a record in the history table with the provided comments
 
+    var myHeaders = new Headers()
+    myHeaders.append(
+      'x-access-token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
+    )
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+    var urlencoded = new URLSearchParams()
+    urlencoded.append('array', '1')
+    urlencoded.append('array', 'TYR27YJD0RNNMP72JPF6GTOUG51NEA1KG')
+
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
+        requestOptions
+      )
+      const responseJSON = await response.json()
+      console.log(responseJSON.message)
+    } catch (e) {
+      console.log(e)
+    }
+
     setDeleteDevicePopUpOpen(false)
+    window.location.hash = '/devices'
   }
 
   const postReturnDevice = () => {
