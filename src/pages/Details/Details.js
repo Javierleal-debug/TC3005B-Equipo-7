@@ -282,7 +282,6 @@ const Details = () => {
     //    isRequested: true
     //    requestedBy: "Employee Name"
     //    isAvailable: false
-    //    acceptedConditions: true
     // Creates a record in the history table
 
     // mock functionality:
@@ -301,7 +300,6 @@ const Details = () => {
   const postLoanConfirmation = () => {
     // Posts confirmation to loan a device after it was requested
     // Checks that the following is true:
-    //    acceptedConditions
     //    isRequested
     //    isAvailable
     // Makes this changes to peripheral data:
@@ -309,6 +307,7 @@ const Details = () => {
     //    requestedBy: ""
     //    isAvailable: false
     //    currentUser: user
+    //    acceptedConditions: true
     // Creates a record in the history table
 
     // Mock functionality:
