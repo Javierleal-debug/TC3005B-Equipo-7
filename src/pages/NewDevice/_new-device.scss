@@ -1,0 +1,11 @@
+@use '@carbon/layout';
+@use '@carbon/colors';
+
+h1 {
+  margin-top: layout.$spacing-04 * 2;
+}
+
+.edit-mode-button-set {
+  margin-top: 50px;
+  margin-left: 2000px;
+}
