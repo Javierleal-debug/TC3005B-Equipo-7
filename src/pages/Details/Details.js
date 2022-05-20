@@ -10,6 +10,8 @@ import axios from 'axios'
 // mock data
 import device from '../../mock_data/device.json'
 
+import { getDeviceStatus } from '../../util'
+
 // Carbon Styling
 import {
   Grid,
@@ -40,7 +42,7 @@ import { checkAuth } from '../../util'
 /*
   PopUps
 */
-const RequestDevicePopUp = ({ open, setOpen, submit }) => (
+const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalHeading="User agreement"
@@ -221,18 +223,8 @@ const Details = () => {
     checkAuth()
   }, [])
 
-  const getDeviceStatus = (conditions, inside, security) => {
-    if(conditions === 'false' && inside === 'true' && security === 'false'){
-      return "Available";
-    }else if(conditions === 'true' && inside === 'true' && security === 'false'){
-      return "Requested";
-    }else if(conditions === 'true' && inside === 'false' && security === 'true'){
-      return "Borrowed";
-    }else {return "Invalid";} 
-  }
-
   // API Calls
-  const getItemRequest = () => {
+  const getItemRequest = (markRequested = false) => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
     console.log(serialNumber)
     setIsDataLoading(true)
@@ -259,16 +251,15 @@ const Details = () => {
           isInside: data[5] === 'true' ? true : false,
           securityAuthorization: data[6] === 'true' ? true : false,
           // ----- TENTATIVO -----
-          isAvailable: true,
           currentUser: 'Fulano De Ibm',
           location: 'Area A',
           isRequested: false,
           requestedBy: 'Fulano De Ibm',
           // ----- NEW -----
           isAvailable:
-            data[4] === false && data[5] === true && data[6] === false
-              ? true
-              : false,
+            data[8] !== ''
+              ? false
+              : getDeviceStatus(data[4], data[5], data[6]) === 'Available',
           employeeName: data[7],
           employeeEmail: data[8],
           employeeSerial: data[9],
@@ -279,11 +270,13 @@ const Details = () => {
           comment: data[14],
         }
         setperipheralData(device)
+        markRequested &&
+          setperipheralData({ ...peripheralData, isRequested: true })
         setIsDataLoading(false)
       })
   }
 
-  const postDeviceLoanRequest = () => {
+  const postDeviceLoanRequest = async () => {
     // Posts request to loan a device
     // Checks that the following is true:
     //    !isRequested
@@ -294,17 +287,49 @@ const Details = () => {
     //    isAvailable: false
     // Creates a record in the history table
 
-    // mock functionality:
-    setperipheralData({
-      ...peripheralData,
-      isRequested: true,
-      requestedBy: 'Sample User',
-      isAvailable: false,
-      acceptedConditions: true,
-    })
+    /**
+     * API Request Device
+     */
+    setIsDataLoading(true)
 
-    // good
+    const myHeaders = new Headers()
+    myHeaders.append(
+      'x-access-token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDcyOTc0LCJleHAiOjE2NTMxNTkzNzR9.IrrtgbbzOhYehkFkUOFz-c7kP871tq5OsBrH09zkY2E'
+    )
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+    const urlencoded = new URLSearchParams()
+    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/request',
+        requestOptions
+      )
+      const responseJSON = await response.json()
+      console.log(responseJSON.message)
+    } catch (e) {
+      console.log(e)
+    }
+
+    /**
+     * Close PopUp
+     */
     setRequestPopUpOpen(false)
+    setIsDataLoading(false)
+
+    /**
+     * API Reload Device data
+     */
+    getItemRequest(true)
   }
 
   const postLoanConfirmation = () => {
@@ -331,7 +356,7 @@ const Details = () => {
     setLendDevicePopUpOpen(false)
   }
 
-  const postDeviceReset = () => {
+  const postDeviceReset = async () => {
     // Resets device
 
     // Makes this changes to peripheral data:
@@ -344,6 +369,10 @@ const Details = () => {
     //    securityAuthorization: false
 
     // Creates a record in the history table with the provided comments
+
+    /**
+     * API Request Device
+     */
 
     // Mock functionality:
     setperipheralData({
@@ -482,6 +511,7 @@ const Details = () => {
         open={requestPopUpOpen}
         setOpen={setRequestPopUpOpen}
         submit={postDeviceLoanRequest}
+        isDataLoading={isDataLoading}
       />
       <ResetDevicePopUp
         open={resetDevicePopUpOpen}
@@ -524,7 +554,7 @@ const Details = () => {
               iconDescription="describes the close button"
               subtitle={
                 <span>
-                  {peripheralData.requestedBy} has requested this device. Click
+                  {peripheralData.employeeName} has requested this device. Click
                   the "Lend" button to proceed.
                 </span>
               }

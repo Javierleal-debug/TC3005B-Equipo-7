@@ -16,3 +16,23 @@ export function checkAuth() {
       }
     })
 }
+
+export const getDeviceStatus = (conditions, inside, security) => {
+  if (conditions === 'false' && inside === 'true' && security === 'false') {
+    return 'Available'
+  } else if (
+    conditions === 'true' &&
+    inside === 'true' &&
+    security === 'false'
+  ) {
+    return 'Requested'
+  } else if (
+    conditions === 'true' &&
+    inside === 'false' &&
+    security === 'true'
+  ) {
+    return 'Borrowed'
+  } else {
+    return 'Invalid'
+  }
+}
