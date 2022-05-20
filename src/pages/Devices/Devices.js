@@ -6,6 +6,8 @@ import {
   Misuse,
   TrashCan,
   MobileAdd,
+  WarningFilled,
+  FlagFilled
 } from '@carbon/icons-react'
 import {
   Button,
@@ -27,6 +29,7 @@ import {
   TableSelectRow,
   Pagination,
   SkeletonText,
+  Tag
 } from 'carbon-components-react'
 
 import { checkAuth } from '../../util'
@@ -80,12 +83,12 @@ const Devices = () => {
             brand: data[i][1],
             model: data[i][2],
             serialNumber: data[i][3],
-            acceptedConditions: data[i][4] === 'true' ? true : false,
-            isInside: data[i][5] === 'true' ? true : false,
-            securityAuthorization: data[i][6] === 'true' ? true : false,
+            status: getDeviceStatus(data[i][4], data[i][5], data[i][6]),
+            currentUser: data[i][7],
           }
           devices[i] = newRow
         }
+        console.log(devices);
         loadRows()
       })
   }
@@ -134,23 +137,38 @@ const Devices = () => {
       })
   }
 
+  const getDeviceStatus = (conditions, inside, security) => {
+    if(conditions === 'false' && inside === 'true' && security === 'false'){
+      return "Available";
+    }else if(conditions === 'true' && inside === 'true' && security === 'false'){
+      return "Requested";
+    }else if(conditions === 'true' && inside === 'false' && security === 'true'){
+      return "Borrowed";
+    }else {return "Invalid";} 
+  }
+
   const createCellOfType = (cell, row) => {
-    if (cell.value === true) {
+    if (cell.value === "Available") {
       return (
-        <div>
-          <CheckmarkFilled className="icon-check" />
-        </div>
+        <div><Tag renderIcon={FlagFilled} size='md' className='icon-check'>{cell.value}</Tag></div>
       )
-    } else if (cell.value === false) {
+    } else if (cell.value === "Borrowed") {
       return (
-        <div>
-          <Misuse className="icon-fail" />
-        </div>
+        <div><Tag renderIcon={FlagFilled} size='md' className='icon-fail'>{cell.value}</Tag></div>
       )
+    } else if(cell.value === "Requested") {
+      return (
+        <div><Tag renderIcon={FlagFilled} size='md' className='icon-warning'>{cell.value}</Tag></div>
+      )
+    } else if(cell.value === "") {
+      return (<div>No one</div>)
     } else {
       if ('type' === cell.id.split(':')[1]) {
         var pathString = '#/devices/' + row.cells[3].value
         return <a href={pathString}>{cell.value}</a>
+      }
+      if ('currentUser' === cell.id.split(":")[1]) {
+        return (<div>{cell.value}</div>)
       }
       return cell.value
     }
@@ -216,10 +234,10 @@ const Devices = () => {
 
           <Table {...getTableProps()}>
             <TableHead>
-              <TableRow>
+              <TableRow className='table-row'>
                 <TableSelectAll {...getSelectionProps()} />
                 {headers.map((header) => (
-                  <TableHeader key={header.key} {...getHeaderProps({ header })}>
+                  <TableHeader className='header' key={header.key} {...getHeaderProps({ header })}>
                     <div className="table-header">{header.header}</div>
                   </TableHeader>
                 ))}

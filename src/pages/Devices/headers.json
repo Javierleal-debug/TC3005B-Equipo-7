@@ -16,15 +16,11 @@
     "header": "Serial"
   },
   {
-    "key": "acceptedConditions",
-    "header": "Accepted Conditions"
+    "key": "status",
+    "header": "Device Availability"
   },
   {
-    "key": "isInside",
-    "header": "Is Inside?"
-  },
-  {
-    "key": "securityAuthorization",
-    "header": "Security Authorization"
+    "key": "currentUser",
+    "header": "Who Has It?"
   }
 ]
