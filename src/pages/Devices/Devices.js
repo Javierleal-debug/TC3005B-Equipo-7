@@ -83,12 +83,11 @@ const Devices = () => {
             brand: data[i][1],
             model: data[i][2],
             serialNumber: data[i][3],
-            status: getDeviceStatus(data[i][4], data[i][5], data[i][6]),
-            currentUser: data[i][7],
+            status: `${getDeviceStatus(data[i][4], data[i][5], data[i][6], data[i][7])}`,
+            currentUser: `${data[i][7]===""? data[i][7]="No one":data[i][7]}`
           }
           devices[i] = newRow
         }
-        console.log(devices);
         loadRows()
       })
   }
@@ -137,12 +136,14 @@ const Devices = () => {
       })
   }
 
-  const getDeviceStatus = (conditions, inside, security) => {
-    if(conditions === 'false' && inside === 'true' && security === 'false'){
+  const getDeviceStatus = (conditions, inside, security, currentUser) => {
+    if(currentUser === "" && conditions === 'false' && inside === 'true' && security === 'false'){
       return "Available";
-    }else if(conditions === 'true' && inside === 'true' && security === 'false'){
+    }else if(currentUser !== "" && conditions === 'false' && inside === 'true' && security === 'false'){
       return "Requested";
-    }else if(conditions === 'true' && inside === 'false' && security === 'true'){
+    }else if(currentUser !== "" && conditions === 'true' && inside === 'true' && security === 'false'){
+      return "Requested";
+    }else if(currentUser !== "" && conditions === 'true' && inside === 'false' && security === 'true'){
       return "Borrowed";
     }else {return "Invalid";} 
   }
@@ -164,8 +165,6 @@ const Devices = () => {
       return (
         <div><Tag renderIcon={FlagFilled} size='md' className='icon-invalid'>{cell.value}</Tag></div>
       )
-    } else if(cell.value === "") {
-      return (<div>No one</div>)
     } else {
       if ('type' === cell.id.split(':')[1]) {
         var pathString = '#/devices/' + row.cells[3].value
