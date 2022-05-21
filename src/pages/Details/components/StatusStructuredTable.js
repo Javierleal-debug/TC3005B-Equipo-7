@@ -32,9 +32,7 @@ const StatusStructuredTable = ({ device }) => {
       <StructuredListBody>
         <StructuredListRow tabIndex={0}>
           <StructuredListCell>Availability</StructuredListCell>
-          <StructuredListCell>
-            {device.isAvailable ? 'Available' : 'Unavailable'}{' '}
-          </StructuredListCell>
+          <StructuredListCell>{device.availability}</StructuredListCell>
         </StructuredListRow>
         <StructuredListRow tabIndex={0}>
           <StructuredListCell>Employee Name</StructuredListCell>

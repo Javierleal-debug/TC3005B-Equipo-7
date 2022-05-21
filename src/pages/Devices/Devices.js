@@ -7,7 +7,7 @@ import {
   TrashCan,
   MobileAdd,
   WarningFilled,
-  FlagFilled
+  FlagFilled,
 } from '@carbon/icons-react'
 import {
   Button,
@@ -29,10 +29,10 @@ import {
   TableSelectRow,
   Pagination,
   SkeletonText,
-  Tag
+  Tag,
 } from 'carbon-components-react'
 
-import { checkAuth } from '../../util'
+import { checkAuth, getDeviceStatus } from '../../util'
 
 const devices = [{}]
 
@@ -83,8 +83,15 @@ const Devices = () => {
             brand: data[i][1],
             model: data[i][2],
             serialNumber: data[i][3],
-            status: `${getDeviceStatus(data[i][4], data[i][5], data[i][6], data[i][7])}`,
-            currentUser: `${data[i][7]===""? data[i][7]="No one":data[i][7]}`
+            status: `${getDeviceStatus(
+              data[i][4],
+              data[i][5],
+              data[i][6],
+              data[i][7]
+            )}`,
+            currentUser: `${
+              data[i][7] === '' ? (data[i][7] = 'No one') : data[i][7]
+            }`,
           }
           devices[i] = newRow
         }
@@ -136,42 +143,46 @@ const Devices = () => {
       })
   }
 
-  const getDeviceStatus = (conditions, inside, security, currentUser) => {
-    if(currentUser === "" && conditions === 'false' && inside === 'true' && security === 'false'){
-      return "Available";
-    }else if(currentUser !== "" && conditions === 'false' && inside === 'true' && security === 'false'){
-      return "Requested";
-    }else if(currentUser !== "" && conditions === 'true' && inside === 'true' && security === 'false'){
-      return "Requested";
-    }else if(currentUser !== "" && conditions === 'true' && inside === 'false' && security === 'true'){
-      return "Borrowed";
-    }else {return "Invalid";} 
-  }
-
   const createCellOfType = (cell, row) => {
-    if (cell.value === "Available") {
+    if (cell.value === 'Available') {
       return (
-        <div><Tag renderIcon={FlagFilled} size='md' className='icon-check'>{cell.value}</Tag></div>
+        <div>
+          <Tag renderIcon={FlagFilled} size="md" className="icon-check">
+            {cell.value}
+          </Tag>
+        </div>
       )
-    } else if (cell.value === "Borrowed") {
+    } else if (cell.value === 'Borrowed') {
       return (
-        <div><Tag renderIcon={FlagFilled} size='md' className='icon-fail'>{cell.value}</Tag></div>
+        <div>
+          <Tag renderIcon={FlagFilled} size="md" className="icon-fail">
+            {cell.value}
+          </Tag>
+        </div>
       )
-    } else if(cell.value === "Requested") {
+    } else if (cell.value === 'Requested') {
       return (
-        <div><Tag renderIcon={FlagFilled} size='md' className='icon-warning'>{cell.value}</Tag></div>
+        <div>
+          <Tag renderIcon={FlagFilled} size="md" className="icon-warning">
+            {cell.value}
+          </Tag>
+        </div>
       )
-    }else if(cell.value === "Invalid") {
+    } else if (cell.value === 'Invalid') {
       return (
-        <div><Tag renderIcon={FlagFilled} size='md' className='icon-invalid'>{cell.value}</Tag></div>
+        <div>
+          <Tag renderIcon={FlagFilled} size="md" className="icon-invalid">
+            {cell.value}
+          </Tag>
+        </div>
       )
     } else {
       if ('type' === cell.id.split(':')[1]) {
         var pathString = '#/devices/' + row.cells[3].value
         return <a href={pathString}>{cell.value}</a>
       }
-      if ('currentUser' === cell.id.split(":")[1]) {
-        return (<div>{cell.value}</div>)
+      if ('currentUser' === cell.id.split(':')[1]) {
+        return <div>{cell.value}</div>
       }
       return cell.value
     }
@@ -237,10 +248,14 @@ const Devices = () => {
 
           <Table {...getTableProps()}>
             <TableHead>
-              <TableRow className='table-row'>
+              <TableRow className="table-row">
                 <TableSelectAll {...getSelectionProps()} />
                 {headers.map((header) => (
-                  <TableHeader className='header' key={header.key} {...getHeaderProps({ header })}>
+                  <TableHeader
+                    className="header"
+                    key={header.key}
+                    {...getHeaderProps({ header })}
+                  >
                     <div className="table-header">{header.header}</div>
                   </TableHeader>
                 ))}

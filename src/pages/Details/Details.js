@@ -22,7 +22,7 @@ import {
   ComboBox,
   TextArea,
   InlineNotification,
-  ToastNotification,
+  InlineLoading,
 } from 'carbon-components-react'
 import {
   Edit,
@@ -47,7 +47,14 @@ const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     open={open}
     modalHeading="User agreement"
     modalLabel="Request a peripheral"
-    primaryButtonText="Agree and create request"
+    primaryButtonText={
+      isDataLoading ? (
+        <InlineLoading description="Loading..." />
+      ) : (
+        'Agree and create request'
+      )
+    }
+    primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     size="sm"
     onRequestClose={() => setOpen(false)}
@@ -94,12 +101,15 @@ const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const ResetDevicePopUp = ({ open, setOpen, submit }) => (
+const ResetDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
     modalHeading="Reset"
-    primaryButtonText="Confirm"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Confirm'
+    }
+    primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
@@ -128,12 +138,15 @@ const ResetDevicePopUp = ({ open, setOpen, submit }) => (
   </Modal>
 )
 
-const LendDevicePopUp = ({ open, setOpen, submit }) => (
+const LendDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
     modalHeading="Lend"
-    primaryButtonText="Accept"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Confirm'
+    }
+    primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
@@ -146,12 +159,15 @@ const LendDevicePopUp = ({ open, setOpen, submit }) => (
   </Modal>
 )
 
-const DeleteDevicePopUp = ({ open, setOpen, submit }) => (
+const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
     modalHeading="Delete"
-    primaryButtonText="Delete"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Delete'
+    }
+    primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
@@ -172,12 +188,15 @@ const DeleteDevicePopUp = ({ open, setOpen, submit }) => (
   </Modal>
 )
 
-const ReturnDevicePopUp = ({ open, setOpen, submit }) => (
+const ReturnDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
     modalHeading="Return"
-    primaryButtonText="Accept"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Accept'
+    }
+    primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
@@ -205,6 +224,7 @@ const Details = () => {
   // States
   // const [onEditMode, setOnEditMode] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
+  const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [peripheralData, setperipheralData] = useState(device)
   const [requestPopUpOpen, setRequestPopUpOpen] = useState(false)
   const [resetDevicePopUpOpen, setResetDevicePopUpOpen] = useState(false)
@@ -224,7 +244,7 @@ const Details = () => {
   }, [])
 
   // API Calls
-  const getItemRequest = (markRequested = false) => {
+  const getItemRequest = () => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
     console.log(serialNumber)
     setIsDataLoading(true)
@@ -242,7 +262,7 @@ const Details = () => {
       )
       .then(({ data }) => {
         console.log(data)
-        device = {
+        const device = {
           type: data[0],
           brand: data[1],
           model: data[2],
@@ -260,6 +280,7 @@ const Details = () => {
             data[8] !== ''
               ? false
               : getDeviceStatus(data[4], data[5], data[6]) === 'Available',
+          availability: getDeviceStatus(data[4], data[5], data[6], data[7]),
           employeeName: data[7],
           employeeEmail: data[8],
           employeeSerial: data[9],
@@ -270,8 +291,6 @@ const Details = () => {
           comment: data[14],
         }
         setperipheralData(device)
-        markRequested &&
-          setperipheralData({ ...peripheralData, isRequested: true })
         setIsDataLoading(false)
       })
   }
@@ -287,20 +306,19 @@ const Details = () => {
     //    isAvailable: false
     // Creates a record in the history table
 
+    setIsRequestLoading(true)
+
     /**
      * API Request Device
      */
-    setIsDataLoading(true)
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
     const myHeaders = new Headers()
-    myHeaders.append(
-      'x-access-token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDcyOTc0LCJleHAiOjE2NTMxNTkzNzR9.IrrtgbbzOhYehkFkUOFz-c7kP871tq5OsBrH09zkY2E'
-    )
+    myHeaders.append('x-access-token', userInfo['accessToken'])
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     const urlencoded = new URLSearchParams()
-    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+    urlencoded.append('serialNumber', peripheralData.serialNumber)
 
     const requestOptions = {
       method: 'POST',
@@ -320,16 +338,9 @@ const Details = () => {
       console.log(e)
     }
 
-    /**
-     * Close PopUp
-     */
     setRequestPopUpOpen(false)
-    setIsDataLoading(false)
-
-    /**
-     * API Reload Device data
-     */
-    getItemRequest(true)
+    setIsRequestLoading(false)
+    getItemRequest()
   }
 
   const postLoanConfirmation = async () => {
@@ -344,16 +355,16 @@ const Details = () => {
     //    currentUser: user
     //    acceptedConditions: true
     // Creates a record in the history table
+    setIsRequestLoading(true)
+
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
     var myHeaders = new Headers()
-    myHeaders.append(
-      'x-access-token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
-    )
+    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     var urlencoded = new URLSearchParams()
-    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+    urlencoded.append('serialNumber', peripheralData.serialNumber)
 
     var requestOptions = {
       method: 'POST',
@@ -373,9 +384,9 @@ const Details = () => {
       console.log(e)
     }
 
-    getItemRequest()
-
     setLendDevicePopUpOpen(false)
+    setIsRequestLoading(false)
+    getItemRequest()
   }
 
   const postDeviceReset = async () => {
@@ -392,18 +403,19 @@ const Details = () => {
 
     // Creates a record in the history table with the provided comments
 
+    setIsRequestLoading(true)
+
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+
     /**
      * API Request Device
      */
     var myHeaders = new Headers()
-    myHeaders.append(
-      'x-access-token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
-    )
+    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     var urlencoded = new URLSearchParams()
-    urlencoded.append('serialNumber', 'IQI37UES2HZWXS65DSF0XHOVB72SFQ8EV')
+    urlencoded.append('serialNumber', peripheralData.serialNumber)
 
     var requestOptions = {
       method: 'POST',
@@ -424,7 +436,7 @@ const Details = () => {
     }
 
     getItemRequest()
-
+    setIsRequestLoading(false)
     setResetDevicePopUpOpen(false)
   }
 
@@ -437,17 +449,15 @@ const Details = () => {
     //    isVisible: false
 
     // Creates a record in the history table with the provided comments
+    setIsRequestLoading(true)
+
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
     var myHeaders = new Headers()
-    myHeaders.append(
-      'x-access-token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTHVpcyBBcm1hbmRvIFNhbGF6YXIiLCJpZCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwic2VyaWFsIjoiVGVzdCIsImFyZWEiOiJUZXN0IiwibW5nck5hbWUiOiJMdWlzIEFybWFuZG8gU2FsYXphciIsIm1uZ3JFbWFpbCI6Imx1aXMtYXJtYW5kb3NsQGhvdG1haWwuY29tIiwidXNlclR5cGUiOiIxIiwiaWF0IjoxNjUzMDc1OTEyLCJleHAiOjE2NTMxNjIzMTJ9.yCxytbmX2AR2be7XmCBRuBRMl7WQtamybSOaHS-eKiw'
-    )
+    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     var urlencoded = new URLSearchParams()
-    urlencoded.append('array', '1')
-    urlencoded.append('array', 'TYR27YJD0RNNMP72JPF6GTOUG51NEA1KG')
 
     var requestOptions = {
       method: 'DELETE',
@@ -458,7 +468,7 @@ const Details = () => {
 
     try {
       const response = await fetch(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
+        `https://peripheralsloanbackend.mybluemix.net/peripheral/${peripheralData.serialNumber}`,
         requestOptions
       )
       const responseJSON = await response.json()
@@ -468,10 +478,11 @@ const Details = () => {
     }
 
     setDeleteDevicePopUpOpen(false)
+    setIsRequestLoading(false)
     window.location.hash = '/devices'
   }
 
-  const postReturnDevice = () => {
+  const postReturnDevice = async () => {
     // Returns device back to IBM
 
     // Makes this changes to peripheral data:
@@ -483,13 +494,36 @@ const Details = () => {
 
     // Creates a record in the history table with the provided comments
 
-    // Mock functionality:
-    setperipheralData({
-      ...peripheralData,
-      isAvailable: true,
-      acceptedConditions: false,
-    })
+    setIsRequestLoading(true)
 
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+
+    var myHeaders = new Headers()
+    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+    var urlencoded = new URLSearchParams()
+    urlencoded.append('serialNumber', peripheralData.serialNumber)
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/return',
+        requestOptions
+      )
+      const responseJSON = await response.json()
+      console.log(responseJSON.message)
+    } catch (e) {
+      console.log(e)
+    }
+
+    getItemRequest()
+    setIsRequestLoading(false)
     setReturnDevicePopUpOpen(false)
   }
 
@@ -504,7 +538,7 @@ const Details = () => {
       case 'focal':
         return (
           <ButtonSet stacked>
-            {peripheralData.isRequested ? (
+            {peripheralData.availability === 'Requested' ? (
               <Button
                 renderIcon={Friendship}
                 onClick={() => setLendDevicePopUpOpen(true)}
@@ -512,7 +546,7 @@ const Details = () => {
                 Lend
               </Button>
             ) : (
-              !peripheralData.isAvailable && (
+              peripheralData.availability === 'Borrowed' && (
                 <Button
                   renderIcon={Undo}
                   onClick={() => setReturnDevicePopUpOpen(true)}
@@ -540,14 +574,15 @@ const Details = () => {
             >
               Reset
             </Button>
-
-            <Button
-              renderIcon={TrashCan}
-              kind={'danger'}
-              onClick={() => setDeleteDevicePopUpOpen(true)}
-            >
-              Delete
-            </Button>
+            {peripheralData.availability === 'Available' && (
+              <Button
+                renderIcon={TrashCan}
+                kind={'danger'}
+                onClick={() => setDeleteDevicePopUpOpen(true)}
+              >
+                Delete
+              </Button>
+            )}
           </ButtonSet>
         )
       case 'requisitor':
@@ -555,7 +590,7 @@ const Details = () => {
           <ButtonSet stacked>
             <Button
               renderIcon={Friendship}
-              disabled={!peripheralData.isAvailable}
+              disabled={peripheralData.availability !== 'Available'}
               onClick={() => setRequestPopUpOpen(true)}
             >
               Request
@@ -565,7 +600,12 @@ const Details = () => {
       case 'security':
         return (
           <ButtonSet stacked>
-            <Button renderIcon={Exit}>Authorize exit</Button>
+            <Button
+              renderIcon={Exit}
+              disabled={peripheralData.availability !== 'Borrowed'}
+            >
+              Authorize exit
+            </Button>
           </ButtonSet>
         )
       default:
@@ -583,27 +623,31 @@ const Details = () => {
         open={requestPopUpOpen}
         setOpen={setRequestPopUpOpen}
         submit={postDeviceLoanRequest}
-        isDataLoading={isDataLoading}
+        isDataLoading={isRequestLoading}
       />
       <ResetDevicePopUp
         open={resetDevicePopUpOpen}
         setOpen={setResetDevicePopUpOpen}
         submit={postDeviceReset}
+        isDataLoading={isRequestLoading}
       />
       <LendDevicePopUp
         open={lendDevicePopUpOpen}
         setOpen={setLendDevicePopUpOpen}
         submit={postLoanConfirmation}
+        isDataLoading={isRequestLoading}
       />
       <DeleteDevicePopUp
         open={deleteDevicePopUpOpen}
         setOpen={setDeleteDevicePopUpOpen}
         submit={postDeleteDevice}
+        isDataLoading={isRequestLoading}
       />
       <ReturnDevicePopUp
         open={returnDevicePopUpOpen}
         setOpen={setReturnDevicePopUpOpen}
         submit={postReturnDevice}
+        isDataLoading={isRequestLoading}
       />
 
       <Grid className="page-content">

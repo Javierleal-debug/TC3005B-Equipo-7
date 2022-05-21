@@ -1,6 +1,5 @@
 export function checkAuth() {
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-  console.log('checkauth')
   fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
     method: 'GET',
     headers: {
@@ -17,21 +16,35 @@ export function checkAuth() {
     })
 }
 
-export const getDeviceStatus = (conditions, inside, security) => {
-  if (conditions === 'false' && inside === 'true' && security === 'false') {
+export const getDeviceStatus = (conditions, inside, security, currentUser) => {
+  if (
+    currentUser === '' &&
+    conditions === 'false' &&
+    inside === 'true' &&
+    security === 'false'
+  ) {
     return 'Available'
   } else if (
-    conditions === 'true' &&
+    currentUser !== '' &&
+    conditions === 'false' &&
     inside === 'true' &&
     security === 'false'
   ) {
     return 'Requested'
   } else if (
+    currentUser !== '' &&
+    conditions === 'true' &&
+    inside === 'true' &&
+    security === 'false'
+  ) {
+    return 'Borrowed'
+  } else if (
+    currentUser !== '' &&
     conditions === 'true' &&
     inside === 'false' &&
     security === 'true'
   ) {
-    return 'Borrowed'
+    return 'Outside'
   } else {
     return 'Invalid'
   }
