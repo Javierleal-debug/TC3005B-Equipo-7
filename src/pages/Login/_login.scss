@@ -18,3 +18,23 @@
   padding-bottom: $spacing-04;
   width: 300px;
 }
+
+body {
+  background-color: #f4f4f4;
+}
+
+form {
+  background-color: white;
+}
+
+.cds--btn-set {
+  justify-content: end;
+}
+
+.cds--btn-set button {
+  min-width: 50%;
+}
+
+.form-header {
+  padding: 20px;
+}
