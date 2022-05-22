@@ -44,7 +44,7 @@ export const getDeviceStatus = (conditions, inside, security, currentUser) => {
     inside === 'false' &&
     security === 'true'
   ) {
-    return 'Outside'
+    return 'Borrowed'
   } else {
     return 'Invalid'
   }
