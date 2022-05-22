@@ -61,49 +61,45 @@ const LandingPage = () => {
 
   return (
     <div className="login-background">
-      <Grid className="page-content">
-        <Column sm={4} md={8} lg={6} className="actions-block">
-          <h1>Peripheral Loans</h1>
-          <Form>
-            <div className="form-header">
-              <h2>Sign in</h2>
-              <p>Please sign in with your Peripheral Loans Credentials</p>
-            </div>
-            <TextInput
-              onChange={handleChangeEmail}
-              type="text"
-              id="email"
-              placeholder="Email here"
-              labelText="Email"
-              required
-            />
-            <TextInput.PasswordInput
-              onChange={handleChangePwd}
-              type="password"
-              id="pwd"
-              placeholder="Password here"
-              labelText="Password"
-              required
-            />
-            <ButtonSet className="login-btn-set">
-              <Button kind="ghost">Create an account</Button>
-              <Button
-                type="submit"
-                kind="primary"
-                onClick={signIn}
-                disabled={isRequestLoading}
-                size="xl"
-              >
-                {isRequestLoading ? (
-                  <InlineLoading description="Loading..." />
-                ) : (
-                  'Sign in'
-                )}
-              </Button>
-            </ButtonSet>
-          </Form>
-        </Column>
-      </Grid>
+      <h1>Peripheral Loans</h1>
+      <Form>
+        <div className="form-header">
+          <h2>Sign in</h2>
+          <p>Please sign in with your Peripheral Loans Credentials</p>
+        </div>
+        <TextInput
+          onChange={handleChangeEmail}
+          type="text"
+          id="email"
+          placeholder="Email here"
+          labelText="Email"
+          required
+        />
+        <TextInput.PasswordInput
+          onChange={handleChangePwd}
+          type="password"
+          id="pwd"
+          placeholder="Password here"
+          labelText="Password"
+          required
+        />
+        <ButtonSet className="login-btn-set">
+          <Button kind="ghost">Create an account</Button>
+          <Button
+            type="submit"
+            kind="primary"
+            onClick={signIn}
+            disabled={isRequestLoading}
+            size="xl"
+          >
+            {isRequestLoading ? (
+              <InlineLoading description="Loading..." />
+            ) : (
+              'Sign in'
+            )}
+          </Button>
+        </ButtonSet>
+      </Form>
     </div>
   )
 }

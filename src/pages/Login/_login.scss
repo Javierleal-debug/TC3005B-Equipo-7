@@ -21,10 +21,28 @@
 
 form {
   background-color: white;
+  max-width: 600px;
 }
 
 .login-background {
   background-color: #f4f4f4;
+  height: 100%;
+  padding: 60px;
+}
+
+@media screen and (max-width: 630px) {
+  .login-background {
+    padding: 12px;
+  }
+}
+
+main,
+#root {
+  height: 100%;
+}
+
+body {
+  height: 100vh;
 }
 
 .login-btn-set {
