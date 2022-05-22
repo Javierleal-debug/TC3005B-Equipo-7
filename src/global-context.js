@@ -4,25 +4,33 @@ import React, { useState, useContext } from 'react'
  * User type context
  */
 
-const UserTypeContext = React.createContext()
+/**
+ * Session data context
+ */
 
-function UserTypeProvider({ children }) {
-  const [userType, setUserType] = useState('focal')
+const SessionDataContext = React.createContext()
 
-  const value = { userType, setUserType }
+function SessionDataProvider({ children }) {
+  const [sessionData, setSessionData] = useState({
+    userType: 'focal',
+    accessToken: '',
+    loggedIn: false,
+  })
+
+  const value = { sessionData, setSessionData }
   return (
-    <UserTypeContext.Provider value={value}>
+    <SessionDataContext.Provider value={value}>
       {children}
-    </UserTypeContext.Provider>
+    </SessionDataContext.Provider>
   )
 }
 
-function useUserType() {
-  const context = useContext(UserTypeContext)
+function useSessionData() {
+  const context = useContext(SessionDataContext)
   if (context === undefined) {
-    throw new Error('useUserType must be used within a UserTypeProvider')
+    throw new Error('useSessionData must be used within a SessionDataProvider')
   }
   return context
 }
 
-export { UserTypeProvider, useUserType }
+export { SessionDataProvider, useSessionData }

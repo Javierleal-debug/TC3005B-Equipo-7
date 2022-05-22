@@ -8,20 +8,7 @@ import {
   StructuredListBody,
 } from 'carbon-components-react'
 
-import { CheckmarkFilled, Misuse } from '@carbon/icons-react'
-
-import { useUserType } from '../../../global-context'
-
-const statusIcon = (status) =>
-  status ? (
-    <CheckmarkFilled size={20} className="icon-check" />
-  ) : (
-    <Misuse size={20} className="icon-fail" />
-  )
-
 const StatusStructuredTable = ({ device }) => {
-  const { userType } = useUserType()
-
   return (
     <StructuredListWrapper aria-label="Product details list">
       <StructuredListHead>

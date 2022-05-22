@@ -12,6 +12,7 @@ import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
 
 import { checkAuth } from '../../util'
+import { useSessionData } from '../../global-context'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
@@ -47,9 +48,11 @@ const options = {
 }
 
 const Dashboard = () => {
+  const { sessionData, setSessionData } = useSessionData()
+
   useEffect(() => {
     try {
-      checkAuth()
+      checkAuth(sessionData, setSessionData)
     } catch (e) {
       window.location.hash = '/login'
     }

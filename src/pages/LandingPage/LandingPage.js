@@ -1,8 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Grid, Column } from 'carbon-components-react'
+import { useSessionData } from '../../global-context'
+
+import { checkAuth } from '../../util'
 
 const LandingPage = () => {
+  const { sessionData, setSessionData } = useSessionData()
+
+  useEffect(() => {
+    try {
+      checkAuth(sessionData, setSessionData)
+    } catch (e) {
+      window.location.hash = '/login'
+    }
+  }, [])
+
   return (
     <Grid className="home-banner">
       <Column sm={4} md={8} lg={16} className="page-title-block">

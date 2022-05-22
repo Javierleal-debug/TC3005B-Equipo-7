@@ -35,7 +35,7 @@ import {
 import SkeletonStructure from './components/SkeletonStructure'
 import { useParams } from 'react-router-dom'
 import StatusStructuredTable from './components/StatusStructuredTable'
-import { useUserType } from '../../global-context'
+import { useSessionData } from '../../global-context'
 
 import { checkAuth } from '../../util'
 
@@ -127,6 +127,7 @@ const ResetDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
       label="Select or type area (leave blank to use corresponding default area)"
       placeholder={device.location}
       titleText="Area (leave blank to use corresponding default area)"
+      onChange={() => {}}
     />
     <TextArea
       labelText="Comments (optional)"
@@ -235,12 +236,16 @@ const Details = () => {
   // const enableEditMode = () => setOnEditMode(true)
   // const disableEditMode = () => setOnEditMode(false)
 
-  const { userType } = useUserType()
-
   const { serialNumber } = useParams()
 
+  const { sessionData, setSessionData } = useSessionData()
+
   useEffect(() => {
-    checkAuth()
+    try {
+      checkAuth(sessionData, setSessionData)
+    } catch (e) {
+      window.location.hash = '/login'
+    }
   }, [])
 
   // API Calls
@@ -248,8 +253,8 @@ const Details = () => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
     console.log(serialNumber)
     setIsDataLoading(true)
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestRowData = {
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    const requestRowData = {
       headers: {
         'x-access-token': `${userInfo['accessToken']}`,
       },
@@ -359,14 +364,14 @@ const Details = () => {
 
     const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
-    var myHeaders = new Headers()
+    const myHeaders = new Headers()
     myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
-    var urlencoded = new URLSearchParams()
+    const urlencoded = new URLSearchParams()
     urlencoded.append('serialNumber', peripheralData.serialNumber)
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: urlencoded,
@@ -410,14 +415,14 @@ const Details = () => {
     /**
      * API Request Device
      */
-    var myHeaders = new Headers()
+    const myHeaders = new Headers()
     myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
-    var urlencoded = new URLSearchParams()
+    const urlencoded = new URLSearchParams()
     urlencoded.append('serialNumber', peripheralData.serialNumber)
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: urlencoded,
@@ -453,13 +458,13 @@ const Details = () => {
 
     const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
-    var myHeaders = new Headers()
-    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
+    const myHeaders = new Headers()
+    myHeaders.append('x-access-token', userInfo['accessToken'])
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
-    var urlencoded = new URLSearchParams()
+    const urlencoded = new URLSearchParams()
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'DELETE',
       headers: myHeaders,
       body: urlencoded,
@@ -498,13 +503,13 @@ const Details = () => {
 
     const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
 
-    var myHeaders = new Headers()
-    myHeaders.append('x-access-token', `${userInfo['accessToken']}`)
+    const myHeaders = new Headers()
+    myHeaders.append('x-access-token', userInfo['accessToken'])
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
-    var urlencoded = new URLSearchParams()
+    const urlencoded = new URLSearchParams()
     urlencoded.append('serialNumber', peripheralData.serialNumber)
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: urlencoded,
@@ -527,6 +532,39 @@ const Details = () => {
     setReturnDevicePopUpOpen(false)
   }
 
+  const postAuthorizeExit = async () => {
+    setIsRequestLoading(true)
+
+    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+
+    const myHeaders = new Headers()
+    myHeaders.append('x-access-token', userInfo['accessToken'])
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+    const urlencoded = new URLSearchParams()
+    urlencoded.append('serialNumber', peripheralData.serialNumber)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/securityAuthorize',
+        requestOptions
+      )
+      const responseJSON = await response.json()
+      window.alert(responseJSON.message)
+    } catch (e) {
+      window.alert(e)
+    }
+
+    setIsRequestLoading(false)
+  }
+
   useEffect(() => {
     getItemRequest()
     // eslint-disable-next-line
@@ -534,7 +572,7 @@ const Details = () => {
 
   // Buttons
   const actionsBlock = () => {
-    switch (userType) {
+    switch (sessionData.userType) {
       case 'focal':
         return (
           <ButtonSet stacked>
@@ -555,15 +593,6 @@ const Details = () => {
                 </Button>
               )
             )}
-
-            {/*<Button
-              renderIcon={Edit}
-              disabled={onEditMode}
-              kind={'secondary'}
-              onClick={enableEditMode}
-            >
-              Edit
-              </Button>*/}
 
             <Button
               renderIcon={Reset}
@@ -602,9 +631,18 @@ const Details = () => {
           <ButtonSet stacked>
             <Button
               renderIcon={Exit}
-              disabled={peripheralData.availability !== 'Borrowed'}
+              disabled={
+                peripheralData.availability !== 'Borrowed' ||
+                peripheralData.isInside === false ||
+                isRequestLoading
+              }
+              onClick={postAuthorizeExit}
             >
-              Authorize exit
+              {isRequestLoading ? (
+                <InlineLoading description="Loading..." />
+              ) : (
+                'Authorize exit'
+              )}
             </Button>
           </ButtonSet>
         )
@@ -664,7 +702,7 @@ const Details = () => {
           </div>
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
-          {peripheralData.isRequested && userType === 'focal' && (
+          {peripheralData.isRequested && sessionData.userType === 'focal' && (
             <InlineNotification
               kind="info"
               iconDescription="describes the close button"
@@ -682,34 +720,24 @@ const Details = () => {
           )}
           {
             /* Warning: also depends on authentication */
-            peripheralData.isRequested && userType === 'requisitor' && (
-              <InlineNotification
-                kind="success"
-                iconDescription="Close"
-                subtitle={
-                  <span>
-                    The device {peripheralData.serialNumber} has been assigned
-                    to you. Contact the corresponding focal to get the device.
-                  </span>
-                }
-                title="Request confirmed"
-                lowContrast
-                hideCloseButton
-                style={{ minWidth: '100%' }}
-              />
-            )
+            peripheralData.isRequested &&
+              sessionData.userType === 'requisitor' && (
+                <InlineNotification
+                  kind="success"
+                  iconDescription="Close"
+                  subtitle={
+                    <span>
+                      The device {peripheralData.serialNumber} has been assigned
+                      to you. Contact the corresponding focal to get the device.
+                    </span>
+                  }
+                  title="Request confirmed"
+                  lowContrast
+                  hideCloseButton
+                  style={{ minWidth: '100%' }}
+                />
+              )
           }
-          {/*onEditMode ? (
-            <DeviceForm
-              device={peripheralData}
-              disableEditMode={disableEditMode}
-            />
-          ) : (
-            <>
-              <DeviceStructuredTable device={peripheralData} />
-              <StatusStructuredTable device={peripheralData} />
-            </>
-          )*/}
           <DeviceStructuredTable device={peripheralData} />
           <StatusStructuredTable device={peripheralData} />
         </Column>

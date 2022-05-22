@@ -6,16 +6,16 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 import { GlobalTheme } from 'carbon-components-react'
-import { UserTypeProvider } from './global-context'
+import { SessionDataProvider, UserTypeProvider } from './global-context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   //<React.StrictMode>
   <HashRouter>
     <GlobalTheme>
-      <UserTypeProvider>
+      <SessionDataProvider>
         <App />
-      </UserTypeProvider>
+      </SessionDataProvider>
     </GlobalTheme>
   </HashRouter>
   //</React.StrictMode>

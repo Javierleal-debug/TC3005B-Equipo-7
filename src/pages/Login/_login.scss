@@ -1,4 +1,4 @@
-.loginTitle{
+.loginTitle {
   @include carbon--type-style('productive-heading-05');
   @include carbon--font-weight('semibold');
 
@@ -7,13 +7,12 @@
   padding-left: $layout-02;
 }
 
-.loginInstructions{
+.loginInstructions {
   @include carbon--type-style('productive-heading-03');
   padding-left: $layout-02;
-  
 }
 
-.textinput{
+.textinput {
   padding-left: $layout-02;
   padding-top: $spacing-04;
   padding-bottom: $spacing-04;

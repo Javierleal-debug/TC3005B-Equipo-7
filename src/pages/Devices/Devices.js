@@ -34,6 +34,8 @@ import {
 
 import { checkAuth, getDeviceStatus } from '../../util'
 
+import { useSessionData } from '../../global-context'
+
 const devices = [{}]
 
 const Devices = () => {
@@ -99,15 +101,17 @@ const Devices = () => {
       })
   }
 
+  const { sessionData, setSessionData } = useSessionData()
+
   useEffect(() => {
     try {
       JSON.parse(localStorage.getItem('UserInfo'))
-      checkAuth()
+      checkAuth(sessionData, setSessionData)
       getItemsRequest()
     } catch (e) {
       window.location.hash = '/login'
     }
-  }, []) //funcion que corre al cargar la pagina, despues de mostrar lo que está en el return
+  }, [])
 
   function handleChangeItemsPerPage(event) {
     itemsPerPage = event.pageSize

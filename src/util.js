@@ -1,4 +1,4 @@
-export function checkAuth() {
+export function checkAuth(sessionData, setSessionData) {
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
   fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
     method: 'GET',
@@ -10,8 +10,10 @@ export function checkAuth() {
     .then((response) => response.json())
     .then((json) => {
       if (json.access) {
+        setSessionData({ ...sessionData, loggedIn: true })
       } else {
         window.location.hash = '/login'
+        setSessionData({ ...sessionData, loggedIn: false })
       }
     })
 }
