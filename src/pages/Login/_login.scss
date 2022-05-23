@@ -21,13 +21,17 @@
 
 form {
   background-color: white;
-  max-width: 600px;
+  width: 550px;
+  max-width: 550px;
 }
 
 .login-background {
   background-color: #f4f4f4;
   height: 100%;
   padding: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 630px) {

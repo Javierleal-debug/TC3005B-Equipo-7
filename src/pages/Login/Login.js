@@ -61,7 +61,6 @@ const LandingPage = () => {
 
   return (
     <div className="login-background">
-      <h1>Peripheral Loans</h1>
       <Form>
         <div className="form-header">
           <h2>Sign in</h2>
