@@ -267,7 +267,7 @@ const Details = () => {
       )
       .then(({ data }) => {
         console.log(data)
-        const device = {
+        device = {
           type: data[0],
           brand: data[1],
           model: data[2],
@@ -702,25 +702,26 @@ const Details = () => {
           </div>
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
-          {peripheralData.isRequested && sessionData.userType === 'focal' && (
-            <InlineNotification
-              kind="info"
-              iconDescription="describes the close button"
-              subtitle={
-                <span>
-                  {peripheralData.employeeName} has requested this device. Click
-                  the "Lend" button to proceed.
-                </span>
-              }
-              title="New request"
-              lowContrast
-              hideCloseButton
-              style={{ minWidth: '100%' }}
-            />
-          )}
+          {peripheralData.availability === 'Requested' &&
+            sessionData.userType === 'focal' && (
+              <InlineNotification
+                kind="info"
+                iconDescription="describes the close button"
+                subtitle={
+                  <span>
+                    {peripheralData.employeeName} has requested this device.
+                    Click the "Lend" button to proceed.
+                  </span>
+                }
+                title="New request"
+                lowContrast
+                hideCloseButton
+                style={{ minWidth: '100%' }}
+              />
+            )}
           {
             /* Warning: also depends on authentication */
-            peripheralData.isRequested &&
+            peripheralData.availability === 'Requested' &&
               sessionData.userType === 'requisitor' && (
                 <InlineNotification
                   kind="success"
