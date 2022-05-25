@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FormLabel,
-  DatePicker,
-  DatePickerInput,
   Tile,
   AspectRatio,
   Grid,
@@ -10,22 +8,17 @@ import {
 } from 'carbon-components-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
+import axios from 'axios'
+
+import Moment from 'moment'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import { checkAuth } from '../../util'
 import { useSessionData } from '../../global-context'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
-const data = [
-  {
-    group: 'Out',
-    value: 2099,
-  },
-  {
-    group: 'In',
-    value: 428,
-  },
-]
 
 function getDate() {
   const date = new Date()
@@ -33,34 +26,111 @@ function getDate() {
   const month = date.getMonth() + 1
   const year = date.getFullYear()
 
-  return month + '/' + day + '/' + year
+  return year + '/' + month + '/' + day
 }
 
-const options = {
-  resizable: true,
-  donut: {
-    center: {
-      label: 'Total devices',
-    },
-    alignment: 'center',
-  },
-  height: '400px',
-}
+
+
+var date='';
 
 const Dashboard = () => {
+
+  var [outValue, setOutValue] = useState(0);
+  var [inValue, setInValue] = useState(0);
+
+  const data = [
+    {
+      group: 'Out',
+      value: outValue,
+    },
+    {
+      group: 'In',
+      value: inValue,
+    },
+  ]
+  var totalDevices = parseInt(outValue)+parseInt(inValue);
+  const options = {
+    resizable: true,
+    donut: {
+      center: {
+        label: 'Total devices',
+        number: totalDevices
+      },
+      alignment: 'center',
+    },
+    height: '400px',
+  }
+
+  const getInsideOutDate = () => {
+    setOutValue('');
+    setInValue('');
+    console.log('date : '+ date)
+    console.log(Moment(startDate).format('YYYY-MM-DD'));
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    if(date.length > 0){
+      var requestData = {
+        date: date,
+      }  
+    }else{
+      var requestData = {
+        date: Moment(startDate).format('YYYY-MM-DD'),
+      }
+    }
+    let requestHeaders = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    axios
+      .post(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/inOutDate',
+        requestData,
+        requestHeaders
+      )
+      .then(({ data }) => {
+        setInValue(data.valueIn);
+        setOutValue(data.valueOut);
+        console.log('value In: ' + data.valueIn + ', value out: ' + data.valueOut)
+      })
+  }
+
   const { sessionData, setSessionData } = useSessionData()
 
   useEffect(() => {
-    try {
+    
       checkAuth(sessionData, setSessionData)
-    } catch (e) {
-      window.location.hash = '/login'
-    }
+      getInsideOutDate()
+    
   }, [])
+
+  // Variable de tipo estado [Variable, función para cambiar el valor de Variable]
+  const [startDate, setStartDate] = useState(new Date())
+
+  const handleDate = (dateChange) => {
+    console.log(startDate)
+    setStartDate(dateChange)
+    date = Moment(dateChange).format('YYYY-MM-DD');
+    console.log('value:' + Moment(dateChange).format('YYYY-MM-DD'))
+    console.log('value S:' + Moment(startDate).format('YYYY-MM-DD'))
+    getInsideOutDate()
+  }
 
   return (
     <div>
-      <Tile className="titleDashboard">Dashboard</Tile>
+      <Tile className="titleDashboard">
+        Dashboard
+        <DatePicker
+          id="calendar"
+          selected={startDate}
+          onChange={handleDate}
+          maxDate={new Date(getDate())}
+          dateFormat="Y-MM-d"
+          showYearDropdown
+          scrollToYearDropdown
+          placeholderText="YYYY-MM-DD"
+        ></DatePicker>
+      </Tile>
       <Grid className="bodyDashboard">
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
@@ -68,18 +138,6 @@ const Dashboard = () => {
               <FormLabel className="titleDevices">
                 Devices Distribution
               </FormLabel>
-              <DatePicker
-                className="datepicker"
-                datePickerType="single"
-                maxDate={getDate()}
-              >
-                <DatePickerInput
-                  id="date-picker-single"
-                  size="sm"
-                  value={getDate()}
-                  placeholder="mm/dd/yyyy"
-                />
-              </DatePicker>
             </div>
             <AspectRatio ratio={'0.5x0.5'} className="chartDevices">
               <DonutChart data={data} options={options}></DonutChart>
@@ -90,22 +148,11 @@ const Dashboard = () => {
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
             <FormLabel className="titleDevices">Devices Out</FormLabel>
-            <DatePicker
-              className="datepicker"
-              datePickerType="single"
-              maxDate={getDate()}
-            >
-              <DatePickerInput
-                id="date-picker-single"
-                size="sm"
-                value={getDate()}
-                placeholder="mm/dd/yyyy"
-              />
-            </DatePicker>
+
             <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
               <Grid>
                 <Column sm={4} className="numberDevices">
-                  1
+                  {outValue}
                 </Column>
               </Grid>
             </AspectRatio>
@@ -114,25 +161,10 @@ const Dashboard = () => {
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
             <FormLabel className="titleDevices">Devices In</FormLabel>
-            <DatePicker
-              className="datepicker"
-              datePickerType="single"
-              maxDate={getDate()}
-            >
-              <DatePickerInput
-                id="date-picker-single"
-                size="sm"
-                value={getDate()}
-                placeholder="mm/dd/yyyy"
-              />
-            </DatePicker>
             <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
               <Grid>
                 <Column sm={4} className="numberDevices">
-                  0
-                </Column>
-                <Column sm={4} className="infoIn">
-                  No data
+                  {inValue}
                 </Column>
               </Grid>
             </AspectRatio>
@@ -142,5 +174,5 @@ const Dashboard = () => {
     </div>
   )
 }
-console.log(getDate())
+
 export default Dashboard
