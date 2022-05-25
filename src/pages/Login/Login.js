@@ -48,7 +48,7 @@ const Login = () => {
       })
       .catch((e) => {
         console.log(e)
-        alert('Wrong user or password')
+        alert(json.message)
       })
       .finally(() => {
         setIsRequestLoading(false)
