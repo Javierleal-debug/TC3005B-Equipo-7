@@ -15,6 +15,8 @@ function SessionDataProvider({ children }) {
     userType: 'focal',
     accessToken: '',
     loggedIn: false,
+    email: '',
+    name: 'Name Example',
   })
 
   const value = { sessionData, setSessionData }

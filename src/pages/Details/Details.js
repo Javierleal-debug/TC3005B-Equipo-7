@@ -275,11 +275,6 @@ const Details = () => {
           acceptedConditions: data[4] === 'true' ? true : false,
           isInside: data[5] === 'true' ? true : false,
           securityAuthorization: data[6] === 'true' ? true : false,
-          // ----- TENTATIVO -----
-          currentUser: 'Fulano De Ibm',
-          location: 'Area A',
-          isRequested: false,
-          requestedBy: 'Fulano De Ibm',
           // ----- NEW -----
           isAvailable:
             data[8] !== ''

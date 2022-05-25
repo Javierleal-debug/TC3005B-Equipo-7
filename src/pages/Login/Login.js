@@ -1,8 +1,6 @@
 import {
   Button,
-  Column,
   Form,
-  Grid,
   TextInput,
   InlineLoading,
   ButtonSet,
@@ -11,7 +9,7 @@ import React, { useState } from 'react'
 
 import { useSessionData } from '../../global-context'
 
-const LandingPage = () => {
+const Login = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const { sessionData, setSessionData } = useSessionData()
 
@@ -23,6 +21,11 @@ const LandingPage = () => {
   const signIn = () => {
     setIsRequestLoading(true)
     let signedIn = false
+    setSessionData({
+      ...sessionData,
+      email: state.email,
+      loggedIn: signedIn,
+    })
 
     fetch('https://peripheralsloanbackend.mybluemix.net/auth/login', {
       method: 'POST',
@@ -41,12 +44,13 @@ const LandingPage = () => {
           localStorage.setItem('UserInfo', JSON.stringify(json))
           signedIn = true
           window.location.hash = '/devices'
-        } else {
-          alert('Wrong user or password')
         }
       })
-      .then(() => {
-        setSessionData({ ...sessionData, loggedIn: signedIn })
+      .catch((e) => {
+        console.log(e)
+        alert('Wrong user or password')
+      })
+      .finally(() => {
         setIsRequestLoading(false)
       })
   }
@@ -103,4 +107,4 @@ const LandingPage = () => {
   )
 }
 
-export default LandingPage
+export default Login

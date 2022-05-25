@@ -22,6 +22,17 @@ import {
 import { Notification, User, Logout } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
 
+const AccountInfo = ({}) => {
+  const { sessionData } = useSessionData()
+  return (
+    <div className="account-data-area">
+      <h1>Account</h1>
+      <p>{sessionData.email}</p>
+      <p>Profile: {sessionData.userType}</p>
+    </div>
+  )
+}
+
 const TempUserTypeSwitch = ({ setUserMenuOn }) => {
   const { sessionData, setSessionData } = useSessionData()
 
@@ -31,33 +42,30 @@ const TempUserTypeSwitch = ({ setUserMenuOn }) => {
   }
 
   return (
-    <>
-      <h1 style={{ padding: '20px' }}>User type</h1>
-      <RadioButtonGroup
-        legendText="Switch user type"
-        name="radio-button-group"
-        defaultSelected={sessionData.userType}
-      >
-        <RadioButton
-          labelText="Focal"
-          value="focal"
-          id="focal"
-          onClick={handleChange}
-        />
-        <RadioButton
-          labelText="Requisitor"
-          value="requisitor"
-          id="requisitor"
-          onClick={handleChange}
-        />
-        <RadioButton
-          labelText="Security"
-          value="security"
-          id="security"
-          onClick={handleChange}
-        />
-      </RadioButtonGroup>
-    </>
+    <RadioButtonGroup
+      legendText="Switch user type"
+      name="radio-button-group"
+      defaultSelected={sessionData.userType}
+    >
+      <RadioButton
+        labelText="Focal"
+        value="focal"
+        id="focal"
+        onClick={handleChange}
+      />
+      <RadioButton
+        labelText="Requisitor"
+        value="requisitor"
+        id="requisitor"
+        onClick={handleChange}
+      />
+      <RadioButton
+        labelText="Security"
+        value="security"
+        id="security"
+        onClick={handleChange}
+      />
+    </RadioButtonGroup>
   )
 }
 
@@ -127,6 +135,7 @@ const TutorialHeader = () => {
                 </HeaderGlobalAction>
               </HeaderGlobalBar>
               <HeaderPanel aria-label="Header Panel" expanded={userMenuOn}>
+                <AccountInfo />
                 <TempUserTypeSwitch setUserMenuOn={setUserMenuOn} />
               </HeaderPanel>
             </>
