@@ -42,7 +42,7 @@ const LandingPage = () => {
           signedIn = true
           window.location.hash = '/devices'
         } else {
-          alert('Wrong user or password')
+          alert(json.message)
         }
       })
       .then(() => {
