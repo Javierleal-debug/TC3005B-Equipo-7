@@ -19,19 +19,6 @@ import { useSessionData } from '../../global-context'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
-let outValue = 0
-let inValue = 0
-
-const data = [
-  {
-    group: 'Out',
-    value: outValue,
-  },
-  {
-    group: 'In',
-    value: inValue,
-  },
-]
 
 function getDate() {
   const date = new Date()
@@ -42,45 +29,52 @@ function getDate() {
   return year + '/' + month + '/' + day
 }
 
-const options = {
-  resizable: true,
-  donut: {
-    center: {
-      label: 'Total devices',
-    },
-    alignment: 'center',
-  },
-  height: '400px',
-}
+
+
+var date='';
 
 const Dashboard = () => {
-  const getInsideDate = () => {
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      date: startDate,
-    }
-    let requestHeaders = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-        'Content-Type': 'application/json',
+
+  var [outValue, setOutValue] = useState(0);
+  var [inValue, setInValue] = useState(0);
+
+  const data = [
+    {
+      group: 'Out',
+      value: outValue,
+    },
+    {
+      group: 'In',
+      value: inValue,
+    },
+  ]
+  var totalDevices = parseInt(outValue)+parseInt(inValue);
+  const options = {
+    resizable: true,
+    donut: {
+      center: {
+        label: 'Total devices',
+        number: totalDevices
       },
-    }
-    axios
-      .get(
-        'http://localhost:3001/peripheral/insideDate',
-        requestData,
-        requestHeaders
-      )
-      .then(({ data }) => {
-        inValue = data.value
-        console.log('value In:' + data.value)
-      })
+      alignment: 'center',
+    },
+    height: '400px',
   }
 
-  const getOutDate = () => {
+  const getInsideOutDate = () => {
+    setOutValue('');
+    setInValue('');
+    console.log('date : '+ date)
+    console.log(Moment(startDate).format('YYYY-MM-DD'));
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      date: '2022-05-18',
+    if(date.length > 0){
+      var requestData = {
+        date: date,
+      }  
+    }else{
+      var requestData = {
+        date: Moment(startDate).format('YYYY-MM-DD'),
+      }
     }
     let requestHeaders = {
       headers: {
@@ -89,38 +83,37 @@ const Dashboard = () => {
       },
     }
     axios
-      .get(
-        'http://localhost:3001/peripheral/outsideDate',
+      .post(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/inOutDate',
         requestData,
         requestHeaders
       )
       .then(({ data }) => {
-        outValue = data.value
-        console.log('value Out:' + data)
+        setInValue(data.valueIn);
+        setOutValue(data.valueOut);
+        console.log('value In: ' + data.valueIn + ', value out: ' + data.valueOut)
       })
   }
 
   const { sessionData, setSessionData } = useSessionData()
 
   useEffect(() => {
-    try {
+    
       checkAuth(sessionData, setSessionData)
-      getOutDate()
-      getInsideDate()
-    } catch (e) {
-      window.location.hash = '/login'
-    }
+      getInsideOutDate()
+    
   }, [])
 
   // Variable de tipo estado [Variable, función para cambiar el valor de Variable]
   const [startDate, setStartDate] = useState(new Date())
 
-  const handleDate = (date) => {
-    setStartDate(date)
-    console.log('value:' + Moment(date).format('YYYY-MM-DD'))
+  const handleDate = (dateChange) => {
+    console.log(startDate)
+    setStartDate(dateChange)
+    date = Moment(dateChange).format('YYYY-MM-DD');
+    console.log('value:' + Moment(dateChange).format('YYYY-MM-DD'))
     console.log('value S:' + Moment(startDate).format('YYYY-MM-DD'))
-    getOutDate()
-    //getInsideDate()
+    getInsideOutDate()
   }
 
   return (
