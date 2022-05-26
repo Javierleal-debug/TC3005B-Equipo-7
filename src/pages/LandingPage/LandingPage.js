@@ -14,6 +14,7 @@ const LandingPage = () => {
     } catch (e) {
       window.location.hash = '/login'
     }
+    // eslint-disable-next-line
   }, [])
 
   return (

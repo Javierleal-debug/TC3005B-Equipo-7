@@ -1,14 +1,7 @@
 import axios from 'axios'
 import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
-import {
-  CheckmarkFilled,
-  Misuse,
-  TrashCan,
-  MobileAdd,
-  WarningFilled,
-  FlagFilled,
-} from '@carbon/icons-react'
+import { TrashCan, MobileAdd, FlagFilled } from '@carbon/icons-react'
 import {
   Button,
   DataTableSkeleton,
@@ -111,6 +104,7 @@ const Devices = () => {
     } catch (e) {
       window.location.hash = '/login'
     }
+    // eslint-disable-next-line
   }, [])
 
   function handleChangeItemsPerPage(event) {

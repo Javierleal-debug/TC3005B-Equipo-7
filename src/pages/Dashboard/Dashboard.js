@@ -19,7 +19,6 @@ import { useSessionData } from '../../global-context'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
-
 function getDate() {
   const date = new Date()
   const day = date.getDate()
@@ -29,14 +28,11 @@ function getDate() {
   return year + '/' + month + '/' + day
 }
 
-
-
-var date='';
+var date = ''
 
 const Dashboard = () => {
-
-  var [outValue, setOutValue] = useState(0);
-  var [inValue, setInValue] = useState(0);
+  var [outValue, setOutValue] = useState(0)
+  var [inValue, setInValue] = useState(0)
 
   const data = [
     {
@@ -48,13 +44,13 @@ const Dashboard = () => {
       value: inValue,
     },
   ]
-  var totalDevices = parseInt(outValue)+parseInt(inValue);
+  var totalDevices = parseInt(outValue) + parseInt(inValue)
   const options = {
     resizable: true,
     donut: {
       center: {
         label: 'Total devices',
-        number: totalDevices
+        number: totalDevices,
       },
       alignment: 'center',
     },
@@ -62,16 +58,16 @@ const Dashboard = () => {
   }
 
   const getInsideOutDate = () => {
-    setOutValue('');
-    setInValue('');
-    console.log('date : '+ date)
-    console.log(Moment(startDate).format('YYYY-MM-DD'));
+    setOutValue('')
+    setInValue('')
+    console.log('date : ' + date)
+    console.log(Moment(startDate).format('YYYY-MM-DD'))
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    if(date.length > 0){
+    if (date.length > 0) {
       var requestData = {
         date: date,
-      }  
-    }else{
+      }
+    } else {
       var requestData = {
         date: Moment(startDate).format('YYYY-MM-DD'),
       }
@@ -89,19 +85,20 @@ const Dashboard = () => {
         requestHeaders
       )
       .then(({ data }) => {
-        setInValue(data.valueIn);
-        setOutValue(data.valueOut);
-        console.log('value In: ' + data.valueIn + ', value out: ' + data.valueOut)
+        setInValue(data.valueIn)
+        setOutValue(data.valueOut)
+        console.log(
+          'value In: ' + data.valueIn + ', value out: ' + data.valueOut
+        )
       })
   }
 
   const { sessionData, setSessionData } = useSessionData()
 
   useEffect(() => {
-    
-      checkAuth(sessionData, setSessionData)
-      getInsideOutDate()
-    
+    checkAuth(sessionData, setSessionData)
+    getInsideOutDate()
+    // eslint-disable-next-line
   }, [])
 
   // Variable de tipo estado [Variable, función para cambiar el valor de Variable]
@@ -110,7 +107,7 @@ const Dashboard = () => {
   const handleDate = (dateChange) => {
     console.log(startDate)
     setStartDate(dateChange)
-    date = Moment(dateChange).format('YYYY-MM-DD');
+    date = Moment(dateChange).format('YYYY-MM-DD')
     console.log('value:' + Moment(dateChange).format('YYYY-MM-DD'))
     console.log('value S:' + Moment(startDate).format('YYYY-MM-DD'))
     getInsideOutDate()

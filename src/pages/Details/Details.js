@@ -3,7 +3,6 @@ import QRCode from 'react-qr-code'
 // import { useParams } from 'react-router-dom'
 
 import DeviceStructuredTable from './components/DeviceStructuredTable'
-import DeviceForm from './components/DeviceForm'
 
 import axios from 'axios'
 
@@ -24,14 +23,7 @@ import {
   InlineNotification,
   InlineLoading,
 } from 'carbon-components-react'
-import {
-  Edit,
-  Exit,
-  Friendship,
-  Undo,
-  Reset,
-  TrashCan,
-} from '@carbon/icons-react'
+import { Exit, Friendship, Undo, Reset, TrashCan } from '@carbon/icons-react'
 import SkeletonStructure from './components/SkeletonStructure'
 import { useParams } from 'react-router-dom'
 import StatusStructuredTable from './components/StatusStructuredTable'
@@ -246,6 +238,7 @@ const Details = () => {
     } catch (e) {
       window.location.hash = '/login'
     }
+    // eslint-disable-next-line
   }, [])
 
   // API Calls

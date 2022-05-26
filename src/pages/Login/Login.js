@@ -48,7 +48,6 @@ const Login = () => {
       })
       .catch((e) => {
         console.log(e)
-        alert(json.message)
       })
       .finally(() => {
         setIsRequestLoading(false)
