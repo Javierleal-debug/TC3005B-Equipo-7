@@ -22,7 +22,7 @@ import {
 import { Notification, User, Logout } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
 
-const AccountInfo = ({}) => {
+const AccountInfo = () => {
   const { sessionData } = useSessionData()
   return (
     <div className="account-data-area">
