@@ -51,3 +51,29 @@ export const getDeviceStatus = (conditions, inside, security, currentUser) => {
     return 'Invalid'
   }
 }
+
+export async function getUserType() {
+  const accessToken = JSON.parse(localStorage.getItem('UserInfo'))[
+    'accessToken'
+  ]
+
+  var myHeaders = new Headers()
+  myHeaders.append('x-access-token', accessToken)
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  }
+
+  try {
+    const res = await fetch(
+      'https://peripheralsloanbackend.mybluemix.net/auth/userType',
+      requestOptions
+    )
+    const resJSON = await res.json()
+    return resJSON.value
+  } catch (e) {
+    console.log(e)
+  }
+}
