@@ -188,7 +188,7 @@ const Devices = () => {
 
   return loadingData === true ? (
     <div className="loadingComponent">
-      <DataTableSkeleton columnCount={8} rowCount={10} />
+      <DataTableSkeleton columnCount={6} rowCount={10} />
       <SkeletonText heading={true} />
     </div>
   ) : (
