@@ -71,21 +71,22 @@ const Devices = () => {
         requestRowData
       )
       .then(({ data }) => {
+        console.log(data);
         for (var i = 0; i < data.length; i++) {
           var newRow = {
             id: (i + 1).toString(),
-            type: data[i][0],
-            brand: data[i][1],
-            model: data[i][2],
-            serialNumber: data[i][3],
+            type: data[i].type,
+            brand: data[i].brand,
+            model: data[i].model,
+            serialNumber: data[i].serialNumber,
             status: `${getDeviceStatus(
-              data[i][4],
-              data[i][5],
-              data[i][6],
-              data[i][7]
+              data[i].acceptedConditions,
+              data[i].isInside,
+              data[i].securityAuthorization,
+              data[i].employeeName
             )}`,
             currentUser: `${
-              data[i][7] === '' ? (data[i][7] = 'No one') : data[i][7]
+              data[i].employeeName === '' ? (data[i].employeeName = 'No one') : data[i].employeeName
             }`,
           }
           devices[i] = newRow
