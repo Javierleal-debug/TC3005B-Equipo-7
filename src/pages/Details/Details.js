@@ -620,8 +620,9 @@ const Details = () => {
             <Button
               renderIcon={Exit}
               disabled={
-                peripheralData.availability !== 'Borrowed' ||
+                peripheralData.availability !== 'Requested' ||
                 peripheralData.isInside === false ||
+                peripheralData.acceptedConditions === false ||
                 isRequestLoading
               }
               onClick={postAuthorizeExit}
