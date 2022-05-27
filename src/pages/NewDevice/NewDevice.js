@@ -119,81 +119,69 @@ const NewDevice = () => {
   return (
     <>
       <Grid className="page-content">
-        <Column sm={4} md={8} lg={8} className="table-block">
-          <h1>New Device</h1>
-          <Form>
-            <Stack>
-              <Dropdown
-                id="Type"
-                onChange={handleTypeChange}
-                label="Select Device Type"
-                titleText="Type"
-                items={items}
-              />
-              <TextInput
-                id="Brand"
-                onChange={handleBrandChange}
-                placeholder="Device Brand"
-                labelText="Brand"
-              />
-              <TextInput
-                id="Model"
-                onChange={handleModelChange}
-                placeholder="Model"
-                labelText="Model"
-              />
-              <TextInput
-                id="Serial"
-                onChange={handleSerialChange}
-                placeholder="Serial Number"
-                labelText="Serial"
-              />
-              <TextInput
-                id="EmployeeName"
-                onChange={handleEmployeeNameChange}
-                placeholder="Requisitor's Name"
-                labelText="Employee Name"
-              />
-            </Stack>
-          </Form>
+        <Column sm={4} md={8} lg={16}>
+          <h1 className="new-device-title">New Device</h1>
         </Column>
         <Column sm={4} md={8} lg={8}>
-          <Form>
-            <Stack>
-              <TextInput
-                id="EmployeeEmail"
-                onChange={handleEmployeeEmailChange}
-                placeholder="Requisitor's Email"
-                labelText="Employee Email"
-              />
-              <TextInput
-                id="EmployeeSerial"
-                onChange={handleEmployeeSerialChange}
-                placeholder="Requisitor's Serial Number"
-                labelText="Employee Serial"
-              />
-              <TextArea
-                id="Comment"
-                onChange={handleCommentChange}
-                placeholder="Optional Comment"
-                labelText="Comment"
-                rows={6}
-              />
-              <ButtonSet className="edit-mode-button-set">
-                <Button renderIcon={Misuse} kind="secondary" href="#/devices">
-                  Cancel
-                </Button>
-                <Button
-                  renderIcon={Save}
-                  kind="primary"
-                  type="button"
-                  onClick={createItemRequest}
+          <Stack>
+            <Dropdown
+              id="Type"
+              onChange={handleTypeChange}
+              label="Select Device Type"
+              titleText="Type"
+              items={items}
+            />
+            <TextInput
+              id="Brand"
+              onChange={handleBrandChange}
+              placeholder="Device Brand"
+              labelText="Brand"
+            />
+          </Stack>
+        </Column>
+        <Column sm={4} md={8} lg={8}>
+          <Stack>
+            <TextInput
+              id="Model"
+              onChange={handleModelChange}
+              placeholder="Model"
+              labelText="Model"
+            />
+            <TextInput
+              id="Serial"
+              onChange={handleSerialChange}
+              placeholder="Serial Number"
+              labelText="Serial"
+            />
+          </Stack>
+        </Column>
+        <Column sm={4} md={8} lg={16}>
+          <TextArea
+            id="Comment"
+            onChange={handleCommentChange}
+            placeholder="Optional Comment"
+            labelText="Comment"
+            rows={6}
+          />
+        </Column>
+        <Column sm={4} md={8} lg={16}>
+          <ButtonSet  className="new-device-button-set">
+              <Button 
+                renderIcon={Misuse} 
+                kind="secondary" 
+                href="#/devices"
                 >
-                  Save
-                </Button>
-              </ButtonSet>
-            </Stack>
-          </Form>
+                Cancel
+              </Button>
+              <Button
+                renderIcon={Save}
+                kind="primary"
+                type="button"
+                onClick={createItemRequest}
+              >
+                Save
+              </Button>
+            </ButtonSet>
         </Column>
       </Grid>
     </>

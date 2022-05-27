@@ -175,7 +175,7 @@ const MyLoans = () => {
         getTableProps,
         getTableContainerProps,
       }) => (
-        <TableContainer title="My Device List" {...getTableContainerProps()}>
+        <TableContainer title="My loan List" {...getTableContainerProps()}>
           <TableToolbar {...getToolbarProps()}>
             <TableToolbarContent>
               <TableToolbarSearch
