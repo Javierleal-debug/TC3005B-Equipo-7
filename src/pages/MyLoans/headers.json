@@ -1,0 +1,26 @@
+[
+  {
+    "key": "type",
+    "header": "Type"
+  },
+  {
+    "key": "brand",
+    "header": "Brand"
+  },
+  {
+    "key": "model",
+    "header": "Model"
+  },
+  {
+    "key": "serialNumber",
+    "header": "Serial"
+  },
+  {
+    "key": "loanStatus",
+    "header": "Loan Status"
+  },
+  {
+    "key": "date",
+    "header": "Date"
+  }
+]
