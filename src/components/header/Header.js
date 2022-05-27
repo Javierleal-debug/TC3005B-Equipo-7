@@ -112,6 +112,9 @@ const TutorialHeader = () => {
                 <HeaderMenuItem element={Link} to="/devices">
                   Devices
                 </HeaderMenuItem>
+                <HeaderMenuItem element={Link} to="/my-loans">
+                  My Loans
+                </HeaderMenuItem>
               </HeaderNavigation>
               <SideNav
                 aria-label="Side navigation"

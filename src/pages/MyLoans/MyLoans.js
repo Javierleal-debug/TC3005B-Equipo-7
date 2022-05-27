@@ -1,7 +1,7 @@
 import axios from 'axios'
 import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
-import { TrashCan, MobileAdd, FlagFilled } from '@carbon/icons-react'
+import { FlagFilled } from '@carbon/icons-react'
 import {
   Button,
   DataTableSkeleton,
@@ -31,7 +31,7 @@ import { useSessionData } from '../../global-context'
 
 const devices = [{}]
 
-const Devices = () => {
+const MyLoans = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchingData, setSearchingData] = useState(false)
 
@@ -79,13 +79,13 @@ const Devices = () => {
             brand: data[i].brand,
             model: data[i].model,
             serialNumber: data[i].serialNumber,
-            status: `${getDeviceStatus(
+            loanStatus: `${getDeviceStatus(
               data[i].acceptedConditions,
               data[i].isInside,
               data[i].securityAuthorization,
               data[i].employeeName
             )}`,
-            currentUser: `${
+            date: `${
               data[i].employeeName === '' ? (data[i].employeeName = 'No one') : data[i].employeeName
             }`,
           }
@@ -201,29 +201,15 @@ const Devices = () => {
         rows,
         headers,
         getHeaderProps,
-        getSelectionProps,
         getToolbarProps,
-        getBatchActionProps,
         getRowProps,
         onInputChange,
         selectedRows,
         getTableProps,
         getTableContainerProps,
       }) => (
-        <TableContainer title="Device List" {...getTableContainerProps()}>
+        <TableContainer title="My Device List" {...getTableContainerProps()}>
           <TableToolbar {...getToolbarProps()}>
-            <TableBatchActions {...getBatchActionProps()}>
-              <TableBatchAction
-                renderIcon={TrashCan}
-                iconDescription="Delete the selected rows"
-                onClick={() => {
-                  batchActionClick(selectedRows)
-                }}
-              >
-                Delete
-              </TableBatchAction>
-            </TableBatchActions>
-
             <TableToolbarContent>
               <TableToolbarSearch
                 onChange={(event) => {
@@ -239,16 +225,12 @@ const Devices = () => {
                   onInputChange(event)
                 }}
               />
-              <Button href="#/devices/new-device" renderIcon={MobileAdd}>
-                New Device
-              </Button>
             </TableToolbarContent>
           </TableToolbar>
 
           <Table {...getTableProps()}>
             <TableHead>
               <TableRow className="table-row">
-                <TableSelectAll {...getSelectionProps()} />
                 {headers.map((header) => (
                   <TableHeader
                     className="header"
@@ -265,9 +247,8 @@ const Devices = () => {
               {rows.map((row) => (
                 <React.Fragment key={row.id}>
                   <TableRow {...getRowProps({ row })} className="table-row">
-                    <TableSelectRow {...getSelectionProps({ row })} />
                     {row.cells.map((cell) => (
-                      <TableCell key={cell.id} className="cell">
+                      <TableCell key={cell.id} className="cell2">
                         {createCellOfType(cell, row)}
                       </TableCell>
                     ))}
@@ -297,4 +278,4 @@ const Devices = () => {
   )
 }
 
-export default Devices
+export default MyLoans
