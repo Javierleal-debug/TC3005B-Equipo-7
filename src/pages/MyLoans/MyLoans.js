@@ -3,7 +3,6 @@ import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
 import { FlagFilled } from '@carbon/icons-react'
 import {
-  Button,
   DataTableSkeleton,
   DataTable,
   Table,
@@ -16,10 +15,6 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  TableBatchActions,
-  TableBatchAction,
-  TableSelectAll,
-  TableSelectRow,
   Pagination,
   SkeletonText,
   Tag,
@@ -46,8 +41,6 @@ const MyLoans = () => {
     firstItemIndex = itemsPerPage * (pageNumber - 1),
     lastItemIndex = itemsPerPage * pageNumber
   ) => {
-    /*let firstItemIndex = (itemsPerPage)*(pageNumber-1);
-    let lastItemIndex = itemsPerPage*pageNumber;*/
     if (lastItemIndex > devices.length) {
       lastItemIndex = devices.length
     }
@@ -68,6 +61,7 @@ const MyLoans = () => {
     axios
       .post(
         'https://peripheralsloanbackend.mybluemix.net/peripheral/byEmail',
+        {},
         requestRowData
       )
       .then(({ data }) => {
@@ -111,33 +105,6 @@ const MyLoans = () => {
     pageNumber = event.page
     setPageConfig([itemsPerPage, pageNumber])
     loadRows()
-  }
-
-  const batchActionClick = (selectedRows) => {
-    let serialNumbers = []
-    selectedRows.forEach((i) => {
-      let serialNumber = i.cells[3].value
-      serialNumbers.push(serialNumber)
-    })
-    console.log(serialNumbers)
-
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-      },
-      data: {
-        array: serialNumbers,
-      },
-    }
-    axios
-      .delete(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
-        requestData
-      )
-      .then(({ data }) => {
-        window.location.reload()
-      })
   }
 
   const createCellOfType = (cell, row) => {
@@ -246,7 +213,7 @@ const MyLoans = () => {
                 <React.Fragment key={row.id}>
                   <TableRow {...getRowProps({ row })} className="table-row">
                     {row.cells.map((cell) => (
-                      <TableCell key={cell.id} className="cell2">
+                      <TableCell key={cell.id} className="my-loans-cell">
                         {createCellOfType(cell, row)}
                       </TableCell>
                     ))}
