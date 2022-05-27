@@ -66,8 +66,8 @@ const MyLoans = () => {
     }
 
     axios
-      .get(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
+      .post(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/byEmail',
         requestRowData
       )
       .then(({ data }) => {
@@ -85,9 +85,7 @@ const MyLoans = () => {
               data[i].securityAuthorization,
               data[i].employeeName
             )}`,
-            date: `${
-              data[i].employeeName === '' ? (data[i].employeeName = 'No one') : data[i].employeeName
-            }`,
+            date: data[i].date,
           }
           devices[i] = newRow
         }
