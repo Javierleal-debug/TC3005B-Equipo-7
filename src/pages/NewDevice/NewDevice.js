@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import axios from 'axios'
 
@@ -13,6 +13,9 @@ import {
   TextInput,
   TextArea,
   Dropdown,
+  Modal,
+  InlineLoading,
+  ToastNotification
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
 
@@ -46,9 +49,41 @@ const items = [
   'Others',
 ]
 
+const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading}) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Create"
+    primaryButtonDisabled={isDataLoading}
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Create'
+    }
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
+    danger={false}
+  >
+    <p>
+      By clicking "Create", you understand that this device will be
+      visible to users.
+    </p>
+    <TextArea
+      labelText="Comments (optional)"
+      helperText="Please add comments on why this device is being created."
+      cols={50}
+      rows={4}
+      id="text-area-1"
+    />
+  </Modal>
+)
+
 const deviceData = {}
 
 const NewDevice = () => {
+  const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
+  const [isRequestLoading, setIsRequestLoading] = useState(false)
+
   const handleTypeChange = (event) => {
     deviceData.type = event.selectedItem
   }
@@ -65,23 +100,12 @@ const NewDevice = () => {
     deviceData.serial = event.target.value
   }
 
-  const handleEmployeeNameChange = (event) => {
-    deviceData.employeeName = event.target.value
-  }
-
-  const handleEmployeeEmailChange = (event) => {
-    deviceData.employeeEmail = event.target.value
-  }
-
-  const handleEmployeeSerialChange = (event) => {
-    deviceData.employeeSerial = event.target.value
-  }
-
   const handleCommentChange = (event) => {
     deviceData.comment = event.target.value
   }
 
-  const createItemRequest = () => {
+  const postCreateDevices = () => {
+    setIsRequestLoading(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     let requestData = {
       type: deviceData.type,
@@ -107,17 +131,28 @@ const NewDevice = () => {
         'https://peripheralsloanbackend.mybluemix.net/peripheral',
         requestData,
         requestHeaders
-      )
-      .then(({ data }) => {
+      ).then(({ data }) => {
+        setCreateDevicePopUpOpen(false)
+        setIsRequestLoading(false)
+        console.log(data.message)
         window.location.hash = '/devices'
-      })
-      .catch((error) => {
+        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+      }).catch((error) => {
+        setCreateDevicePopUpOpen(false)
+        setIsRequestLoading(false)
         console.error(`There was an error!`, error)
+        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
       })
   }
 
   return (
     <>
+      <CreateDevicePopUp
+        open={createDevicePopUpOpen}
+        setOpen={setCreateDevicePopUpOpen}
+        submit={postCreateDevices}
+        isDataLoading={isRequestLoading} 
+      />
       <Grid className="page-content">
         <Column sm={4} md={8} lg={16}>
           <h1 className="new-device-title">New Device</h1>
@@ -177,7 +212,7 @@ const NewDevice = () => {
                 renderIcon={Save}
                 kind="primary"
                 type="button"
-                onClick={createItemRequest}
+                onClick={()=>{setCreateDevicePopUpOpen(true)}}
               >
                 Save
               </Button>
