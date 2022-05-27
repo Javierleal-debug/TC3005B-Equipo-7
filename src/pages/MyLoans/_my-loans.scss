@@ -7,6 +7,10 @@
   font-weight: bold;
 }
 
+.my-loans-cell div, .my-loans-cell:nth-of-type(6), .table-headerloanStatus, .table-headerdate {
+  text-align: center;
+}
+
 a {
   text-decoration: none;
 }

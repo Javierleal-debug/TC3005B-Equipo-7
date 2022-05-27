@@ -163,7 +163,6 @@ const MyLoans = () => {
     <DataTable
       rows={rows}
       headers={headers}
-      isSortable
       render={({
         rows,
         headers,
@@ -171,7 +170,6 @@ const MyLoans = () => {
         getToolbarProps,
         getRowProps,
         onInputChange,
-        selectedRows,
         getTableProps,
         getTableContainerProps,
       }) => (
@@ -204,7 +202,7 @@ const MyLoans = () => {
                     key={header.key}
                     {...getHeaderProps({ header })}
                   >
-                    <div className="table-header">{header.header}</div>
+                    <div className={"table-header"+header.key}>{header.header}</div>
                   </TableHeader>
                 ))}
               </TableRow>
