@@ -12,7 +12,7 @@ const SessionDataContext = React.createContext()
 
 function SessionDataProvider({ children }) {
   const [sessionData, setSessionData] = useState({
-    userType: 'focal',
+    userType: '',
     accessToken: '',
     loggedIn: false,
     email: '',

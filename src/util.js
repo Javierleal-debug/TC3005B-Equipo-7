@@ -52,11 +52,7 @@ export const getDeviceStatus = (conditions, inside, security, currentUser) => {
   }
 }
 
-export async function getUserType() {
-  const accessToken = JSON.parse(localStorage.getItem('UserInfo'))[
-    'accessToken'
-  ]
-
+export async function getUserType(accessToken) {
   var myHeaders = new Headers()
   myHeaders.append('x-access-token', accessToken)
 
@@ -72,7 +68,19 @@ export async function getUserType() {
       requestOptions
     )
     const resJSON = await res.json()
-    return resJSON.value
+
+    switch (resJSON.value) {
+      case '0':
+        return 'admin'
+      case '1':
+        return 'focal'
+      case '2':
+        return 'security'
+      case '3':
+        return 'requisitor'
+      default:
+        break
+    }
   } catch (e) {
     console.log(e)
   }

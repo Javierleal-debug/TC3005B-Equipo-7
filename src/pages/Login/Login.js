@@ -5,61 +5,67 @@ import {
   InlineLoading,
   ButtonSet,
 } from 'carbon-components-react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { useSessionData } from '../../global-context'
+import { getUserType } from '../../util'
 
 const Login = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const { sessionData, setSessionData } = useSessionData()
 
-  const state = {
+  const [input, setInput] = useState({
     email: '',
     pwd: '',
-  }
+  })
 
-  const signIn = () => {
+  useEffect(() => {
+    if (sessionData.loggedIn) window.location.hash = '/devices'
+    // eslint-disable-next-line
+  }, [sessionData])
+
+  const signIn = async () => {
     setIsRequestLoading(true)
-    let signedIn = false
-    setSessionData({
-      ...sessionData,
-      email: state.email,
-      loggedIn: signedIn,
-    })
 
-    fetch('https://peripheralsloanbackend.mybluemix.net/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: state.email,
-        pwd: state.pwd,
-      }),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json.accessToken)
-        if (json.accessToken) {
-          localStorage.setItem('UserInfo', JSON.stringify(json))
-          signedIn = true
-          window.location.hash = '/devices'
+    try {
+      const res = await fetch(
+        'https://peripheralsloanbackend.mybluemix.net/auth/login',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            email: input.email,
+            pwd: input.pwd,
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
         }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-      .finally(() => {
-        setIsRequestLoading(false)
-      })
+      )
+      const json = await res.json()
+      const userType = await getUserType(json.accessToken)
+      if (json.accessToken && userType) {
+        localStorage.setItem('UserInfo', JSON.stringify(json))
+        setSessionData({
+          ...sessionData,
+          loggedIn: true,
+          email: input.email,
+          userType: userType,
+        })
+      }
+      setIsRequestLoading(false)
+    } catch (e) {
+      console.log(e)
+      alert(e.message)
+    } finally {
+    }
   }
 
   function handleChangeEmail(event) {
-    state.email = event.target.value
+    setInput({ ...input, email: event.target.value })
   }
 
   function handleChangePwd(event) {
-    state.pwd = event.target.value
+    setInput({ ...input, pwd: event.target.value })
   }
 
   return (

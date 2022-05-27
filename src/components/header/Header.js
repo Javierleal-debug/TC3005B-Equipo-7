@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -74,10 +74,19 @@ const TutorialHeader = () => {
 
   const { sessionData, setSessionData } = useSessionData()
 
+  useEffect(() => {
+    if (!sessionData.loggedIn) window.location.hash = '/login'
+  }, [sessionData])
+
   const LogOut = () => {
     localStorage.removeItem('UserInfo')
-    window.location.hash = '/login'
-    setSessionData({ ...sessionData, loggedIn: false })
+    setSessionData({
+      userType: '',
+      accessToken: '',
+      loggedIn: false,
+      email: '',
+      name: 'Name Example',
+    })
   }
 
   return (
