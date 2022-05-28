@@ -1,11 +1,12 @@
 @use '@carbon/layout';
 @use '@carbon/colors';
 
-h1 {
-  margin-top: layout.$spacing-04 * 2;
+.new-device-title {
+  justify-content: flex-start;
+  padding: 0px 20px;
 }
 
-.edit-mode-button-set {
-  margin-top: 50px;
-  margin-left: 2000px;
+.new-device-button-set {
+  justify-content: flex-end;
+  padding: 20px;
 }

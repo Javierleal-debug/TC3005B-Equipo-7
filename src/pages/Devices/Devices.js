@@ -23,17 +23,53 @@ import {
   Pagination,
   SkeletonText,
   Tag,
+  Modal,
+  TextArea,
+  InlineLoading,
+  ToastNotification
 } from 'carbon-components-react'
 
 import { checkAuth, getDeviceStatus } from '../../util'
 
 import { useSessionData } from '../../global-context'
 
+const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading}) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Delete"
+    primaryButtonDisabled={isDataLoading}
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Delete'
+    }
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={submit}
+    danger
+  >
+    <p>
+      By clicking "Delete", you understand that this device(s) will no longer be
+      visible to users.
+    </p>
+    <TextArea
+      labelText="Comments (optional)"
+      helperText="Please add comments on why this device(s) is being deleted."
+      cols={50}
+      rows={4}
+      id="text-area-1"
+    />
+  </Modal>
+)
+
 const devices = [{}]
 
 const Devices = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchingData, setSearchingData] = useState(false)
+  const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
+  const [isRequestLoading, setIsRequestLoading] = useState(false)
+  const [serialNumbersToDelete, setSerialNumbersToDelete] = useState([])
 
   const [rows, setRows] = useState(null)
   const headers = tableHeaders
@@ -41,6 +77,34 @@ const Devices = () => {
   let itemsPerPage = 10
   let pageNumber = 1
   const [pageConfig, setPageConfig] = useState([itemsPerPage, pageNumber])
+
+  const postDeleteDevices = async () => {
+    setIsRequestLoading(true)
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    var requestData = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+      },
+      data: {
+        array: serialNumbersToDelete,
+      },
+    }
+      axios
+      .delete(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
+        requestData
+      )
+      .then(({ data }) => {
+        console.log(data.message)
+        setDeleteDevicePopUpOpen(false)
+        setIsRequestLoading(false)
+        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+      }).catch(function (error) {
+        setDeleteDevicePopUpOpen(false)
+        setIsRequestLoading(false)
+        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+      })
+  }
 
   const loadRows = (
     firstItemIndex = itemsPerPage * (pageNumber - 1),
@@ -121,25 +185,9 @@ const Devices = () => {
       let serialNumber = i.cells[3].value
       serialNumbers.push(serialNumber)
     })
-    console.log(serialNumbers)
+    setSerialNumbersToDelete(serialNumbers)
 
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-      },
-      data: {
-        array: serialNumbers,
-      },
-    }
-    axios
-      .delete(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
-        requestData
-      )
-      .then(({ data }) => {
-        window.location.reload()
-      })
+    setDeleteDevicePopUpOpen(true)
   }
 
   const createCellOfType = (cell, row) => {
@@ -193,107 +241,109 @@ const Devices = () => {
       <SkeletonText heading={true} />
     </div>
   ) : (
-    <DataTable
-      rows={rows}
-      headers={headers}
-      isSortable
-      render={({
-        rows,
-        headers,
-        getHeaderProps,
-        getSelectionProps,
-        getToolbarProps,
-        getBatchActionProps,
-        getRowProps,
-        onInputChange,
-        selectedRows,
-        getTableProps,
-        getTableContainerProps,
-      }) => (
-        <TableContainer title="Device List" {...getTableContainerProps()}>
-          <TableToolbar {...getToolbarProps()}>
-            <TableBatchActions {...getBatchActionProps()}>
-              <TableBatchAction
-                renderIcon={TrashCan}
-                iconDescription="Delete the selected rows"
-                onClick={() => {
-                  batchActionClick(selectedRows)
-                }}
-              >
-                Delete
-              </TableBatchAction>
-            </TableBatchActions>
+    <>
+      <ToastNotification
+      className='error-notification'
+      kind="error"
+      lowContrast={true}
+      title="Error"
+      subtitle="Something went wrong, try it later"
+      />
+      <DeleteDevicePopUp
+        open={deleteDevicePopUpOpen}
+        setOpen={setDeleteDevicePopUpOpen}
+        submit={postDeleteDevices}
+        isDataLoading={isRequestLoading} 
+      />
+      <DataTable
+        rows={rows}
+        headers={headers}
 
-            <TableToolbarContent>
-              <TableToolbarSearch
-                onChange={(event) => {
-                  if (event.target.value === '') {
-                    itemsPerPage = pageConfig[0]
-                    pageNumber = pageConfig[1]
-                    setSearchingData(false)
-                    loadRows()
-                  } else {
-                    setSearchingData(true)
-                    loadRows(0, devices.length)
-                  }
-                  onInputChange(event)
-                }}
-              />
-              <Button href="#/devices/new-device" renderIcon={MobileAdd}>
-                New Device
-              </Button>
-            </TableToolbarContent>
-          </TableToolbar>
+        render={({
+          rows, headers, getHeaderProps, getSelectionProps, getToolbarProps, getBatchActionProps, getRowProps, onInputChange, selectedRows, getTableProps, getTableContainerProps,
+        }) => (
+          <TableContainer title="Device List" {...getTableContainerProps()}>
+            <TableToolbar {...getToolbarProps()}>
+              <TableBatchActions {...getBatchActionProps()}>
+                <TableBatchAction
+                  renderIcon={TrashCan}
+                  iconDescription="Delete the selected rows"
+                  onClick={() => {
+                    batchActionClick(selectedRows)
+                  } }
+                >
+                  Delete
+                </TableBatchAction>
+              </TableBatchActions>
 
-          <Table {...getTableProps()}>
-            <TableHead>
-              <TableRow className="table-row">
-                <TableSelectAll {...getSelectionProps()} />
-                {headers.map((header) => (
-                  <TableHeader
-                    className="header"
-                    key={header.key}
-                    {...getHeaderProps({ header })}
-                  >
-                    <div className="table-header">{header.header}</div>
-                  </TableHeader>
+              <TableToolbarContent>
+                <TableToolbarSearch
+                  onChange={(event) => {
+                    if (event.target.value === '') {
+                      itemsPerPage = pageConfig[0]
+                      pageNumber = pageConfig[1]
+                      setSearchingData(false)
+                      loadRows()
+                    } else {
+                      setSearchingData(true)
+                      loadRows(0, devices.length)
+                    }
+                    onInputChange(event)
+                  } } />
+                <Button href="#/devices/new-device" renderIcon={MobileAdd}>
+                  New Device
+                </Button>
+              </TableToolbarContent>
+            </TableToolbar>
+
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  <TableSelectAll {...getSelectionProps()} />
+                  {headers.map((header) => (
+                    <TableHeader
+                      key={header.key}
+                      {...getHeaderProps({ header })}
+                    >
+                      <div className={"table-header" + header.key}>{header.header}</div>
+                    </TableHeader>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {rows.map((row) => (
+                  <React.Fragment key={row.id}>
+                    <TableRow {...getRowProps({ row })} className="table-row">
+                      <TableSelectRow {...getSelectionProps({ row })} />
+                      {row.cells.map((cell) => (
+                        <TableCell key={cell.id} className="cell">
+                          {createCellOfType(cell, row)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </React.Fragment>
                 ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {rows.map((row) => (
-                <React.Fragment key={row.id}>
-                  <TableRow {...getRowProps({ row })} className="table-row">
-                    <TableSelectRow {...getSelectionProps({ row })} />
-                    {row.cells.map((cell) => (
-                      <TableCell key={cell.id} className="cell">
-                        {createCellOfType(cell, row)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-          {searchingData ? (
-            () => {}
-          ) : (
-            <Pagination
-              backwardText="Previous page"
-              forwardText="Next page"
-              itemsPerPageText="Items per page:"
-              onChange={handleChangeItemsPerPage}
-              page={pageConfig[1]}
-              pageSize={pageConfig[0]}
-              pageSizes={[10, 20, 30, 40, 50, 100]}
-              size="md"
-              totalItems={devices.length}
-            />
-          )}
-        </TableContainer>
-      )}
-    />
+              </TableBody>
+            </Table>
+            {searchingData ? (
+              () => { }
+            ) : (
+              <Pagination
+                backwardText="Previous page"
+                forwardText="Next page"
+                itemsPerPageText="Items per page:"
+                onChange={handleChangeItemsPerPage}
+                page={pageConfig[1]}
+                pageSize={pageConfig[0]}
+                pageSizes={[10, 20, 30, 40, 50, 100]}
+                size="md"
+                totalItems={devices.length} />
+            )}
+          </TableContainer>
+        )} 
+      />
+    </>
   )
 }
 

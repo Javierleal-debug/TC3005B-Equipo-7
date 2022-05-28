@@ -41,8 +41,6 @@ const MyLoans = () => {
     firstItemIndex = itemsPerPage * (pageNumber - 1),
     lastItemIndex = itemsPerPage * pageNumber
   ) => {
-    /*let firstItemIndex = (itemsPerPage)*(pageNumber-1);
-    let lastItemIndex = itemsPerPage*pageNumber;*/
     if (lastItemIndex > devices.length) {
       lastItemIndex = devices.length
     }
@@ -61,8 +59,9 @@ const MyLoans = () => {
     }
 
     axios
-      .get(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
+      .post(
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/byEmail',
+        {},
         requestRowData
       )
       .then(({ data }) => {
@@ -80,11 +79,7 @@ const MyLoans = () => {
               data[i].securityAuthorization,
               data[i].employeeName
             )}`,
-            date: `${
-              data[i].employeeName === ''
-                ? (data[i].employeeName = 'No one')
-                : data[i].employeeName
-            }`,
+            date: data[i].date,
           }
           devices[i] = newRow
         }
@@ -110,33 +105,6 @@ const MyLoans = () => {
     pageNumber = event.page
     setPageConfig([itemsPerPage, pageNumber])
     loadRows()
-  }
-
-  const batchActionClick = (selectedRows) => {
-    let serialNumbers = []
-    selectedRows.forEach((i) => {
-      let serialNumber = i.cells[3].value
-      serialNumbers.push(serialNumber)
-    })
-    console.log(serialNumbers)
-
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-      },
-      data: {
-        array: serialNumbers,
-      },
-    }
-    axios
-      .delete(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
-        requestData
-      )
-      .then(({ data }) => {
-        window.location.reload()
-      })
   }
 
   const createCellOfType = (cell, row) => {
@@ -193,7 +161,6 @@ const MyLoans = () => {
     <DataTable
       rows={rows}
       headers={headers}
-      isSortable
       render={({
         rows,
         headers,
@@ -201,11 +168,10 @@ const MyLoans = () => {
         getToolbarProps,
         getRowProps,
         onInputChange,
-        selectedRows,
         getTableProps,
         getTableContainerProps,
       }) => (
-        <TableContainer title="My Device List" {...getTableContainerProps()}>
+        <TableContainer title="My loan List" {...getTableContainerProps()}>
           <TableToolbar {...getToolbarProps()}>
             <TableToolbarContent>
               <TableToolbarSearch
@@ -234,7 +200,9 @@ const MyLoans = () => {
                     key={header.key}
                     {...getHeaderProps({ header })}
                   >
-                    <div className="table-header">{header.header}</div>
+                    <div className={'table-header' + header.key}>
+                      {header.header}
+                    </div>
                   </TableHeader>
                 ))}
               </TableRow>
@@ -245,7 +213,7 @@ const MyLoans = () => {
                 <React.Fragment key={row.id}>
                   <TableRow {...getRowProps({ row })} className="table-row">
                     {row.cells.map((cell) => (
-                      <TableCell key={cell.id} className="cell2">
+                      <TableCell key={cell.id} className="my-loans-cell">
                         {createCellOfType(cell, row)}
                       </TableCell>
                     ))}

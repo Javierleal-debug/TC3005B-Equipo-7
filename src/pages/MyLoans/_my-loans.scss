@@ -1,6 +1,14 @@
-.table-row .cell2:nth-of-type(1) {
+.table-row .my-loans-cell:nth-of-type(1) {
   color: #0f62fe;
   font-weight: bold;
+}
+
+.table-row .my-loans-cell:nth-of-type(5) {
+  font-weight: bold;
+}
+
+.my-loans-cell div, .my-loans-cell:nth-of-type(6), .table-headerloanStatus, .table-headerdate {
+  text-align: center;
 }
 
 a {
@@ -8,6 +16,10 @@ a {
 }
 
 a:hover {
-  color: rgb(0, 0, 0);
+  color: rgb(14, 86, 226);
   text-decoration: underline;
+}
+
+.cds--data-table-container {
+  padding: 0;
 }
