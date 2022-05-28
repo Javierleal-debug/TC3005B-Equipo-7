@@ -54,41 +54,28 @@ const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     onRequestSubmit={submit}
   >
     <p>
-      Sunt non dolore quis consectetur. Non magna in excepteur amet ullamco.
-      Cupidatat ex esse fugiat mollit amet.
+      1.- Acepto ser responsable del cuidado del dispositivo; que me esta siendo
+      asignado como instrumento de trabajo, por lo que certifico que cuento con
+      los conocimientos y la capacidad necesaria para darle uso adecuado.
     </p>
     <p>
-      Ullamco velit eiusmod aliqua occaecat quis sit. Cillum nostrud eiusmod
-      minim id eiusmod veniam duis ipsum enim exercitation laborum proident.
-      Amet esse aliqua enim dolore. Adipisicing dolor quis fugiat voluptate
-      eiusmod commodo mollit laboris incididunt culpa qui veniam mollit. Ullamco
-      in nulla laboris elit tempor ea ad labore voluptate.
+      2.- En caso que el dispositivo se dañe por negligencia o mal uso del mismo
+      al ser este una herramienta de trabajo se revisara el caso para determinar
+      si hubo algún mal uso o descuido de las mismas, en el entendido de que
+      podría ser responsable de cubrir el costo de reparación o reposición
     </p>
     <p>
-      Nulla eu sunt do voluptate labore amet nostrud tempor nisi anim magna enim
-      reprehenderit. Id veniam minim fugiat officia laboris qui non exercitation
-      dolore est minim. Consectetur minim eiusmod ipsum non. Do commodo tempor
-      dolor velit sunt culpa cillum fugiat minim eiusmod duis.
+      3.-El Dispositivo me está siendo asignado como instrumento de trabajo para
+      el desempeño de las actividades propias de mi puesto, por lo que seguiré
+      esta normativa referente al uso y cuidado de estos instrumentos
+      proporcionados por IBM y deberán de ser devueltos contra el requerimiento
+      de IBM con el desgaste de uso natural.
     </p>
     <p>
-      Incididunt proident minim commodo et duis ex et aute sit nulla nulla. Do
-      pariatur amet proident incididunt enim non tempor magna aliquip
-      exercitation irure sint. Aute non magna magna quis cupidatat nostrud sit
-      cupidatat. Cupidatat sit dolor voluptate adipisicing.
-    </p>
-    <p>
-      Adipisicing excepteur magna cillum anim fugiat ipsum laborum enim elit
-      deserunt. Dolor eiusmod esse reprehenderit exercitation laboris commodo
-      elit dolor nisi quis sint amet. Commodo veniam sit voluptate irure mollit
-      exercitation enim sint incididunt exercitation Lorem minim occaecat.
-      Aliquip excepteur anim id aliquip pariatur enim.
-    </p>
-    <p>
-      Ullamco aliquip nostrud mollit id veniam proident. Eu nulla nostrud
-      incididunt qui fugiat mollit aute proident irure nostrud. Tempor irure
-      officia eiusmod ea velit ut cupidatat sunt incididunt velit Lorem quis ea.
-      Cupidatat qui excepteur sunt irure labore amet cillum enim irure esse.
-      Irure Lorem do ad quis quis.
+      4.- En caso de extravió, o robo del Dispositivo por no cumplir con las
+      reglas de seguridad establecidas por la compañía o no entregarla en la
+      fecha establecida de devolución, seré responsable de reponer el monto que
+      se me señale.
     </p>
   </Modal>
 )

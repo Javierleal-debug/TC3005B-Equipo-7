@@ -3,7 +3,6 @@ import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
 import { FlagFilled } from '@carbon/icons-react'
 import {
-  Button,
   DataTableSkeleton,
   DataTable,
   Table,
@@ -16,10 +15,6 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  TableBatchActions,
-  TableBatchAction,
-  TableSelectAll,
-  TableSelectRow,
   Pagination,
   SkeletonText,
   Tag,
@@ -71,7 +66,7 @@ const MyLoans = () => {
         requestRowData
       )
       .then(({ data }) => {
-        console.log(data);
+        console.log(data)
         for (var i = 0; i < data.length; i++) {
           var newRow = {
             id: (i + 1).toString(),
@@ -86,7 +81,9 @@ const MyLoans = () => {
               data[i].employeeName
             )}`,
             date: `${
-              data[i].employeeName === '' ? (data[i].employeeName = 'No one') : data[i].employeeName
+              data[i].employeeName === ''
+                ? (data[i].employeeName = 'No one')
+                : data[i].employeeName
             }`,
           }
           devices[i] = newRow

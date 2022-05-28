@@ -13,13 +13,13 @@ import { getUserType } from '../../util'
 const Login = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const { sessionData, setSessionData } = useSessionData()
-
   const [input, setInput] = useState({
     email: '',
     pwd: '',
   })
 
   useEffect(() => {
+    // Este efecto es para segurarse de que sessionData se haya actualizado correctamente
     if (sessionData.loggedIn) window.location.hash = '/devices'
     // eslint-disable-next-line
   }, [sessionData])
