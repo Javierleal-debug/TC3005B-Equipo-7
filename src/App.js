@@ -14,9 +14,10 @@ import NewDevice from './pages/NewDevice/NewDevice'
 
 import { useSessionData } from './global-context'
 import { useEffect } from 'react'
+import { checkAuth } from './util'
 
 function App() {
-  const { sessionData } = useSessionData()
+  const { sessionData, setSessionData } = useSessionData()
 
   useEffect(() => {
     if (!sessionData.loggedIn) {

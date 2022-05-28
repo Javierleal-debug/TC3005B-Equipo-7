@@ -45,10 +45,10 @@ export const getDeviceStatus = (conditions, inside, security, currentUser) => {
   } else if (currentUser !== '' && inside === 'true' && security === 'false') {
     return 'Requested'
   } else if (
-    currentUser !== '' &&
     conditions === 'true' &&
     inside === 'false' &&
-    security === 'true'
+    security === 'true' &&
+    currentUser !== ''
   ) {
     return 'Borrowed'
   } else {

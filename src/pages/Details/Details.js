@@ -248,14 +248,10 @@ const Details = () => {
           brand: data[1],
           model: data[2],
           serialNumber: data[3],
-          acceptedConditions: data[4] === 'true' ? true : false,
-          isInside: data[5] === 'true' ? true : false,
-          securityAuthorization: data[6] === 'true' ? true : false,
+          acceptedConditions: data[4] === 'true',
+          isInside: data[5] === 'true',
+          securityAuthorization: data[6] === 'true',
           // ----- NEW -----
-          isAvailable:
-            data[8] !== ''
-              ? false
-              : getDeviceStatus(data[4], data[5], data[6]) === 'Available',
           availability: getDeviceStatus(data[4], data[5], data[6], data[7]),
           employeeName: data[7],
           employeeEmail: data[8],
@@ -551,6 +547,7 @@ const Details = () => {
               <Button
                 renderIcon={Friendship}
                 onClick={() => setLendDevicePopUpOpen(true)}
+                disabled={peripheralData.acceptedConditions}
               >
                 Lend
               </Button>
@@ -675,10 +672,10 @@ const Details = () => {
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
           {peripheralData.availability === 'Requested' &&
-            sessionData.userType === 'focal' && (
+            sessionData.userType === 'focal' &&
+            !peripheralData.acceptedConditions && (
               <InlineNotification
                 kind="info"
-                iconDescription="describes the close button"
                 subtitle={
                   <span>
                     {peripheralData.employeeName} has requested this device.
@@ -697,7 +694,6 @@ const Details = () => {
               sessionData.userType === 'requisitor' && (
                 <InlineNotification
                   kind="success"
-                  iconDescription="Close"
                   subtitle={
                     <span>
                       The device {peripheralData.serialNumber} has been assigned
