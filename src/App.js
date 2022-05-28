@@ -12,7 +12,18 @@ import MyLoans from './pages/MyLoans/MyLoans'
 import Dashboard from './pages/Dashboard'
 import NewDevice from './pages/NewDevice/NewDevice'
 
+import { useSessionData } from './global-context'
+import { useEffect } from 'react'
+
 function App() {
+  const { sessionData } = useSessionData()
+
+  useEffect(() => {
+    if (!sessionData.loggedIn) {
+      window.location.hash = '/login'
+    }
+  }, [sessionData])
+
   return (
     <>
       <Theme>

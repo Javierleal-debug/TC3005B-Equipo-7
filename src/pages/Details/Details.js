@@ -220,11 +220,7 @@ const Details = () => {
   const { sessionData, setSessionData } = useSessionData()
 
   useEffect(() => {
-    try {
-      checkAuth(sessionData, setSessionData)
-    } catch (e) {
-      window.location.hash = '/login'
-    }
+    checkAuth(sessionData, setSessionData)
     // eslint-disable-next-line
   }, [])
 

@@ -1,3 +1,15 @@
+import { useEffect } from 'react'
+import { useSessionData } from './global-context'
+
+export function useAuthorizer() {
+  const { sessionData, setSessionData } = useSessionData()
+
+  useEffect(() => {
+    checkAuth(sessionData, setSessionData)
+    // eslint-disable-next-line
+  }, [])
+}
+
 export function checkAuth(sessionData, setSessionData) {
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
   fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
@@ -12,10 +24,14 @@ export function checkAuth(sessionData, setSessionData) {
       if (json.access) {
         setSessionData({ ...sessionData, loggedIn: true })
       } else {
-        window.location.hash = '/login'
         setSessionData({ ...sessionData, loggedIn: false })
       }
+      return getUserType(userInfo['accessToken'])
     })
+    .then((userType) => {
+      setSessionData({ ...sessionData, userType: userType })
+    })
+    .catch((e) => console.log(e))
 }
 
 export const getDeviceStatus = (conditions, inside, security, currentUser) => {
@@ -26,11 +42,7 @@ export const getDeviceStatus = (conditions, inside, security, currentUser) => {
     security === 'false'
   ) {
     return 'Available'
-  } else if (
-    currentUser !== '' &&
-    inside === 'true' &&
-    security === 'false'
-  ) {
+  } else if (currentUser !== '' && inside === 'true' && security === 'false') {
     return 'Requested'
   } else if (
     currentUser !== '' &&
