@@ -146,7 +146,6 @@ const Dashboard = () => {
         requestHeaders
       )
       .then(({ data }) => {
-        console.log(data)
         let csvContent = "data:text/csv;charset=utf-8,";
         data.forEach(function(rowArray) {
           let row = rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.comment+','+rowArray.hidden;
