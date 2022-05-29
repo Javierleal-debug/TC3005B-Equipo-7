@@ -122,7 +122,7 @@ const Dashboard = () => {
     getInsideOutDate()
   }
 
-  function generateFile(){
+  function generateFilePeripheral(){
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -149,6 +149,45 @@ const Dashboard = () => {
         let csvContent = "data:text/csv;charset=utf-8,";
         data.forEach(function(rowArray) {
           let row = rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.comment+','+rowArray.hidden;
+          csvContent += row + "\r\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        window.open(encodedUri);
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.csv");
+        document.body.appendChild(link); 
+        link.click();
+      })
+  }
+  function generateFileRecord(){
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    if (date.length > 0) {
+      var requestData = {
+        date: date,
+      }
+    } else {
+      var requestData = {
+        date: Moment(startDate).format('YYYY-MM-DD'),
+      }
+    }
+    let requestHeaders = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    axios
+      .post(
+        'http://localhost:3001/record',
+        requestData,
+        requestHeaders
+      )
+      .then(({ data }) => {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(rowArray) {
+          let row = rowArray.recordId+','+rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.actionType+','+rowArray.comment;
           csvContent += row + "\r\n";
         });
         var encodedUri = encodeURI(csvContent);
@@ -205,8 +244,8 @@ const Dashboard = () => {
             </AspectRatio>
           </AspectRatio>
 
-          <Button onClick={generateFile}>Download Peripherals</Button>
-
+          <Button onClick={generateFilePeripheral}>Download Peripherals</Button>
+          <Button onClick={generateFileRecord}>Download Records</Button>
         </Column>
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
