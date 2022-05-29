@@ -5,6 +5,7 @@ import {
   AspectRatio,
   Grid,
   Column,
+  Button,
 } from 'carbon-components-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
@@ -121,6 +122,47 @@ const Dashboard = () => {
     getInsideOutDate()
   }
 
+  function generateFile(){
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    if (date.length > 0) {
+      var requestData = {
+        date: date,
+      }
+    } else {
+      var requestData = {
+        date: Moment(startDate).format('YYYY-MM-DD'),
+      }
+    }
+    let requestHeaders = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    axios
+      .post(
+        'http://localhost:3001/peripheral/inOutDateData',
+        requestData,
+        requestHeaders
+      )
+      .then(({ data }) => {
+        console.log(data)
+        let csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(rowArray) {
+          let row = rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.comment+','+rowArray.hidden;
+          csvContent += row + "\r\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        window.open(encodedUri);
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.csv");
+        document.body.appendChild(link); 
+        link.click();
+      })
+  }
+
   return (
     <div>
       <Tile className="titleDashboard">
@@ -135,6 +177,7 @@ const Dashboard = () => {
           scrollToYearDropdown
           placeholderText="YYYY-MM-DD"
         ></DatePicker>
+      
       </Tile>
       <Grid className="bodyDashboard">
         <Column sm={1} md={3} lg={5}>
@@ -162,6 +205,9 @@ const Dashboard = () => {
               </Grid>
             </AspectRatio>
           </AspectRatio>
+
+          <Button onClick={generateFile}>Download Peripherals</Button>
+
         </Column>
         <Column sm={1} md={3} lg={5}>
           <AspectRatio ratio="16x9" className="devices">
