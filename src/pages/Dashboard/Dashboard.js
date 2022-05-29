@@ -156,7 +156,7 @@ const Dashboard = () => {
         var encodedUri = encodeURI(csvContent);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_data.csv");
+        link.setAttribute("download", "peripherals.csv");
         document.body.appendChild(link); 
         link.click();
       })
@@ -195,7 +195,7 @@ const Dashboard = () => {
         var encodedUri = encodeURI(csvContent);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_data.csv");
+        link.setAttribute("download", "records.csv");
         document.body.appendChild(link); 
         link.click();
       })
