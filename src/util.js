@@ -10,8 +10,13 @@ export function useAuthorizer() {
   }, [])
 }
 
-export function checkAuth(sessionData, setSessionData) {
+export function checkAuth(sessionData, setSessionData, redirect) {
+  if (!localStorage.getItem('UserInfo')) {
+    setSessionData({ ...sessionData, loggedIn: false, redirect: redirect })
+    return
+  }
   var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+
   fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
     method: 'GET',
     headers: {
@@ -22,9 +27,13 @@ export function checkAuth(sessionData, setSessionData) {
     .then((response) => response.json())
     .then((json) => {
       if (json.access) {
-        setSessionData({ ...sessionData, loggedIn: true })
+        setSessionData({
+          ...sessionData,
+          loggedIn: true,
+          email: userInfo['email'],
+        })
       } else {
-        setSessionData({ ...sessionData, loggedIn: false })
+        setSessionData({ ...sessionData, loggedIn: false, redirect: redirect })
       }
       return getUserType(userInfo['accessToken'])
     })
@@ -88,4 +97,14 @@ export async function getUserType(accessToken) {
   } catch (e) {
     console.log(e)
   }
+}
+
+export function redirectIfUserTypeIsNot(sessionData, ...userTypes) {
+  let valid = false
+
+  userTypes.forEach((type) => {
+    if (type === sessionData.userType) valid = true
+  })
+
+  if (!valid) window.location.hash = '/'
 }

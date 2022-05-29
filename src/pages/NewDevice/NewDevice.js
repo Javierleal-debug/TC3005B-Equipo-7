@@ -8,16 +8,17 @@ import {
   Column,
   Button,
   ButtonSet,
-  Form,
   Stack,
   TextInput,
   TextArea,
   Dropdown,
   Modal,
   InlineLoading,
-  ToastNotification
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
+import { useSessionData } from '../../global-context'
+import { useLocation } from 'react-router-dom'
+import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 
 const items = [
   'Monitor',
@@ -49,7 +50,7 @@ const items = [
   'Others',
 ]
 
-const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading}) => (
+const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -65,8 +66,8 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading}) => (
     danger={false}
   >
     <p>
-      By clicking "Create", you understand that this device will be
-      visible to users.
+      By clicking "Create", you understand that this device will be visible to
+      users.
     </p>
     <TextArea
       labelText="Comments (optional)"
@@ -83,6 +84,20 @@ const deviceData = {}
 const NewDevice = () => {
   const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
+
+  const { sessionData, setSessionData } = useSessionData()
+  const location = useLocation()
+
+  useEffect(() => {
+    checkAuth(sessionData, setSessionData, location.pathname)
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if (sessionData.userType) {
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'security')
+    }
+  }, [sessionData])
 
   const handleTypeChange = (event) => {
     deviceData.type = event.selectedItem
@@ -131,13 +146,15 @@ const NewDevice = () => {
         'https://peripheralsloanbackend.mybluemix.net/peripheral',
         requestData,
         requestHeaders
-      ).then(({ data }) => {
+      )
+      .then(({ data }) => {
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         console.log(data.message)
         window.location.hash = '/devices'
         //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         console.error(`There was an error!`, error)
@@ -151,7 +168,7 @@ const NewDevice = () => {
         open={createDevicePopUpOpen}
         setOpen={setCreateDevicePopUpOpen}
         submit={postCreateDevices}
-        isDataLoading={isRequestLoading} 
+        isDataLoading={isRequestLoading}
       />
       <Grid className="page-content">
         <Column sm={4} md={8} lg={16}>
@@ -200,23 +217,21 @@ const NewDevice = () => {
           />
         </Column>
         <Column sm={4} md={8} lg={16}>
-          <ButtonSet  className="new-device-button-set">
-              <Button 
-                renderIcon={Misuse} 
-                kind="secondary" 
-                href="#/devices"
-                >
-                Cancel
-              </Button>
-              <Button
-                renderIcon={Save}
-                kind="primary"
-                type="button"
-                onClick={()=>{setCreateDevicePopUpOpen(true)}}
-              >
-                Save
-              </Button>
-            </ButtonSet>
+          <ButtonSet className="new-device-button-set">
+            <Button renderIcon={Misuse} kind="secondary" href="#/devices">
+              Cancel
+            </Button>
+            <Button
+              renderIcon={Save}
+              kind="primary"
+              type="button"
+              onClick={() => {
+                setCreateDevicePopUpOpen(true)
+              }}
+            >
+              Save
+            </Button>
+          </ButtonSet>
         </Column>
       </Grid>
     </>

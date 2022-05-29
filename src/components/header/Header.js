@@ -97,7 +97,7 @@ const TutorialHeader = () => {
             Peripheral Loans
           </HeaderName>
 
-          {sessionData.loggedIn && (
+          {sessionData.loggedIn && localStorage.getItem('UserInfo') && (
             <>
               <SkipToContent />
               <HeaderMenuButton
@@ -106,15 +106,19 @@ const TutorialHeader = () => {
                 isActive={isSideNavExpanded}
               />
               <HeaderNavigation aria-label="Peripheral Loans">
-                <HeaderMenuItem element={Link} to="/dashboard">
-                  Dashboard
-                </HeaderMenuItem>
+                {!(sessionData.userType === 'requisitor') && (
+                  <HeaderMenuItem element={Link} to="/dashboard">
+                    Dashboard
+                  </HeaderMenuItem>
+                )}
                 <HeaderMenuItem element={Link} to="/devices">
                   Devices
                 </HeaderMenuItem>
-                <HeaderMenuItem element={Link} to="/my-loans">
-                  My Loans
-                </HeaderMenuItem>
+                {!(sessionData.userType === 'security') && (
+                  <HeaderMenuItem element={Link} to="/my-loans">
+                    My Loans
+                  </HeaderMenuItem>
+                )}
               </HeaderNavigation>
               <SideNav
                 aria-label="Side navigation"
@@ -148,7 +152,7 @@ const TutorialHeader = () => {
               </HeaderGlobalBar>
               <HeaderPanel aria-label="Header Panel" expanded={userMenuOn}>
                 <AccountInfo />
-                <TempUserTypeSwitch setUserMenuOn={setUserMenuOn} />
+                {/*<TempUserTypeSwitch setUserMenuOn={setUserMenuOn} />*/}
               </HeaderPanel>
             </>
           )}

@@ -19,7 +19,7 @@ h1 {
 }
 
 .qr-code-area {
-  padding: layout.$spacing-06 0;
+  padding-bottom: layout.$spacing-06;
 }
 
 .qr-code-area p {
@@ -50,4 +50,9 @@ svg.icon-fail {
 
 .cds--structured-list {
   margin-bottom: layout.$spacing-04 * 2;
+}
+
+.cds--btn-set--stacked {
+  margin-top: 10px;
+  margin-bottom: 15px;
 }

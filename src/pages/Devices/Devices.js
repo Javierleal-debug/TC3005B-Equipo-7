@@ -26,14 +26,15 @@ import {
   Modal,
   TextArea,
   InlineLoading,
-  ToastNotification
+  ToastNotification,
 } from 'carbon-components-react'
 
 import { checkAuth, getDeviceStatus } from '../../util'
 
 import { useSessionData } from '../../global-context'
+import { useLocation } from 'react-router-dom'
 
-const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading}) => (
+const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -70,9 +71,9 @@ const Devices = () => {
   const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [serialNumbersToDelete, setSerialNumbersToDelete] = useState([])
+  const [headers, setHeaders] = useState(tableHeaders)
 
   const [rows, setRows] = useState(null)
-  const headers = tableHeaders
 
   let itemsPerPage = 10
   let pageNumber = 1
@@ -89,7 +90,7 @@ const Devices = () => {
         array: serialNumbersToDelete,
       },
     }
-      axios
+    axios
       .delete(
         'https://peripheralsloanbackend.mybluemix.net/peripheral/',
         requestData
@@ -99,7 +100,8 @@ const Devices = () => {
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
         //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
         //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
@@ -135,7 +137,7 @@ const Devices = () => {
         requestRowData
       )
       .then(({ data }) => {
-        console.log(data);
+        console.log(data)
         for (var i = 0; i < data.length; i++) {
           var newRow = {
             id: (i + 1).toString(),
@@ -150,7 +152,9 @@ const Devices = () => {
               data[i].employeeName
             )}`,
             currentUser: `${
-              data[i].employeeName === '' ? (data[i].employeeName = 'No one') : data[i].employeeName
+              data[i].employeeName === ''
+                ? (data[i].employeeName = 'No one')
+                : data[i].employeeName
             }`,
           }
           devices[i] = newRow
@@ -160,11 +164,18 @@ const Devices = () => {
   }
 
   const { sessionData, setSessionData } = useSessionData()
+  const location = useLocation()
 
   useEffect(() => {
+    if (sessionData.userType === 'requisitor') {
+      const newHeaders = headers.filter((header) => {
+        return header.key !== 'currentUser'
+      })
+      setHeaders(newHeaders)
+    }
     try {
       JSON.parse(localStorage.getItem('UserInfo'))
-      checkAuth(sessionData, setSessionData)
+      checkAuth(sessionData, setSessionData, location.pathname)
       getItemsRequest()
     } catch (e) {
       window.location.hash = '/login'
@@ -243,24 +254,33 @@ const Devices = () => {
   ) : (
     <>
       <ToastNotification
-      className='error-notification'
-      kind="error"
-      lowContrast={true}
-      title="Error"
-      subtitle="Something went wrong, try it later"
+        className="error-notification"
+        kind="error"
+        lowContrast={true}
+        title="Error"
+        subtitle="Something went wrong, try it later"
       />
       <DeleteDevicePopUp
         open={deleteDevicePopUpOpen}
         setOpen={setDeleteDevicePopUpOpen}
         submit={postDeleteDevices}
-        isDataLoading={isRequestLoading} 
+        isDataLoading={isRequestLoading}
       />
       <DataTable
         rows={rows}
         headers={headers}
-
         render={({
-          rows, headers, getHeaderProps, getSelectionProps, getToolbarProps, getBatchActionProps, getRowProps, onInputChange, selectedRows, getTableProps, getTableContainerProps,
+          rows,
+          headers,
+          getHeaderProps,
+          getSelectionProps,
+          getToolbarProps,
+          getBatchActionProps,
+          getRowProps,
+          onInputChange,
+          selectedRows,
+          getTableProps,
+          getTableContainerProps,
         }) => (
           <TableContainer title="Device List" {...getTableContainerProps()}>
             <TableToolbar {...getToolbarProps()}>
@@ -270,7 +290,7 @@ const Devices = () => {
                   iconDescription="Delete the selected rows"
                   onClick={() => {
                     batchActionClick(selectedRows)
-                  } }
+                  }}
                 >
                   Delete
                 </TableBatchAction>
@@ -289,7 +309,8 @@ const Devices = () => {
                       loadRows(0, devices.length)
                     }
                     onInputChange(event)
-                  } } />
+                  }}
+                />
                 <Button href="#/devices/new-device" renderIcon={MobileAdd}>
                   New Device
                 </Button>
@@ -305,7 +326,9 @@ const Devices = () => {
                       key={header.key}
                       {...getHeaderProps({ header })}
                     >
-                      <div className={"table-header" + header.key}>{header.header}</div>
+                      <div className={'table-header' + header.key}>
+                        {header.header}
+                      </div>
                     </TableHeader>
                   ))}
                 </TableRow>
@@ -327,7 +350,7 @@ const Devices = () => {
               </TableBody>
             </Table>
             {searchingData ? (
-              () => { }
+              () => {}
             ) : (
               <Pagination
                 backwardText="Previous page"
@@ -338,10 +361,11 @@ const Devices = () => {
                 pageSize={pageConfig[0]}
                 pageSizes={[10, 20, 30, 40, 50, 100]}
                 size="md"
-                totalItems={devices.length} />
+                totalItems={devices.length}
+              />
             )}
           </TableContainer>
-        )} 
+        )}
       />
     </>
   )

@@ -19,8 +19,28 @@ const Login = () => {
   })
 
   useEffect(() => {
-    // Este efecto es para segurarse de que sessionData se haya actualizado correctamente
-    if (sessionData.loggedIn) window.location.hash = '/devices'
+    /*
+    let redirect =
+      sessionData.redirect === '/login' ? '/devices' : sessionData.redirect
+    if (!redirect) redirect = '/devices'
+
+    console.log(redirect)
+
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+
+    if (sessionData.loggedIn && !userInfo) window.location.hash = redirect
+    */
+
+    let redirect = '/devices'
+
+    if (sessionData.redirect && sessionData.redirect !== '/login')
+      redirect = sessionData.redirect
+
+    console.log(redirect)
+
+    if (sessionData.loggedIn && localStorage.getItem('UserInfo'))
+      window.location.hash = redirect
+
     // eslint-disable-next-line
   }, [sessionData])
 

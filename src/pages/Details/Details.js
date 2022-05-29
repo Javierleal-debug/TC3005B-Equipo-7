@@ -15,26 +15,24 @@ import { getDeviceStatus } from '../../util'
 import {
   Grid,
   Column,
-  Button,
-  ButtonSet,
   Modal,
   ComboBox,
   TextArea,
   InlineNotification,
   InlineLoading,
 } from 'carbon-components-react'
-import { Exit, Friendship, Undo, Reset, TrashCan } from '@carbon/icons-react'
 import SkeletonStructure from './components/SkeletonStructure'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import StatusStructuredTable from './components/StatusStructuredTable'
 import { useSessionData } from '../../global-context'
 
 import { checkAuth } from '../../util'
+import ButtonBar from './components/ButtonBar'
 
 /*
   PopUps
 */
-const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const RequestDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalHeading="User agreement"
@@ -49,8 +47,8 @@ const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
     size="sm"
-    onRequestClose={() => setOpen(false)}
-    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={closeFunction}
+    onSecondarySubmit={closeFunction}
     onRequestSubmit={submit}
   >
     <p>
@@ -80,7 +78,26 @@ const RequestDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const ResetDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const CancelRequestPopUp = ({ open, closeFunction, submit, isDataLoading }) => (
+  <Modal
+    open={open}
+    modalHeading="Cancel request"
+    modalLabel="Request a peripheral"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Confirm'
+    }
+    primaryButtonDisabled={isDataLoading}
+    secondaryButtonText="Cancel"
+    size="sm"
+    onRequestClose={closeFunction}
+    onSecondarySubmit={closeFunction}
+    onRequestSubmit={submit}
+  >
+    Are you sure you want to cancel this request?
+  </Modal>
+)
+
+const ResetDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -90,8 +107,8 @@ const ResetDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     }
     primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
     onRequestSubmit={submit}
   >
     <p>
@@ -118,28 +135,28 @@ const ResetDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const LendDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const LendDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
-    modalHeading="Lend"
+    modalHeading="Request approval"
     primaryButtonText={
       isDataLoading ? <InlineLoading description="Loading..." /> : 'Confirm'
     }
     primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
     onRequestSubmit={submit}
   >
     <p>
-      By clicking the "Accept" button, you confirm that you have granted this
-      device to the requisitor.
+      By clicking the "Accept" button, you confirm that you approve this request
+      and you have granted this device to the requisitor.
     </p>
   </Modal>
 )
 
-const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const DeleteDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -149,8 +166,8 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     }
     primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
     onRequestSubmit={submit}
     danger
   >
@@ -168,7 +185,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const ReturnDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const ReturnDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -178,8 +195,8 @@ const ReturnDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     }
     primaryButtonDisabled={isDataLoading}
     secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
     onRequestSubmit={submit}
   >
     <p>
@@ -197,6 +214,29 @@ const ReturnDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
+const SecurityAuthorizePopUp = ({
+  open,
+  closeFunction,
+  submit,
+  isDataLoading,
+}) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Security Authorization"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Accept'
+    }
+    primaryButtonDisabled={isDataLoading}
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
+    onRequestSubmit={submit}
+  >
+    <p>By clicking "Accept", you authorize this device exit.</p>
+  </Modal>
+)
+
 /* 
 Page 
 */
@@ -206,11 +246,7 @@ const Details = () => {
   const [isDataLoading, setIsDataLoading] = useState(true)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [peripheralData, setperipheralData] = useState(device)
-  const [requestPopUpOpen, setRequestPopUpOpen] = useState(false)
-  const [resetDevicePopUpOpen, setResetDevicePopUpOpen] = useState(false)
-  const [lendDevicePopUpOpen, setLendDevicePopUpOpen] = useState(false)
-  const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
-  const [returnDevicePopUpOpen, setReturnDevicePopUpOpen] = useState(false)
+  const [currentAction, setCurrentAction] = useState('')
 
   // const enableEditMode = () => setOnEditMode(true)
   // const disableEditMode = () => setOnEditMode(false)
@@ -218,11 +254,17 @@ const Details = () => {
   const { serialNumber } = useParams()
 
   const { sessionData, setSessionData } = useSessionData()
+  const location = useLocation()
 
   useEffect(() => {
-    checkAuth(sessionData, setSessionData)
+    checkAuth(sessionData, setSessionData, location.pathname)
     // eslint-disable-next-line
   }, [])
+
+  useEffect(() => {
+    if (localStorage.getItem('UserInfo')) getItemRequest()
+    // eslint-disable-next-line
+  }, [location])
 
   // API Calls
   const getItemRequest = () => {
@@ -242,6 +284,7 @@ const Details = () => {
         requestRowData
       )
       .then(({ data }) => {
+        if (!data) window.location.hash = '/not-found'
         console.log(data)
         device = {
           type: data[0],
@@ -264,6 +307,9 @@ const Details = () => {
         }
         setperipheralData(device)
         setIsDataLoading(false)
+      })
+      .catch((e) => {
+        window.location.hash = 'not-found'
       })
   }
 
@@ -310,7 +356,7 @@ const Details = () => {
       console.log(e)
     }
 
-    setRequestPopUpOpen(false)
+    closePopUp()
     setIsRequestLoading(false)
     getItemRequest()
   }
@@ -356,7 +402,7 @@ const Details = () => {
       console.log(e)
     }
 
-    setLendDevicePopUpOpen(false)
+    closePopUp()
     setIsRequestLoading(false)
     getItemRequest()
   }
@@ -409,7 +455,7 @@ const Details = () => {
 
     getItemRequest()
     setIsRequestLoading(false)
-    setResetDevicePopUpOpen(false)
+    closePopUp()
   }
 
   const postDeleteDevice = async () => {
@@ -449,7 +495,7 @@ const Details = () => {
       console.log(e)
     }
 
-    setDeleteDevicePopUpOpen(false)
+    closePopUp()
     setIsRequestLoading(false)
     window.location.hash = '/devices'
   }
@@ -496,7 +542,7 @@ const Details = () => {
 
     getItemRequest()
     setIsRequestLoading(false)
-    setReturnDevicePopUpOpen(false)
+    closePopUp()
   }
 
   const postAuthorizeExit = async () => {
@@ -524,100 +570,19 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      window.alert(responseJSON.message)
+      console.log(responseJSON.message)
     } catch (e) {
       window.alert(e)
     }
 
+    getItemRequest()
     setIsRequestLoading(false)
+    closePopUp()
   }
 
-  useEffect(() => {
-    getItemRequest()
-    // eslint-disable-next-line
-  }, [])
-
-  // Buttons
-  const actionsBlock = () => {
-    switch (sessionData.userType) {
-      case 'focal':
-        return (
-          <ButtonSet stacked>
-            {peripheralData.availability === 'Requested' ? (
-              <Button
-                renderIcon={Friendship}
-                onClick={() => setLendDevicePopUpOpen(true)}
-                disabled={peripheralData.acceptedConditions}
-              >
-                Lend
-              </Button>
-            ) : (
-              peripheralData.availability === 'Borrowed' && (
-                <Button
-                  renderIcon={Undo}
-                  onClick={() => setReturnDevicePopUpOpen(true)}
-                >
-                  Return
-                </Button>
-              )
-            )}
-
-            <Button
-              renderIcon={Reset}
-              kind={'secondary'}
-              onClick={() => {
-                setResetDevicePopUpOpen(true)
-              }}
-            >
-              Reset
-            </Button>
-            {peripheralData.availability === 'Available' && (
-              <Button
-                renderIcon={TrashCan}
-                kind={'danger'}
-                onClick={() => setDeleteDevicePopUpOpen(true)}
-              >
-                Delete
-              </Button>
-            )}
-          </ButtonSet>
-        )
-      case 'requisitor':
-        return (
-          <ButtonSet stacked>
-            <Button
-              renderIcon={Friendship}
-              disabled={peripheralData.availability !== 'Available'}
-              onClick={() => setRequestPopUpOpen(true)}
-            >
-              Request
-            </Button>
-          </ButtonSet>
-        )
-      case 'security':
-        return (
-          <ButtonSet stacked>
-            <Button
-              renderIcon={Exit}
-              disabled={
-                peripheralData.availability !== 'Requested' ||
-                peripheralData.isInside === false ||
-                peripheralData.acceptedConditions === false ||
-                isRequestLoading
-              }
-              onClick={postAuthorizeExit}
-            >
-              {isRequestLoading ? (
-                <InlineLoading description="Loading..." />
-              ) : (
-                'Authorize exit'
-              )}
-            </Button>
-          </ButtonSet>
-        )
-      default:
-        break
-    }
+  // PopUp close function
+  const closePopUp = () => {
+    setCurrentAction('')
   }
 
   // Main component
@@ -627,48 +592,64 @@ const Details = () => {
     <>
       {/* PopUps */}
       <RequestDevicePopUp
-        open={requestPopUpOpen}
-        setOpen={setRequestPopUpOpen}
+        open={currentAction === 'request'}
+        closeFunction={closePopUp}
         submit={postDeviceLoanRequest}
         isDataLoading={isRequestLoading}
       />
+      <CancelRequestPopUp
+        open={currentAction === 'cancelRequest'}
+        closeFunction={closePopUp}
+        submit={postDeviceReset}
+        isDataLoading={isRequestLoading}
+      />
       <ResetDevicePopUp
-        open={resetDevicePopUpOpen}
-        setOpen={setResetDevicePopUpOpen}
+        open={currentAction === 'reset'}
+        closeFunction={closePopUp}
         submit={postDeviceReset}
         isDataLoading={isRequestLoading}
       />
       <LendDevicePopUp
-        open={lendDevicePopUpOpen}
-        setOpen={setLendDevicePopUpOpen}
+        open={currentAction === 'approveRequest'}
+        closeFunction={closePopUp}
         submit={postLoanConfirmation}
         isDataLoading={isRequestLoading}
       />
       <DeleteDevicePopUp
-        open={deleteDevicePopUpOpen}
-        setOpen={setDeleteDevicePopUpOpen}
+        open={currentAction === 'delete'}
+        closeFunction={closePopUp}
         submit={postDeleteDevice}
         isDataLoading={isRequestLoading}
       />
       <ReturnDevicePopUp
-        open={returnDevicePopUpOpen}
-        setOpen={setReturnDevicePopUpOpen}
+        open={currentAction === 'return'}
+        closeFunction={closePopUp}
         submit={postReturnDevice}
+        isDataLoading={isRequestLoading}
+      />
+      <SecurityAuthorizePopUp
+        open={currentAction === 'security'}
+        closeFunction={closePopUp}
+        submit={postAuthorizeExit}
         isDataLoading={isRequestLoading}
       />
 
       <Grid className="page-content">
         <Column sm={4} md={8} lg={4} className="actions-block">
           <h1>{peripheralData.model}</h1>
-          {actionsBlock()}
 
           <div className="qr-code-area">
             <p>QR Code</p>
             <QRCode
               value={`https://peripheral-loans-equipo7.mybluemix.net/#/devices/${serialNumber}`}
-              size={200}
+              size={194}
             />
           </div>
+          <ButtonBar
+            currentAction={currentAction}
+            setCurrentAction={setCurrentAction}
+            peripheralData={peripheralData}
+          />
         </Column>
         <Column sm={4} md={8} lg={12} className="table-block">
           {peripheralData.availability === 'Requested' &&
@@ -708,7 +689,9 @@ const Details = () => {
               )
           }
           <DeviceStructuredTable device={peripheralData} />
-          <StatusStructuredTable device={peripheralData} />
+          {!(sessionData.userType === 'requisitor') && (
+            <StatusStructuredTable device={peripheralData} />
+          )}
         </Column>
       </Grid>
     </>

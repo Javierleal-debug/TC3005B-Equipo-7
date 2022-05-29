@@ -14,13 +14,13 @@ import NewDevice from './pages/NewDevice/NewDevice'
 
 import { useSessionData } from './global-context'
 import { useEffect } from 'react'
-import { checkAuth } from './util'
+import NotFound from './pages/NotFound'
 
 function App() {
-  const { sessionData, setSessionData } = useSessionData()
+  const { sessionData } = useSessionData()
 
   useEffect(() => {
-    if (!sessionData.loggedIn) {
+    if (!sessionData.loggedIn || !localStorage.getItem('UserInfo')) {
       window.location.hash = '/login'
     }
   }, [sessionData])
@@ -39,6 +39,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/devices/new-device" element={<NewDevice />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>
     </>

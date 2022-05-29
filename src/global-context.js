@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { useLocation } from 'react-router-dom'
 
 /**
  * User type context
@@ -11,12 +12,15 @@ import React, { useState, useContext } from 'react'
 const SessionDataContext = React.createContext()
 
 function SessionDataProvider({ children }) {
+  const location = useLocation()
+
   const [sessionData, setSessionData] = useState({
     userType: '',
     accessToken: '',
-    loggedIn: false,
+    loggedIn: true,
     email: '',
     name: 'Name Example',
+    redirect: location.pathname,
   })
 
   const value = { sessionData, setSessionData }

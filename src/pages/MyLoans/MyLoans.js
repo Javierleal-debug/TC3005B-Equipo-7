@@ -20,9 +20,10 @@ import {
   Tag,
 } from 'carbon-components-react'
 
-import { checkAuth, getDeviceStatus } from '../../util'
+import { checkAuth, getDeviceStatus, redirectIfUserTypeIsNot } from '../../util'
 
 import { useSessionData } from '../../global-context'
+import { useLocation } from 'react-router-dom'
 
 const devices = [{}]
 
@@ -89,11 +90,22 @@ const MyLoans = () => {
 
   const { sessionData, setSessionData } = useSessionData()
 
+  const location = useLocation()
+
+  useEffect(() => {
+    checkAuth(sessionData, setSessionData, location.pathname)
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if (sessionData.userType) {
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'requisitor')
+    }
+  }, [sessionData])
+
   useEffect(() => {
     try {
-      JSON.parse(localStorage.getItem('UserInfo'))
-      checkAuth(sessionData, setSessionData)
-      getItemsRequest()
+      localStorage.getItem('UserInfo') && getItemsRequest()
     } catch (e) {
       window.location.hash = '/login'
     }

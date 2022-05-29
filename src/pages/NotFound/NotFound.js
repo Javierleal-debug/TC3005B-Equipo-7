@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react'
 
-import { Grid, Column } from 'carbon-components-react'
-import { useSessionData } from '../../global-context'
-
 import { checkAuth } from '../../util'
+import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
 
-const LandingPage = () => {
+function NotFound() {
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
 
@@ -16,10 +14,11 @@ const LandingPage = () => {
   }, [])
 
   return (
-    <div className="landing-page-container">
-      <h2>IBM Peripheral Loans</h2>
+    <div className="not-found-container">
+      <h1>Error 404</h1>
+      <p>&#9432; The page you are looking for doesn't exist.</p>
     </div>
   )
 }
 
-export default LandingPage
+export default NotFound

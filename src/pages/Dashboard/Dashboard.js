@@ -14,8 +14,9 @@ import Moment from 'moment'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { checkAuth } from '../../util'
+import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 import { useSessionData } from '../../global-context'
+import { useLocation } from 'react-router-dom'
 
 // No olvidar descomentariar el <React.StrictMode> del index.js
 
@@ -31,6 +32,21 @@ function getDate() {
 var date = ''
 
 const Dashboard = () => {
+  const { sessionData, setSessionData } = useSessionData()
+  const location = useLocation()
+
+  useEffect(() => {
+    checkAuth(sessionData, setSessionData, location.pathname)
+    if (localStorage.getItem('UserInfo')) getInsideOutDate()
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if (sessionData.userType) {
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'security')
+    }
+  }, [sessionData])
+
   var [outValue, setOutValue] = useState(0)
   var [inValue, setInValue] = useState(0)
 
@@ -92,14 +108,6 @@ const Dashboard = () => {
         )
       })
   }
-
-  const { sessionData, setSessionData } = useSessionData()
-
-  useEffect(() => {
-    checkAuth(sessionData, setSessionData)
-    getInsideOutDate()
-    // eslint-disable-next-line
-  }, [])
 
   // Variable de tipo estado [Variable, función para cambiar el valor de Variable]
   const [startDate, setStartDate] = useState(new Date())
