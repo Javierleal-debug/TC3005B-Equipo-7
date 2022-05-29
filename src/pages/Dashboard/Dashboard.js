@@ -141,7 +141,7 @@ const Dashboard = () => {
     }
     axios
       .post(
-        'http://localhost:3001/peripheral/inOutDateData',
+        'https://peripheralsloanbackend.mybluemix.net/peripheral/inOutDateData',
         requestData,
         requestHeaders
       )
@@ -180,7 +180,7 @@ const Dashboard = () => {
     }
     axios
       .post(
-        'http://localhost:3001/record',
+        'https://peripheralsloanbackend.mybluemix.net/record',
         requestData,
         requestHeaders
       )
