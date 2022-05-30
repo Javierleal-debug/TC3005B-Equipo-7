@@ -253,13 +253,13 @@ const Devices = () => {
     </div>
   ) : (
     <>
-      <ToastNotification
+      {/* <ToastNotification
         className="error-notification"
         kind="error"
         lowContrast={true}
         title="Error"
         subtitle="Something went wrong, try it later"
-      />
+      /> */}
       <DeleteDevicePopUp
         open={deleteDevicePopUpOpen}
         setOpen={setDeleteDevicePopUpOpen}
