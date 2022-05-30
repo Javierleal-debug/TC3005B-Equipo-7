@@ -72,11 +72,11 @@ const Login = () => {
           userType: userType,
         })
       }
-      setIsRequestLoading(false)
     } catch (e) {
       console.log(e)
       alert(e.message)
     } finally {
+      setIsRequestLoading(false)
     }
   }
 
