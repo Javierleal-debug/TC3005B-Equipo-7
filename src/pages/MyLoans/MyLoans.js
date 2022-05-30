@@ -25,7 +25,7 @@ import { checkAuth, getDeviceStatus, redirectIfUserTypeIsNot } from '../../util'
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
 
-const devices = [{}]
+const devices = []
 
 const MyLoans = () => {
   const [loadingData, setLoadingData] = useState(true)
