@@ -72,6 +72,8 @@ const Devices = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [serialNumbersToDelete, setSerialNumbersToDelete] = useState([])
   const [headers, setHeaders] = useState(tableHeaders)
+  const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
+  const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
 
   const [rows, setRows] = useState(null)
 
@@ -100,11 +102,14 @@ const Devices = () => {
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
         //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+        setIsNotificationSuccessActive(true)
+        getItemsRequest()
       })
       .catch(function (error) {
+        console.log("error")
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
-        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+        setIsNotificationErrorActive(true)
       })
   }
 
@@ -253,13 +258,26 @@ const Devices = () => {
     </div>
   ) : (
     <>
-      {/* <ToastNotification
-        className="error-notification"
-        kind="error"
-        lowContrast={true}
-        title="Error"
-        subtitle="Something went wrong, try it later"
-      /> */}
+      {isNotificationErrorActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="error"
+          lowContrast={true}
+          title="Error"
+          onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
+          subtitle="Something went wrong, try it later"/>
+      </div> : <div></div>}
+
+      {isNotificationSuccessActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="success"
+          lowContrast={true}
+          title="Success!"
+          onCloseButtonClick={()=>{setIsNotificationSuccessActive(false)}}
+          subtitle="Devices 'deleted' successfully"/>
+      </div> : <div></div>}
+      
       <DeleteDevicePopUp
         open={deleteDevicePopUpOpen}
         setOpen={setDeleteDevicePopUpOpen}

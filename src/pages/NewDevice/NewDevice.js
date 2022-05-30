@@ -69,13 +69,6 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
       By clicking "Create", you understand that this device will be visible to
       users.
     </p>
-    <TextArea
-      labelText="Comments (optional)"
-      helperText="Please add comments on why this device is being created."
-      cols={50}
-      rows={4}
-      id="text-area-1"
-    />
   </Modal>
 )
 
