@@ -101,7 +101,6 @@ const Devices = () => {
         console.log(data.message)
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
-        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
         setIsNotificationSuccessActive(true)
         getItemsRequest()
       })
