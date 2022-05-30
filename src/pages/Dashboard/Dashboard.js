@@ -6,7 +6,9 @@ import {
   Grid,
   Column,
   Button,
+  ButtonSet,
 } from 'carbon-components-react'
+import { Download } from '@carbon/icons-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
 import axios from 'axios'
@@ -122,7 +124,7 @@ const Dashboard = () => {
     getInsideOutDate()
   }
 
-  function generateFilePeripheral(){
+  function generateFilePeripheral() {
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -146,22 +148,53 @@ const Dashboard = () => {
         requestHeaders
       )
       .then(({ data }) => {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        data.forEach(function(rowArray) {
-          let row = rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.comment+','+rowArray.hidden;
-          csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        window.open(encodedUri);
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "peripherals.csv");
-        document.body.appendChild(link); 
-        link.click();
+        let csvContent = 'data:text/csv;charset=utf-8,'
+        data.forEach(function (rowArray) {
+          let row =
+            rowArray.type +
+            ',' +
+            rowArray.brand +
+            ',' +
+            rowArray.model +
+            ',' +
+            rowArray.serialNumber +
+            ',' +
+            rowArray.acceptedConditions +
+            ',' +
+            rowArray.isInside +
+            ',' +
+            rowArray.securityAuthorization +
+            ',' +
+            rowArray.employeeName +
+            ',' +
+            rowArray.employeeEmail +
+            ',' +
+            rowArray.employeeSerial +
+            ',' +
+            rowArray.area +
+            ',' +
+            rowArray.mngrName +
+            ',' +
+            rowArray.mngrEmail +
+            ',' +
+            rowArray.date +
+            ',' +
+            rowArray.comment +
+            ',' +
+            rowArray.hidden
+          csvContent += row + '\r\n'
+        })
+        var encodedUri = encodeURI(csvContent)
+        window.open(encodedUri)
+        var encodedUri = encodeURI(csvContent)
+        var link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', 'peripherals.csv')
+        document.body.appendChild(link)
+        link.click()
       })
   }
-  function generateFileRecord(){
+  function generateFileRecord() {
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -185,82 +218,132 @@ const Dashboard = () => {
         requestHeaders
       )
       .then(({ data }) => {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        data.forEach(function(rowArray) {
-          let row = rowArray.recordId+','+rowArray.type+','+rowArray.brand+','+rowArray.model+','+rowArray.serialNumber+','+rowArray.acceptedConditions+','+rowArray.isInside+','+rowArray.securityAuthorization+','+rowArray.employeeName+','+rowArray.employeeEmail+','+rowArray.employeeSerial+','+rowArray.area+','+rowArray.mngrName+','+rowArray.mngrEmail+','+rowArray.date+','+rowArray.actionType+','+rowArray.comment;
-          csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        window.open(encodedUri);
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "records.csv");
-        document.body.appendChild(link); 
-        link.click();
+        let csvContent = 'data:text/csv;charset=utf-8,'
+        data.forEach(function (rowArray) {
+          let row =
+            rowArray.recordId +
+            ',' +
+            rowArray.type +
+            ',' +
+            rowArray.brand +
+            ',' +
+            rowArray.model +
+            ',' +
+            rowArray.serialNumber +
+            ',' +
+            rowArray.acceptedConditions +
+            ',' +
+            rowArray.isInside +
+            ',' +
+            rowArray.securityAuthorization +
+            ',' +
+            rowArray.employeeName +
+            ',' +
+            rowArray.employeeEmail +
+            ',' +
+            rowArray.employeeSerial +
+            ',' +
+            rowArray.area +
+            ',' +
+            rowArray.mngrName +
+            ',' +
+            rowArray.mngrEmail +
+            ',' +
+            rowArray.date +
+            ',' +
+            rowArray.actionType +
+            ',' +
+            rowArray.comment
+          csvContent += row + '\r\n'
+        })
+        var encodedUri = encodeURI(csvContent)
+        window.open(encodedUri)
+        var encodedUri = encodeURI(csvContent)
+        var link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', 'records.csv')
+        document.body.appendChild(link)
+        link.click()
       })
   }
 
   return (
-    <div>
-      <Tile className="titleDashboard">
-        Dashboard
-        <DatePicker
-          id="calendar"
-          selected={startDate}
-          onChange={handleDate}
-          maxDate={new Date(getDate())}
-          dateFormat="Y-MM-d"
-          showYearDropdown
-          scrollToYearDropdown
-          placeholderText="YYYY-MM-DD"
-        ></DatePicker>
-      
-      </Tile>
-      <Grid className="bodyDashboard">
-        <Column sm={1} md={3} lg={5}>
-          <AspectRatio ratio="16x9" className="devices">
-            <div id="deviceDistribution">
-              <FormLabel className="titleDevices">
-                Devices Distribution
-              </FormLabel>
+    <>
+      <Tile className="titleDashboard">Dashboard</Tile>
+
+      <div className="background-dashboard">
+        <Grid className="bodyDashboard">
+          <Column sm={4} md={8} lg={16}>
+            <div className="btn-area-container">
+              <DatePicker
+                id="calendar"
+                selected={startDate}
+                onChange={handleDate}
+                maxDate={new Date(getDate())}
+                dateFormat="Y-MM-d"
+                showYearDropdown
+                scrollToYearDropdown
+                placeholderText="YYYY-MM-DD"
+              ></DatePicker>
+              <ButtonSet>
+                {(sessionData.userType === 'admin' ||
+                  sessionData.userType === 'focal') && (
+                  <Button
+                    onClick={generateFilePeripheral}
+                    renderIcon={Download}
+                  >
+                    Download peripherals data
+                  </Button>
+                )}
+                {sessionData.userType === 'admin' && (
+                  <Button onClick={generateFileRecord} renderIcon={Download}>
+                    Download events history
+                  </Button>
+                )}
+              </ButtonSet>
             </div>
-            <AspectRatio ratio={'0.5x0.5'} className="chartDevices">
-              <DonutChart data={data} options={options}></DonutChart>
+          </Column>
+          <Column sm={1} md={3} lg={6}>
+            <AspectRatio ratio="16x9" className="devices">
+              <div id="deviceDistribution">
+                <FormLabel className="titleDevices">
+                  Devices Distribution
+                </FormLabel>
+              </div>
+              <AspectRatio ratio={'0.5x0.5'} className="chartDevices">
+                <DonutChart data={data} options={options}></DonutChart>
+              </AspectRatio>
             </AspectRatio>
-          </AspectRatio>
-        </Column>
+          </Column>
 
-        <Column sm={1} md={3} lg={5}>
-          <AspectRatio ratio="16x9" className="devices">
-            <FormLabel className="titleDevices">Devices Out</FormLabel>
+          <Column sm={1} md={3} lg={5}>
+            <AspectRatio ratio="16x9" className="devices">
+              <FormLabel className="titleDevices">Devices Out</FormLabel>
 
-            <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
-              <Grid>
-                <Column sm={4} className="numberDevices">
-                  {outValue}
-                </Column>
-              </Grid>
+              <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
+                <Grid>
+                  <Column sm={4} className="numberDevices">
+                    {outValue}
+                  </Column>
+                </Grid>
+              </AspectRatio>
             </AspectRatio>
-          </AspectRatio>
-
-          <Button onClick={generateFilePeripheral}>Download Peripherals</Button>
-          <Button onClick={generateFileRecord}>Download Records</Button>
-        </Column>
-        <Column sm={1} md={3} lg={5}>
-          <AspectRatio ratio="16x9" className="devices">
-            <FormLabel className="titleDevices">Devices In</FormLabel>
-            <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
-              <Grid>
-                <Column sm={4} className="numberDevices">
-                  {inValue}
-                </Column>
-              </Grid>
+          </Column>
+          <Column sm={1} md={3} lg={5}>
+            <AspectRatio ratio="16x9" className="devices">
+              <FormLabel className="titleDevices">Devices In</FormLabel>
+              <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
+                <Grid>
+                  <Column sm={4} className="numberDevices">
+                    {inValue}
+                  </Column>
+                </Grid>
+              </AspectRatio>
             </AspectRatio>
-          </AspectRatio>
-        </Column>
-      </Grid>
-    </div>
+          </Column>
+        </Grid>
+      </div>
+    </>
   )
 }
 

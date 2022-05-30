@@ -7,12 +7,20 @@
   padding-left: 2%;
   @include carbon--type-style('productive-heading-05');
   @include carbon--font-weight('semibold');
-  border-bottom: 1px solid;
-  border-color: #bababa;
+
+  background-color: white;
 }
 
 .bodyDashboard {
   margin-top: 2%;
+}
+
+.background-dashboard {
+  background-color: #f2f2f2;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  height: calc(100% - 40px - 17.5px);
+  overflow-y: scroll;
 }
 
 .datepicker {
@@ -21,9 +29,8 @@
 }
 
 .devices {
-  background-color: #f4f4f4;
-  border-radius: 15px;
-  border: 1px solid;
+  background-color: #ffffff;
+
   border-color: #bababa;
   @include carbon--font-weight('bold');
   margin-bottom: 2%;
@@ -67,4 +74,18 @@
   border-bottom: 1px solid;
   font-size: 15px;
   @include carbon--font-weight('bold');
+}
+
+.btn-area-container {
+  display: flex;
+  max-width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 15px;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  display: inline !important;
+  width: fit-content !important;
 }
