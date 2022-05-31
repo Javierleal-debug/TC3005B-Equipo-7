@@ -358,6 +358,8 @@ const Details = () => {
 
     setIsRequestLoading(true)
 
+    console.log(employeeSerial, employeeName, employeeEmail)
+
     /**
      * API Request Device
      */
@@ -368,7 +370,16 @@ const Details = () => {
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     const urlencoded = new URLSearchParams()
-    urlencoded.append('serialNumber', peripheralData.serialNumber)
+    urlencoded.append(
+      'serialNumber',
+      peripheralData.serialNumber,
+      'employeeName',
+      employeeName,
+      'employeeEmail',
+      employeeEmail,
+      'employeeSerial',
+      employeeSerial
+    )
 
     const requestOptions = {
       method: 'POST',
