@@ -89,8 +89,6 @@ export async function getUserType(accessToken) {
         return 'focal'
       case '2':
         return 'security'
-      case '3':
-        return 'requisitor'
       default:
         break
     }

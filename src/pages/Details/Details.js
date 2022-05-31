@@ -20,6 +20,9 @@ import {
   TextArea,
   InlineNotification,
   InlineLoading,
+  Form,
+  Stack,
+  TextInput,
 } from 'carbon-components-react'
 import SkeletonStructure from './components/SkeletonStructure'
 import { useLocation, useParams } from 'react-router-dom'
@@ -32,51 +35,73 @@ import ButtonBar from './components/ButtonBar'
 /*
   PopUps
 */
-const RequestDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
-  <Modal
-    open={open}
-    modalHeading="User agreement"
-    modalLabel="Request a peripheral"
-    primaryButtonText={
-      isDataLoading ? (
-        <InlineLoading description="Loading..." />
-      ) : (
-        'Agree and create request'
-      )
-    }
-    primaryButtonDisabled={isDataLoading}
-    secondaryButtonText="Cancel"
-    size="sm"
-    onRequestClose={closeFunction}
-    onSecondarySubmit={closeFunction}
-    onRequestSubmit={submit}
-  >
-    <p>
-      1.- Acepto ser responsable del cuidado del dispositivo; que me esta siendo
-      asignado como instrumento de trabajo, por lo que certifico que cuento con
-      los conocimientos y la capacidad necesaria para darle uso adecuado.
-    </p>
-    <p>
-      2.- En caso que el dispositivo se dañe por negligencia o mal uso del mismo
-      al ser este una herramienta de trabajo se revisara el caso para determinar
-      si hubo algún mal uso o descuido de las mismas, en el entendido de que
-      podría ser responsable de cubrir el costo de reparación o reposición
-    </p>
-    <p>
-      3.-El Dispositivo me está siendo asignado como instrumento de trabajo para
-      el desempeño de las actividades propias de mi puesto, por lo que seguiré
-      esta normativa referente al uso y cuidado de estos instrumentos
-      proporcionados por IBM y deberán de ser devueltos contra el requerimiento
-      de IBM con el desgaste de uso natural.
-    </p>
-    <p>
-      4.- En caso de extravió, o robo del Dispositivo por no cumplir con las
-      reglas de seguridad establecidas por la compañía o no entregarla en la
-      fecha establecida de devolución, seré responsable de reponer el monto que
-      se me señale.
-    </p>
-  </Modal>
-)
+const RequestDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => {
+  const [input, setInput] = useState({
+    employeeSerial: '',
+    employeeName: '',
+    employeeEmail: '',
+  })
+
+  const handleSerialInput = (e) => {
+    setInput({ ...input, employeeSerial: e.target.value })
+  }
+
+  const handleNameInput = (e) => {
+    setInput({ ...input, employeeName: e.target.value })
+  }
+
+  const handleEmailInput = (e) => {
+    setInput({ ...input, employeeEmail: e.target.value })
+  }
+
+  return (
+    <Modal
+      open={open}
+      modalHeading="Lend Device"
+      modalLabel="Peripheral Loans"
+      primaryButtonText={
+        isDataLoading ? (
+          <InlineLoading description="Loading..." />
+        ) : (
+          'Agree and create request'
+        )
+      }
+      primaryButtonDisabled={isDataLoading}
+      secondaryButtonText="Cancel"
+      size="sm"
+      onRequestClose={closeFunction}
+      onSecondarySubmit={closeFunction}
+      onRequestSubmit={() =>
+        submit(input.employeeSerial, input.employeeName, input.employeeEmail)
+      }
+    >
+      <p style={{ marginBottom: '10px' }}>Please fill the borrower's data.</p>
+      <Stack gap={5}>
+        <TextInput
+          id="employeeSerial"
+          labelText="Employee ID"
+          placeholder="Employee ID"
+          onChange={handleSerialInput}
+          required
+        ></TextInput>
+        <TextInput
+          id="employeeName"
+          labelText="Employee name"
+          placeholder="Employee name"
+          onChange={handleNameInput}
+          required
+        ></TextInput>
+        <TextInput
+          id="employeeEmail"
+          labelText="Employee Email"
+          placeholder="Employee Email"
+          onChange={handleEmailInput}
+          required
+        ></TextInput>
+      </Stack>
+    </Modal>
+  )
+}
 
 const CancelRequestPopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   <Modal
@@ -284,7 +309,10 @@ const Details = () => {
         requestRowData
       )
       .then(({ data }) => {
-        if (!data) window.location.hash = '/not-found'
+        if (!data) {
+          window.location.hash = '/not-found'
+          return
+        }
         console.log(data)
         device = {
           type: data[0],
@@ -313,7 +341,11 @@ const Details = () => {
       })
   }
 
-  const postDeviceLoanRequest = async () => {
+  const postDeviceLoanRequest = async (
+    employeeSerial,
+    employeeName,
+    employeeEmail
+  ) => {
     // Posts request to loan a device
     // Checks that the following is true:
     //    !isRequested

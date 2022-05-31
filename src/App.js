@@ -1,5 +1,5 @@
 import './App.scss'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 
 import { Content, Theme } from 'carbon-components-react'
 
@@ -15,14 +15,23 @@ import NewDevice from './pages/NewDevice/NewDevice'
 import { useSessionData } from './global-context'
 import { useEffect } from 'react'
 import NotFound from './pages/NotFound'
+import UserAgreementConfirmation from './pages/UserAgreementConfirmation/UserAgreementConfirmation'
 
 function App() {
   const { sessionData } = useSessionData()
+  const location = useLocation()
 
   useEffect(() => {
-    if (!sessionData.loggedIn || !localStorage.getItem('UserInfo')) {
-      window.location.hash = '/login'
+    const path = location.path
+    console.log(path)
+
+    if (path !== '/confirmation') {
+      if (!sessionData.loggedIn || !localStorage.getItem('UserInfo')) {
+        window.location.hash = '/login'
+      }
     }
+
+    // eslint-disable-next-line
   }, [sessionData])
 
   return (
@@ -39,6 +48,11 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/devices/new-device" element={<NewDevice />} />
+          <Route
+            exact
+            path="/confirmation/:serialNumber"
+            element={<UserAgreementConfirmation />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>

@@ -1,0 +1,2 @@
+import UserAgreementConfirmation from './UserAgreementConfirmation'
+export default UserAgreementConfirmation

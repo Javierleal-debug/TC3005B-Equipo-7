@@ -106,11 +106,9 @@ const TutorialHeader = () => {
                 isActive={isSideNavExpanded}
               />
               <HeaderNavigation aria-label="Peripheral Loans">
-                {!(sessionData.userType === 'requisitor') && (
-                  <HeaderMenuItem element={Link} to="/dashboard">
-                    Dashboard
-                  </HeaderMenuItem>
-                )}
+                <HeaderMenuItem element={Link} to="/dashboard">
+                  Dashboard
+                </HeaderMenuItem>
                 <HeaderMenuItem element={Link} to="/devices">
                   Devices
                 </HeaderMenuItem>
