@@ -14,6 +14,7 @@ import {
   Dropdown,
   Modal,
   InlineLoading,
+  ToastNotification
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
@@ -69,13 +70,6 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
       By clicking "Create", you understand that this device will be visible to
       users.
     </p>
-    <TextArea
-      labelText="Comments (optional)"
-      helperText="Please add comments on why this device is being created."
-      cols={50}
-      rows={4}
-      id="text-area-1"
-    />
   </Modal>
 )
 
@@ -84,6 +78,12 @@ const deviceData = {}
 const NewDevice = () => {
   const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
+  const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
+
+  const [isTypeNotSelected, setIsTypeNotSelected] = useState(false)
+  const [isBrandInvalid, setIsBrandInvalid] = useState(false)
+  const [isModelInvalid, setIsModelInvalid] = useState(false)
+  const [isSerialInvalid, setIsSerialInvalid] = useState(false)
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
@@ -152,18 +152,29 @@ const NewDevice = () => {
         setIsRequestLoading(false)
         console.log(data.message)
         window.location.hash = '/devices'
-        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
       })
       .catch((error) => {
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         console.error(`There was an error!`, error)
-        //ACTIVAR NOTIFIACIÓN QUE DIGA QUE NO SE PUDO
+        setIsNotificationErrorActive(true)
       })
   }
 
   return (
     <>
+      {isNotificationErrorActive ? 
+        <div className="error-notification">
+          <ToastNotification
+            kind="error"
+            lowContrast={true}
+            title="Error"
+            onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
+            subtitle="Something went wrong, try it later"/>
+        </div> 
+        : 
+        <div></div>
+      }
       <CreateDevicePopUp
         open={createDevicePopUpOpen}
         setOpen={setCreateDevicePopUpOpen}
@@ -178,16 +189,32 @@ const NewDevice = () => {
           <Stack>
             <Dropdown
               id="Type"
-              onChange={handleTypeChange}
+              onChange={(event) => {
+                handleTypeChange(event)
+                if(!deviceData.type){
+                  setIsTypeNotSelected(true)
+                }else{
+                  setIsTypeNotSelected(false)
+                }
+              }}
               label="Select Device Type"
               titleText="Type"
               items={items}
+              invalid={isTypeNotSelected}
             />
             <TextInput
               id="Brand"
-              onChange={handleBrandChange}
+              onChange={(event) => {
+                handleBrandChange(event)
+                if(!deviceData.brand){
+                  setIsBrandInvalid(true)
+                }else{
+                  setIsBrandInvalid(false)
+                }
+              }}
               placeholder="Device Brand"
               labelText="Brand"
+              invalid={isBrandInvalid}
             />
           </Stack>
         </Column>
@@ -195,15 +222,31 @@ const NewDevice = () => {
           <Stack>
             <TextInput
               id="Model"
-              onChange={handleModelChange}
+              onChange={(event)=>{
+                handleModelChange(event)
+                if(!deviceData.model){
+                  setIsModelInvalid(true)
+                }else{
+                  setIsModelInvalid(false)
+                }
+              }}
               placeholder="Model"
               labelText="Model"
+              invalid={isModelInvalid}
             />
             <TextInput
               id="Serial"
-              onChange={handleSerialChange}
+              onChange={(event) => {
+                handleSerialChange(event)
+                if(!deviceData.serial){
+                  setIsSerialInvalid(true)
+                }else{
+                  setIsSerialInvalid(false)
+                }
+              }}
               placeholder="Serial Number"
               labelText="Serial"
+              invalid={isSerialInvalid}
             />
           </Stack>
         </Column>
@@ -226,7 +269,30 @@ const NewDevice = () => {
               kind="primary"
               type="button"
               onClick={() => {
-                setCreateDevicePopUpOpen(true)
+                let allowPopUp = true
+
+                if(!deviceData.type){
+                  setIsTypeNotSelected(true)
+                  allowPopUp = false
+                }
+                if(!deviceData.brand){
+                  setIsBrandInvalid(true)
+                  allowPopUp = false
+                }
+                if(!deviceData.model){
+                  setIsModelInvalid(true)
+                  allowPopUp = false
+                }
+                if(!deviceData.serial){
+                  setIsSerialInvalid(true)
+                  allowPopUp = false
+                }
+
+                if(allowPopUp){
+                  setCreateDevicePopUpOpen(true)
+                }else{
+                  setCreateDevicePopUpOpen(false)
+                }
               }}
             >
               Save

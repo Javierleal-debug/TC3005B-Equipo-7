@@ -55,3 +55,12 @@ a:hover {
 .cds--data-table-container {
   padding: 0;
 }
+
+.error-notification {
+  position: fixed;
+  z-index: 9001;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  padding: 20px;
+}
