@@ -370,17 +370,12 @@ const Details = () => {
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     const urlencoded = new URLSearchParams()
-    urlencoded.append(
-      'serialNumber',
-      peripheralData.serialNumber,
-      'employeeName',
-      employeeName,
-      'employeeEmail',
-      employeeEmail,
-      'employeeSerial',
-      employeeSerial
-    )
-
+    urlencoded.append('serialNumber',serialNumber);
+    urlencoded.append('employeeName',employeeName);
+    urlencoded.append('employeeEmail',employeeEmail);
+    urlencoded.append('employeeSerial',employeeSerial);
+    
+    console.log(urlencoded)
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,

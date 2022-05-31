@@ -33,7 +33,7 @@ const Login = () => {
     */
 
     let redirect = '/devices'
-
+    /*                                                                 Esto esta comentado por un error raro
     if (sessionData.redirect && sessionData.redirect !== '/login')
       redirect = sessionData.redirect
 
@@ -41,7 +41,7 @@ const Login = () => {
 
     if (sessionData.loggedIn && localStorage.getItem('UserInfo'))
       window.location.hash = redirect
-
+    */
     // eslint-disable-next-line
   }, [sessionData])
 
