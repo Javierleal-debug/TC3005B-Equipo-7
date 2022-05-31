@@ -33,7 +33,14 @@ export function checkAuth(sessionData, setSessionData, redirect) {
           email: userInfo['email'],
         })
       } else {
-        setSessionData({ ...sessionData, loggedIn: false, redirect: redirect })
+        localStorage.removeItem('UserInfo')
+        setSessionData({
+          userType: '',
+          accessToken: '',
+          loggedIn: false,
+          email: '',
+          name: 'Name Example',
+        })
       }
       return getUserType(userInfo['accessToken'])
     })
