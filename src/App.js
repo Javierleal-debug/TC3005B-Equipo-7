@@ -23,9 +23,8 @@ function App() {
 
   useEffect(() => {
     const path = location.path
-    console.log(path)
 
-    if (path !== '/confirmation') {
+    if (path && !path.match(/\/confirmation\/.*/i)) {
       if (!sessionData.loggedIn || !localStorage.getItem('UserInfo')) {
         window.location.hash = '/login'
       }

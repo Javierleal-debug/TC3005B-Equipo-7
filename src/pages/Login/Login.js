@@ -4,6 +4,7 @@ import {
   TextInput,
   InlineLoading,
   ButtonSet,
+  Stack,
 } from 'carbon-components-react'
 import React, { useState, useEffect } from 'react'
 
@@ -95,22 +96,25 @@ const Login = () => {
           <h2>Sign in</h2>
           <p>Please sign in with your Peripheral Loans Credentials</p>
         </div>
-        <TextInput
-          onChange={handleChangeEmail}
-          type="text"
-          id="email"
-          placeholder="Email here"
-          labelText="Email"
-          required
-        />
-        <TextInput.PasswordInput
-          onChange={handleChangePwd}
-          type="password"
-          id="pwd"
-          placeholder="Password here"
-          labelText="Password"
-          required
-        />
+        <Stack className="login-text-input-container" gap={3}>
+          <TextInput
+            onChange={handleChangeEmail}
+            type="text"
+            id="email"
+            placeholder="Email here"
+            labelText="Email"
+            required
+          />
+          <TextInput.PasswordInput
+            onChange={handleChangePwd}
+            type="password"
+            id="pwd"
+            placeholder="Password here"
+            labelText="Password"
+            required
+          />
+        </Stack>
+
         <ButtonSet className="login-btn-set">
           <Button kind="ghost">Create an account</Button>
           <Button
