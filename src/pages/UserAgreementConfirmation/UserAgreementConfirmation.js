@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
+
 function UserAgreementConfirmation() {
   const { serialNumberUrl } = useParams()
   const [serialNumber, setSerialNumber] = useState('')
@@ -13,8 +14,9 @@ function UserAgreementConfirmation() {
     setIsDataLoading(true)
 
     try {
+      console.log(serialNumberUrl)
       const res = await fetch(
-        `https://peripheral-loans-equipo7.mybluemix.net/accept/${serialNumberUrl}`
+        `https://peripheralsloanbackend.mybluemix.net/peripheral/accept/${serialNumberUrl}`
       )
       const resJSON = await res.json()
       console.log(resJSON.message)
