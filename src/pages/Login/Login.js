@@ -9,7 +9,7 @@ import {
 import React, { useState, useEffect } from 'react'
 
 import { useSessionData } from '../../global-context'
-import { getUserType } from '../../util'
+import { checkAuth, getUserType } from '../../util'
 
 const Login = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
@@ -33,15 +33,17 @@ const Login = () => {
     */
 
     let redirect = '/devices'
-    
+
     if (sessionData.redirect && sessionData.redirect !== '/login')
       redirect = sessionData.redirect
 
     console.log(redirect)
 
-    if (sessionData.loggedIn && localStorage.getItem('UserInfo'))
+    if (sessionData.loggedIn && localStorage.getItem('UserInfo')) {
+      checkAuth(sessionData, setSessionData, redirect)
       window.location.hash = redirect
-    
+    }
+
     // eslint-disable-next-line
   }, [sessionData])
 
