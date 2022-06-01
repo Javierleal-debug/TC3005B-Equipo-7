@@ -1,0 +1,28 @@
+.confirmation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loan-data-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 300px;
+}
+
+.confirmation-container h1 {
+  text-align: center;
+}
+
+.loan-data-container p {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.confirmation-qr {
+  margin: 15px 0;
+}
