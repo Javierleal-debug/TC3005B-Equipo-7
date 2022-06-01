@@ -8,7 +8,7 @@ import LandingPage from './pages/LandingPage/LandingPage'
 import Devices from './pages/Devices/Devices'
 import Login from './pages/Login'
 import Details from './pages/Details/Details'
-import MyLoans from './pages/MyLoans/MyLoans'
+import MyInventory from './pages/MyInventory/MyInventory'
 import Dashboard from './pages/Dashboard'
 import NewDevice from './pages/NewDevice/NewDevice'
 
@@ -42,7 +42,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/devices" element={<Devices />} />
-          <Route exact path="/my-loans" element={<MyLoans />} />
+          <Route exact path="/my-inventory" element={<MyInventory />} />
           <Route exact path="/devices/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />

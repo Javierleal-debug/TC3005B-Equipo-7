@@ -113,8 +113,8 @@ const TutorialHeader = () => {
                   Devices
                 </HeaderMenuItem>
                 {!(sessionData.userType === 'security') && (
-                  <HeaderMenuItem element={Link} to="/my-loans">
-                    My Loans
+                  <HeaderMenuItem element={Link} to="/my-inventory">
+                    My Inventory
                   </HeaderMenuItem>
                 )}
               </HeaderNavigation>
