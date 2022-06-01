@@ -74,6 +74,7 @@ const Devices = () => {
   const [headers, setHeaders] = useState(tableHeaders)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
   const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
+  const [isNotificationEmptyActive, setIsNotificationEmptyActive] = useState(false)
 
   const [rows, setRows] = useState(null)
 
@@ -162,6 +163,9 @@ const Devices = () => {
             }`,
           }
           devices[i] = newRow
+        }
+        if(data.length === 0){
+          setIsNotificationEmptyActive(true);
         }
         loadRows()
       })
@@ -257,6 +261,15 @@ const Devices = () => {
     </div>
   ) : (
     <>
+      {isNotificationEmptyActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="info"
+          lowContrast={true}
+          title="There are no peripherals registered!"
+          onCloseButtonClick={()=>{setIsNotificationEmptyActive(false)}}
+          subtitle="When you create a new device, your Device List will grow."/>
+      </div> : <div></div>}
       {isNotificationErrorActive ? 
       <div className="error-notification">
         <ToastNotification

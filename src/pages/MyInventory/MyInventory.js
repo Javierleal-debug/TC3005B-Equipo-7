@@ -74,6 +74,7 @@ const MyInventory = () => {
   const [headers, setHeaders] = useState(tableHeaders)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
   const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
+  const [isNotificationEmptyActive, setIsNotificationEmptyActive] = useState(false)
 
   const [rows, setRows] = useState(null)
 
@@ -162,6 +163,9 @@ const MyInventory = () => {
             }`,
           }
           devices[i] = newRow
+        }
+        if(data.length === 0){
+          setIsNotificationEmptyActive(true);
         }
         loadRows()
       })
@@ -257,6 +261,16 @@ const MyInventory = () => {
     </div>
   ) : (
     <>
+      {isNotificationEmptyActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="info"
+          lowContrast={true}
+          title="Your inventory is empty!"
+          onCloseButtonClick={()=>{setIsNotificationEmptyActive(false)}}
+          subtitle="When you create a new device, your inventory will start filling up."/>
+      </div> : <div></div>}
+
       {isNotificationErrorActive ? 
       <div className="error-notification">
         <ToastNotification

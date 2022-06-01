@@ -68,7 +68,7 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   >
     <p>
       By clicking "Create", you understand that this device will be visible to
-      users.
+      users. <b>You will be redirected to the 'Device List' page.</b>
     </p>
   </Modal>
 )
