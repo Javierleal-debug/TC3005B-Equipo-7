@@ -47,7 +47,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/devices/new-device" element={<NewDevice />} />
-          <Route exact path="/confirmation/:serialNumber" element={<UserAgreementConfirmation />} />
+          <Route exact path="/confirmation/:serialNumberUrl" element={<UserAgreementConfirmation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>
