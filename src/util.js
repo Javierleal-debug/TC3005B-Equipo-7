@@ -11,43 +11,55 @@ export function useAuthorizer() {
 }
 
 export function checkAuth(sessionData, setSessionData, redirect) {
-  if (!localStorage.getItem('UserInfo')) {
-    setSessionData({ ...sessionData, loggedIn: false, redirect: redirect })
-    return
-  }
-  var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-
-  fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-access-token': userInfo['accessToken'],
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      if (json.access) {
-        setSessionData({
-          ...sessionData,
-          loggedIn: true,
-          email: userInfo['email'],
-        })
-      } else {
-        localStorage.removeItem('UserInfo')
+  try{
+    if (!localStorage.getItem('UserInfo')) {
+      setSessionData({ ...sessionData, loggedIn: false, redirect: redirect })
+      return
+    }
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+  
+    fetch('https://peripheralsloanbackend.mybluemix.net/auth/hasAccess', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': userInfo['accessToken'],
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.access) {
+          setSessionData({
+            ...sessionData,
+            loggedIn: true,
+            email: userInfo['email'],
+          })
+        } else {
+          localStorage.removeItem('UserInfo')
+          setSessionData({
+            userType: '',
+            accessToken: '',
+            loggedIn: false,
+            email: '',
+            name: '',
+          })
+        }
+        return getUserType(userInfo['accessToken'])
+      })
+      .then((userType) => {
+        setSessionData({ ...sessionData, userType: userType })
+      })
+      .catch((e) => console.log(e))
+  }catch(e){
+    console.log(e);
+    localStorage.removeItem('UserInfo')
         setSessionData({
           userType: '',
           accessToken: '',
           loggedIn: false,
           email: '',
-          name: 'Name Example',
+          name: '',
         })
-      }
-      return getUserType(userInfo['accessToken'])
-    })
-    .then((userType) => {
-      setSessionData({ ...sessionData, userType: userType })
-    })
-    .catch((e) => console.log(e))
+  }
 }
 
 export const getDeviceStatus = (conditions, inside, security, currentUser) => {
