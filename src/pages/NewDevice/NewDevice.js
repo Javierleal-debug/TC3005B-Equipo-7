@@ -188,7 +188,6 @@ const NewDevice = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
             <Dropdown
-              id="Type"
               onChange={(event) => {
                 handleTypeChange(event)
                 if(!deviceData.type){
@@ -203,7 +202,6 @@ const NewDevice = () => {
               invalid={isTypeNotSelected}
             />
             <TextInput
-              id="Brand"
               onChange={(event) => {
                 handleBrandChange(event)
                 if(!deviceData.brand){
@@ -212,6 +210,7 @@ const NewDevice = () => {
                   setIsBrandInvalid(false)
                 }
               }}
+              className="cds--list-box__wrapper"
               placeholder="Device Brand"
               labelText="Brand"
               invalid={isBrandInvalid}
@@ -221,7 +220,6 @@ const NewDevice = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
             <TextInput
-              id="Model"
               onChange={(event)=>{
                 handleModelChange(event)
                 if(!deviceData.model){
@@ -230,12 +228,12 @@ const NewDevice = () => {
                   setIsModelInvalid(false)
                 }
               }}
+              className="cds--list-box__wrapper"
               placeholder="Model"
               labelText="Model"
               invalid={isModelInvalid}
             />
             <TextInput
-              id="Serial"
               onChange={(event) => {
                 handleSerialChange(event)
                 if(!deviceData.serial){
@@ -244,6 +242,7 @@ const NewDevice = () => {
                   setIsSerialInvalid(false)
                 }
               }}
+              className="cds--list-box__wrapper"
               placeholder="Serial Number"
               labelText="Serial"
               invalid={isSerialInvalid}
@@ -252,8 +251,8 @@ const NewDevice = () => {
         </Column>
         <Column sm={4} md={8} lg={16}>
           <TextArea
-            id="Comment"
             onChange={handleCommentChange}
+            className="cds--list-box__wrapper"
             placeholder="Optional Comment"
             labelText="Comment"
             rows={6}
