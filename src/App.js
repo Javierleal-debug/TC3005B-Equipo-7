@@ -19,6 +19,7 @@ import UserAgreementConfirmation from './pages/UserAgreementConfirmation/UserAgr
 
 function App() {
   const { sessionData } = useSessionData()
+  const [originPage, setOriginPage] = useState("")
   const location = useLocation()
 
   useEffect(() => {
@@ -41,13 +42,13 @@ function App() {
       <Content className="page-area">
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/devices" element={<Devices />} />
-          <Route exact path="/my-inventory" element={<MyInventory />} />
+          <Route exact path="/devices" element={<Devices setSourcePage={setOriginPage}/>} />
+          <Route exact path="/my-inventory" element={<MyInventory setSourcePage={setOriginPage} />} />
           <Route exact path="/devices/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path="/devices/new-device" element={<NewDevice />} />
-          <Route exact path="/confirmation/:serialNumberUrl" element={<UserAgreementConfirmation />} />
+          <Route exact path="/devices/new-device" element={<NewDevice sourcePage={originPage} />} />
+          <Route exact path="/confirmation/:serialNumber" element={<UserAgreementConfirmation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>

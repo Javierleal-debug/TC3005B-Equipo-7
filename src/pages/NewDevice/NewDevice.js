@@ -75,7 +75,7 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 
 const deviceData = {}
 
-const NewDevice = () => {
+const NewDevice = (sourcePage, setSourcePage) => {
   const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
@@ -151,7 +151,14 @@ const NewDevice = () => {
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         console.log(data.message)
-        window.location.hash = '/devices'
+        if(sourcePage="devices"){
+          window.location.hash = '/devices'
+        }else if(sourcePage="my-inventory"){
+          window.location.hash = '/my-inventory'
+        }else{
+          window.location.hash = '/devices'
+        }
+        
       })
       .catch((error) => {
         setCreateDevicePopUpOpen(false)
@@ -260,7 +267,19 @@ const NewDevice = () => {
         </Column>
         <Column sm={4} md={8} lg={16}>
           <ButtonSet className="new-device-button-set">
-            <Button renderIcon={Misuse} kind="secondary" href="#/devices">
+            <Button 
+              renderIcon={Misuse} 
+              onClick={()=>{
+                if(sourcePage="devices"){
+                  window.location.hash = '/devices'
+                }else if(sourcePage="my-inventory"){
+                  window.location.hash = '/my-inventory'
+                }else{
+                  window.location.hash = '/devices'
+                }
+              }}
+              kind="secondary" 
+              href="#/devices">
               Cancel
             </Button>
             <Button

@@ -65,7 +65,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 
 const devices = []
 
-const MyInventory = () => {
+const MyInventory = (setSourcePage) => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchingData, setSearchingData] = useState(false)
   const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
@@ -342,7 +342,7 @@ const MyInventory = () => {
                     onInputChange(event)
                   }}
                 />
-                <Button href="#/devices/new-device" renderIcon={MobileAdd}>
+                <Button onClick={()=>setSourcePage("my-inventory")} href="#/devices/new-device" renderIcon={MobileAdd}>
                   New Device
                 </Button>
               </TableToolbarContent>
