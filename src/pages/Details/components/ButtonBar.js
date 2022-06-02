@@ -131,17 +131,6 @@ function ButtonBar({ currentAction, setCurrentAction, peripheralData }) {
                   >
                     Authorize exit
                   </Button>
-                  <Button
-                    renderIcon={Close}
-                    disabled={
-                      !expectedAvailability('Requested')
-                      /*isRequestLoading*/
-                    }
-                    onClick={() => setCurrentAction('securityDeny')}
-                    kind="secondary"
-                  >
-                    Deny exit
-                  </Button>
                 </>
               ) : (
                 <span className="cds--btn">
