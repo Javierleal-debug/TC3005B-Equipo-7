@@ -239,7 +239,12 @@ const ReturnDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   </Modal>
 )
 
-const SecurityAuthorizePopUp = ({open,closeFunction,submit,isDataLoading}) => (
+const SecurityAuthorizePopUp = ({
+  open,
+  closeFunction,
+  submit,
+  isDataLoading,
+}) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -365,11 +370,11 @@ const Details = () => {
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
 
     const urlencoded = new URLSearchParams()
-    urlencoded.append('serialNumber',serialNumber);
-    urlencoded.append('employeeName',employeeName);
-    urlencoded.append('employeeEmail',employeeEmail);
-    urlencoded.append('employeeSerial',employeeSerial);
-    
+    urlencoded.append('serialNumber', serialNumber)
+    urlencoded.append('employeeName', employeeName)
+    urlencoded.append('employeeEmail', employeeEmail)
+    urlencoded.append('employeeSerial', employeeSerial)
+
     console.log(urlencoded)
     const requestOptions = {
       method: 'POST',

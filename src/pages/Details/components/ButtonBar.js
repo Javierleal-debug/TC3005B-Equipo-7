@@ -3,7 +3,14 @@ import React, { useState, useEffect } from 'react'
 import { useSessionData } from '../../../global-context'
 
 import { InlineLoading, Button, ButtonSet } from 'carbon-components-react'
-import { Exit, Friendship, Undo, Reset, TrashCan } from '@carbon/icons-react'
+import {
+  Exit,
+  Close,
+  Friendship,
+  Undo,
+  Reset,
+  TrashCan,
+} from '@carbon/icons-react'
 
 function ButtonBar({ currentAction, setCurrentAction, peripheralData }) {
   /**
@@ -31,13 +38,6 @@ function ButtonBar({ currentAction, setCurrentAction, peripheralData }) {
       if (type === sessionData.userType) valid = true
     })
     return valid
-  }
-
-  const expectedEmail = () => {
-    return (
-      peripheralData.employeeEmail === sessionData.email ||
-      peripheralData.employeeEmail === ''
-    )
   }
 
   const expectedAvailability = (...availability) => {
@@ -127,24 +127,26 @@ function ButtonBar({ currentAction, setCurrentAction, peripheralData }) {
                       !expectedAvailability('Requested')
                       /*isRequestLoading*/
                     }
-                    onClick={() => setCurrentAction('securityAuthorize')}
+                    onClick={() => setCurrentAction('security')}
                   >
                     Authorize exit
                   </Button>
                   <Button
-                    renderIcon={Exit}
+                    renderIcon={Close}
                     disabled={
                       !expectedAvailability('Requested')
                       /*isRequestLoading*/
                     }
                     onClick={() => setCurrentAction('securityDeny')}
+                    kind="secondary"
                   >
                     Deny exit
                   </Button>
                 </>
               ) : (
                 <span className="cds--btn">
-                  &#9432; This device hasn't been assigned to any user.
+                  &#9432; This device can't be authorized because it has no
+                  focal approvals.
                 </span>
               )}
             </ButtonSet>
