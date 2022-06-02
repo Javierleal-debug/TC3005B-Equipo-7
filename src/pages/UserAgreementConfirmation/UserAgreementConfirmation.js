@@ -21,7 +21,7 @@ function UserAgreementConfirmation() {
       const resJSON = await res.json()
       console.log(resJSON.message)
       setSerialNumber(resJSON.serialNumber)
-      if (resJSON.message !== 'Success') setSuccess(false)
+      if (resJSON.message !== 'success') setSuccess(false)
     } catch (e) {
       console.log(e)
       setSuccess(false)
