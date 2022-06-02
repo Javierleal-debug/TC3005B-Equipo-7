@@ -239,12 +239,7 @@ const ReturnDevicePopUp = ({ open, closeFunction, submit, isDataLoading }) => (
   </Modal>
 )
 
-const SecurityAuthorizePopUp = ({
-  open,
-  closeFunction,
-  submit,
-  isDataLoading,
-}) => (
+const SecurityAuthorizePopUp = ({open,closeFunction,submit,isDataLoading}) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
