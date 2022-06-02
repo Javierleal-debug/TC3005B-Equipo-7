@@ -262,6 +262,29 @@ const SecurityAuthorizePopUp = ({
   </Modal>
 )
 
+const SecurityDenyPopUp = ({
+  open,
+  closeFunction,
+  submit,
+  isDataLoading,
+}) => (
+  <Modal
+    open={open}
+    modalLabel="Peripheral device"
+    modalHeading="Security Deny"
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Accept'
+    }
+    primaryButtonDisabled={isDataLoading}
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={closeFunction}
+    onRequestClose={closeFunction}
+    onRequestSubmit={submit}
+  >
+    <p>By clicking "Accept", you deny this device exit.</p>
+  </Modal>
+)
+
 /* 
 Page 
 */
@@ -669,6 +692,12 @@ const Details = () => {
         open={currentAction === 'security'}
         closeFunction={closePopUp}
         submit={postAuthorizeExit}
+        isDataLoading={isRequestLoading}
+      />
+      <SecurityDenyPopUp
+        open={currentAction === 'securityDeny'}
+        closeFunction={closePopUp}
+        submit={postDeviceReset}
         isDataLoading={isRequestLoading}
       />
 
