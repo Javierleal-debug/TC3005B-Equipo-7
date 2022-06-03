@@ -13,7 +13,7 @@ import Dashboard from './pages/Dashboard'
 import NewDevice from './pages/NewDevice/NewDevice'
 
 import { useSessionData } from './global-context'
-import { useEffect } from 'react'
+import { useEffect ,useState } from 'react'
 import NotFound from './pages/NotFound'
 import UserAgreementConfirmation from './pages/UserAgreementConfirmation/UserAgreementConfirmation'
 
