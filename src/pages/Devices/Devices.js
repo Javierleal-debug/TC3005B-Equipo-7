@@ -63,7 +63,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const devices = [{}]
+var devices = []
 
 const Devices = () => {
   const [loadingData, setLoadingData] = useState(true)
@@ -143,6 +143,7 @@ const Devices = () => {
       )
       .then(({ data }) => {
         console.log(data)
+        devices = []
         for (var i = 0; i < data.length; i++) {
           var newRow = {
             id: (i + 1).toString(),
