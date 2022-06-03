@@ -27,7 +27,7 @@ const userTypes = [
   'Security'
 ]
 
-const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const CreateUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -51,7 +51,7 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 const userData = {}
 
 const NewUser = () => {
-  const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
+  const [createUserPopUpOpen, setCreateUserPopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
 
@@ -142,18 +142,18 @@ const NewUser = () => {
 
     axios
       .post(
-        'https://peripheralsloanbackend.mybluemix.net/users/signup',
+        'https://peripheralsloanbackend.mybluemix.net/user/signup',
         requestData,
         requestHeaders
       )
       .then(({ data }) => {
-        setCreateDevicePopUpOpen(false)
+        setCreateUserPopUpOpen(false)
         setIsRequestLoading(false)
         console.log(data.message)
         window.location.hash = '/users'
       })
       .catch((error) => {
-        setCreateDevicePopUpOpen(false)
+        setCreateUserPopUpOpen(false)
         setIsRequestLoading(false)
         console.error(`There was an error!`, error)
         setIsNotificationErrorActive(true)
@@ -174,9 +174,9 @@ const NewUser = () => {
         : 
         <div></div>
       }
-      <CreateDevicePopUp
-        open={createDevicePopUpOpen}
-        setOpen={setCreateDevicePopUpOpen}
+      <CreateUserPopUp
+        open={createUserPopUpOpen}
+        setOpen={setCreateUserPopUpOpen}
         submit={postCreateDevices}
         isDataLoading={isRequestLoading}
       />
@@ -187,6 +187,7 @@ const NewUser = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
             <Dropdown
+              id="Type"
               onChange={(event) => {
                 handleTypeChange(event)
                 if(!userData.type){
@@ -201,6 +202,7 @@ const NewUser = () => {
               invalid={isTypeNotSelected}
             />
             <TextInput
+              id="Serial"
               onChange={(event) => {
                 handleSerialChange(event)
                 if(!userData.serial){
@@ -215,6 +217,7 @@ const NewUser = () => {
               invalid={isSerialInvalid}
             />
             <TextInput
+              id="Area"
               onChange={(event)=>{
                 handleAreaChange(event)
                 if(!userData.area){
@@ -229,6 +232,7 @@ const NewUser = () => {
               invalid={isAreaInvalid}
             />
             <TextInput //Add .PasswordInput
+              id="Password"
               onChange={(event)=>{
                 handlePwdChange(event)
                 if(!userData.pwd){
@@ -247,6 +251,7 @@ const NewUser = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
           <TextInput
+              id="Name"
               onChange={(event) => {
                 handleNameChange(event)
                 if(!userData.name){
@@ -261,6 +266,7 @@ const NewUser = () => {
               invalid={isNameInvalid}
             />
             <TextInput
+              id="Email"
               onChange={(event)=>{
                 handleEmailChange(event)
                 if(!userData.email){
@@ -275,6 +281,7 @@ const NewUser = () => {
               invalid={isEmailInvalid}
             />
             <TextInput
+              id="MngrName"
               onChange={(event)=>{
                 handleMngrNameChange(event)
                 if(!userData.mngrName){
@@ -289,6 +296,7 @@ const NewUser = () => {
               invalid={isMngrNameInvalid}
             />
             <TextInput
+              id="MngrEmail"
               onChange={(event)=>{
                 handleMngrEmailChange(event)
                 if(!userData.mngrEmail){
@@ -350,9 +358,9 @@ const NewUser = () => {
                 }
 
                 if(allowPopUp){
-                  setCreateDevicePopUpOpen(true)
+                  setCreateUserPopUpOpen(true)
                 }else{
-                  setCreateDevicePopUpOpen(false)
+                  setCreateUserPopUpOpen(false)
                 }
               }}
             >
