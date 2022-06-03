@@ -117,6 +117,11 @@ const TutorialHeader = () => {
                     My Inventory
                   </HeaderMenuItem>
                 )}
+                {(sessionData.userType === 'admin') && (
+                  <HeaderMenuItem element={Link} to="/users">
+                    Manage Users
+                  </HeaderMenuItem>
+                )}
               </HeaderNavigation>
               <SideNav
                 aria-label="Side navigation"

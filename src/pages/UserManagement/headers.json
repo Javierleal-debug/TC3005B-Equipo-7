@@ -1,0 +1,30 @@
+[
+  {
+    "key": "name",
+    "header": "User Name"
+  },
+  {
+    "key": "email",
+    "header": "Email"
+  },
+  {
+    "key": "serialNumber",
+    "header": "Serial"
+  },
+  {
+    "key": "area",
+    "header": "User Area"
+  },
+  {
+    "key": "mngrName",
+    "header": "Manager"
+  },
+  {
+    "key": "mngrEmail",
+    "header": "Manager Email"
+  },
+  {
+    "key": "userType",
+    "header": "Type of User"
+  }
+]

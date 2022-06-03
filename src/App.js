@@ -11,6 +11,8 @@ import Details from './pages/Details/Details'
 import MyInventory from './pages/MyInventory/MyInventory'
 import Dashboard from './pages/Dashboard'
 import NewDevice from './pages/NewDevice/NewDevice'
+import UserManagement from './pages/UserManagement/UserManagement'
+import NewUser from './pages/NewUser/NewUser'
 
 import { useSessionData } from './global-context'
 import { useEffect ,useState } from 'react'
@@ -49,6 +51,10 @@ function App() {
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/devices/new-device" element={<NewDevice sourcePage={originPage} />} />
           <Route exact path="/confirmation/:serialNumber" element={<UserAgreementConfirmation />} />
+          <Route exact path="/devices/new-device" element={<NewDevice />} />
+          <Route exact path="/confirmation/:serialNumberUrl" element={<UserAgreementConfirmation />} />
+          <Route exact path="/users" element={<UserManagement />} />
+          <Route exact path="/users/new-user" element={<NewUser />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>
