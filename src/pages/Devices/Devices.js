@@ -34,7 +34,7 @@ import { checkAuth, getDeviceStatus } from '../../util'
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
 
-const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
+const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading, handleCommentChange }) => (
   <Modal
     open={open}
     modalLabel="Peripheral device"
@@ -55,6 +55,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
     </p>
     <TextArea
       labelText="Comments (optional)"
+      onChange={handleCommentChange}
       helperText="Please add comments on why this device(s) is being deleted."
       cols={50}
       rows={4}
@@ -64,6 +65,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 )
 
 var devices = []
+var comment
 
 const Devices = () => {
   const [loadingData, setLoadingData] = useState(true)
@@ -82,6 +84,10 @@ const Devices = () => {
   let pageNumber = 1
   const [pageConfig, setPageConfig] = useState([itemsPerPage, pageNumber])
 
+  const handleCommentChange = (event) => {
+    comment = event.target.value
+  }
+
   const postDeleteDevices = async () => {
     setIsRequestLoading(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
@@ -91,6 +97,7 @@ const Devices = () => {
       },
       data: {
         array: serialNumbersToDelete,
+        comment: comment
       },
     }
     axios
@@ -296,6 +303,7 @@ const Devices = () => {
         setOpen={setDeleteDevicePopUpOpen}
         submit={postDeleteDevices}
         isDataLoading={isRequestLoading}
+        handleCommentChange={handleCommentChange}
       />
       <DataTable
         rows={rows}

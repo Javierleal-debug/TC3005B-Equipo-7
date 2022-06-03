@@ -207,6 +207,7 @@ const NewDevice = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
             <Dropdown
+              id="Type"
               onChange={(event) => {
                 handleTypeChange(event)
                 if(!deviceData.type){
@@ -221,6 +222,7 @@ const NewDevice = () => {
               invalid={isTypeNotSelected}
             />
             <TextInput
+              id="Brand"
               onChange={(event) => {
                 handleBrandChange(event)
                 if(!deviceData.brand){
@@ -239,6 +241,7 @@ const NewDevice = () => {
         <Column sm={4} md={8} lg={8}>
           <Stack>
             <TextInput
+              id="Model"
               onChange={(event)=>{
                 handleModelChange(event)
                 if(!deviceData.model){
@@ -253,6 +256,7 @@ const NewDevice = () => {
               invalid={isModelInvalid}
             />
             <TextInput
+              id="Serial"
               onChange={(event) => {
                 handleSerialChange(event)
                 if(!deviceData.serial){
@@ -270,6 +274,7 @@ const NewDevice = () => {
         </Column>
         <Column sm={4} md={8} lg={16}>
           <TextArea
+            id="Comment"
             onChange={handleCommentChange}
             className="cds--list-box__wrapper"
             placeholder="Optional Comment"
