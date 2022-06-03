@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard'
 import NewDevice from './pages/NewDevice/NewDevice'
 import UserManagement from './pages/UserManagement/UserManagement'
 import NewUser from './pages/NewUser/NewUser'
+import UserDetails from './pages/UserDetails'
 
 import { useSessionData } from './global-context'
 import { useEffect } from 'react'
@@ -54,6 +55,7 @@ function App() {
           <Route exact path="/confirmation/:serialNumberUrl" element={<UserAgreementConfirmation />} />
           <Route exact path="/users" element={<UserManagement />} />
           <Route exact path="/users/new-user" element={<NewUser />} />
+          <Route exact path="/users/:email" element={<UserDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>
