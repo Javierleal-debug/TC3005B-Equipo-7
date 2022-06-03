@@ -18,7 +18,7 @@ import {
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 
 const items = [
@@ -75,7 +75,7 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 
 const deviceData = {}
 
-const NewDevice = (sourcePage, setSourcePage) => {
+const NewDevice = () => {
   const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
@@ -87,10 +87,14 @@ const NewDevice = (sourcePage, setSourcePage) => {
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
+  const { orgPage } = useParams()
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
     // eslint-disable-next-line
+    if(!(orgPage==="devices" || orgPage==="my-inventory")){
+      window.location.hash = 'not-found'
+    }
   }, [])
 
   useEffect(() => {
@@ -151,14 +155,7 @@ const NewDevice = (sourcePage, setSourcePage) => {
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         console.log(data.message)
-        if(sourcePage="devices"){
-          window.location.hash = '/devices'
-        }else if(sourcePage="my-inventory"){
-          window.location.hash = '/my-inventory'
-        }else{
-          window.location.hash = '/devices'
-        }
-        
+        window.location.hash = `/${orgPage}`
       })
       .catch((error) => {
         setCreateDevicePopUpOpen(false)
@@ -270,16 +267,9 @@ const NewDevice = (sourcePage, setSourcePage) => {
             <Button 
               renderIcon={Misuse} 
               onClick={()=>{
-                if(sourcePage="devices"){
-                  window.location.hash = '/devices'
-                }else if(sourcePage="my-inventory"){
-                  window.location.hash = '/my-inventory'
-                }else{
-                  window.location.hash = '/devices'
-                }
+                window.location.hash = `/${orgPage}`
               }}
-              kind="secondary" 
-              href="#/devices">
+              kind="secondary">
               Cancel
             </Button>
             <Button

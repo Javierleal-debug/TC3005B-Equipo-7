@@ -65,7 +65,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 
 const devices = [{}]
 
-const Devices = (setSourcePage) => {
+const Devices = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchingData, setSearchingData] = useState(false)
   const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
@@ -341,7 +341,11 @@ const Devices = (setSourcePage) => {
                     onInputChange(event)
                   }}
                 />
-                <Button onClick={()=>setSourcePage("devices")}href="#/devices/new-device" renderIcon={MobileAdd}>
+                <Button 
+                  onClick={()=>{
+                    window.location.hash = '/devices/new-device'
+                  }}
+                  renderIcon={MobileAdd}>
                   New Device
                 </Button>
               </TableToolbarContent>
