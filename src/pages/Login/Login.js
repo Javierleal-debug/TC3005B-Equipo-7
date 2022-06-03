@@ -4,7 +4,7 @@ import {
   TextInput,
   InlineLoading,
   ButtonSet,
-  Stack,
+  Stack
 } from 'carbon-components-react'
 import React, { useState, useEffect } from 'react'
 
@@ -14,6 +14,11 @@ import { checkAuth, getUserType } from '../../util'
 const Login = () => {
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const { sessionData, setSessionData } = useSessionData()
+  const [isEmailInvalid, setIsEmailInvalid] = useState(false)
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState(false)
+  const [isEmailIncorrect, setIsEmailIncorrect] = useState(false)
+  const [isPasswordIncorrect, setIsPasswordIncorrect] = useState(false)
+  
   const [input, setInput] = useState({
     email: '',
     pwd: '',
@@ -74,6 +79,9 @@ const Login = () => {
           email: input.email,
           userType: userType,
         })
+      }else{
+        setIsEmailIncorrect(true)
+        setIsPasswordIncorrect(true)
       }
     } catch (e) {
       console.log(e)
@@ -85,56 +93,105 @@ const Login = () => {
 
   function handleChangeEmail(event) {
     setInput({ ...input, email: event.target.value })
+    let email = event.target.value
+    let beforeA, betweenAP, afterP
+    try{
+      beforeA = email.split("@")[0]
+      betweenAP = email.split("@")[1].split(".")[0]
+      afterP = email.split(".")[1]
+      if(email==="" || !email.includes("@") || !email.includes(".") || beforeA==="" || betweenAP==="" || afterP===""){
+        setIsEmailInvalid(true)
+      }else{
+        setIsEmailInvalid(false)
+      }
+    }catch(e){
+      setIsEmailInvalid(true)
+    }
+    if(isEmailIncorrect){
+      setIsEmailIncorrect(false)
+    }
   }
 
   function handleChangePwd(event) {
     setInput({ ...input, pwd: event.target.value })
+    if(event.target.value===""){
+      setIsPasswordInvalid(true)
+    }else{
+      setIsPasswordInvalid(false)
+    }
+    if(isPasswordIncorrect){
+      setIsPasswordIncorrect(false)
+    }
   }
 
   return (
-    <div className="login-background">
-      <Form>
-        <div className="form-header">
-          <h2>Sign in</h2>
-          <p>Please sign in with your Peripheral Loans Credentials</p>
-        </div>
-        <Stack className="login-text-input-container" gap={3}>
-          <TextInput
-            onChange={handleChangeEmail}
-            type="text"
-            id="email"
-            placeholder="Email here"
-            labelText="Email"
-            required
-          />
-          <TextInput.PasswordInput
-            onChange={handleChangePwd}
-            type="password"
-            id="pwd"
-            placeholder="Password here"
-            labelText="Password"
-            required
-          />
-        </Stack>
+    <>
+      <div className="login-background">
+        <Form>
+          <div className="form-header">
+            <h2>Sign in</h2>
+            <p>Please sign in with your Peripheral Loans Credentials</p>
+          </div>
+          <Stack className="login-text-input-container" gap={6}>
+            <TextInput
+              onChange={handleChangeEmail}
+              type="text"
+              id="email"
+              placeholder="Email here"
+              labelText="Email"
+              invalid={isEmailIncorrect}
+              warn={isEmailInvalid}
+              warnText="Please specify a valid email address"
+              required
+            />
+            <TextInput.PasswordInput
+              onChange={handleChangePwd}
+              type="password"
+              id="pwd"
+              placeholder="Password here"
+              labelText="Password"
+              invalid={isPasswordIncorrect}
+              invalidText="Incorrect Email or Password"
+              warn={isPasswordInvalid}
+              warnText="Please specify a valid password"
+              required
+            />
+          </Stack>
 
-        <ButtonSet className="login-btn-set">
-          <Button kind="ghost">Create an account</Button>
-          <Button
-            type="submit"
-            kind="primary"
-            onClick={signIn}
-            disabled={isRequestLoading}
-            size="xl"
-          >
-            {isRequestLoading ? (
-              <InlineLoading description="Loading..." />
-            ) : (
-              'Sign in'
-            )}
-          </Button>
-        </ButtonSet>
-      </Form>
-    </div>
+          <ButtonSet className="login-btn-set">
+            <Button kind="ghost">Create an account</Button>
+            <Button
+              type="submit"
+              kind="primary"
+              disabled={isRequestLoading}
+              onClick={() => {
+                let allowPopUp = true
+
+                if(input.email===""){
+                  setIsEmailInvalid(true)
+                  allowPopUp = false
+                }
+                if(input.pwd===""){
+                  setIsPasswordInvalid(true)
+                  allowPopUp = false
+                }
+
+                if(allowPopUp && !isEmailInvalid){
+                  signIn()
+                }
+              }}
+              size="xl"
+            >
+              {isRequestLoading ? (
+                <InlineLoading description="Loading..." />
+              ) : (
+                'Sign in'
+              )}
+            </Button>
+          </ButtonSet>
+        </Form>
+      </div>
+    </>
   )
 }
 
