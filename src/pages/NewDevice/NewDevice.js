@@ -95,7 +95,7 @@ const NewDevice = () => {
     if(!(orgPage==="devices" || orgPage==="my-inventory")){
       window.location.hash = 'not-found'
     }
-  }, [])
+  }, [sessionData, setSessionData, location.pathname, orgPage])
 
   useEffect(() => {
     if (sessionData.userType) {
