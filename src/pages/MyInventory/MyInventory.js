@@ -244,7 +244,7 @@ const MyInventory = () => {
       )
     } else {
       if ('type' === cell.id.split(':')[1]) {
-        var pathString = '#/devices/' + row.cells[3].value
+        var pathString = '#/my-inventory/' + row.cells[3].value
         return <a href={pathString}>{cell.value}</a>
       }
       if ('currentUser' === cell.id.split(':')[1]) {

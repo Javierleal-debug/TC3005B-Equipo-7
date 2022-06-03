@@ -46,7 +46,7 @@ function App() {
           <Route exact path="/devices" element={<Devices />} />
           <Route exact path="/my-inventory" element={<MyInventory />} />
           <Route exact path="/:orgPage/new-device" element={<NewDevice />} />
-          <Route exact path="/devices/:serialNumber" element={<Details />} />
+          <Route exact path="/:orgPage/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/confirmation/:serialNumber" element={<UserAgreementConfirmation />} />

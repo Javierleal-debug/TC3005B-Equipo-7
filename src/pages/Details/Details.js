@@ -20,7 +20,6 @@ import {
   TextArea,
   InlineNotification,
   InlineLoading,
-  Form,
   Stack,
   TextInput,
 } from 'carbon-components-react'
@@ -299,13 +298,16 @@ const Details = () => {
   // const enableEditMode = () => setOnEditMode(true)
   // const disableEditMode = () => setOnEditMode(false)
 
-  const { serialNumber } = useParams()
+  const { orgPage, serialNumber } = useParams()
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
+    if(!(orgPage==="devices" || orgPage==="my-inventory")){
+      window.location.hash = 'not-found'
+    }
     // eslint-disable-next-line
   }, [])
 
@@ -558,7 +560,7 @@ const Details = () => {
 
     closePopUp()
     setIsRequestLoading(false)
-    window.location.hash = '/devices'
+    window.location.hash = `/${orgPage}`
   }
 
   const postReturnDevice = async () => {
