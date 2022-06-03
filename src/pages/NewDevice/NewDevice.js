@@ -79,6 +79,8 @@ const NewDevice = () => {
   const [createDevicePopUpOpen, setCreateDevicePopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
+  const [isWarningNotificationActive, setIsWarningNotificationActive] = useState(false)
+  
 
   const [isTypeNotSelected, setIsTypeNotSelected] = useState(false)
   const [isBrandInvalid, setIsBrandInvalid] = useState(false)
@@ -152,10 +154,14 @@ const NewDevice = () => {
         requestHeaders
       )
       .then(({ data }) => {
+        console.log(data.message)
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
-        console.log(data.message)
-        window.location.hash = `/${orgPage}`
+        if(data.message === "SerialNumber is already registered"){
+          setIsWarningNotificationActive(true)
+        }else{
+          window.location.hash = `/${orgPage}`
+        }
       })
       .catch((error) => {
         setCreateDevicePopUpOpen(false)
@@ -167,6 +173,15 @@ const NewDevice = () => {
 
   return (
     <>
+      {isWarningNotificationActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="warning"
+          lowContrast={true}
+          title="Already exists!"
+          onCloseButtonClick={()=>{setIsWarningNotificationActive(false)}}
+          subtitle="This peripheral serial number is already registered"/>
+      </div> : <div></div>}
       {isNotificationErrorActive ? 
         <div className="error-notification">
           <ToastNotification
