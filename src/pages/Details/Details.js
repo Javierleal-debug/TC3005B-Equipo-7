@@ -298,16 +298,14 @@ const Details = () => {
   // const enableEditMode = () => setOnEditMode(true)
   // const disableEditMode = () => setOnEditMode(false)
 
-  const { orgPage, serialNumber } = useParams()
+  const { serialNumber } = useParams()
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
-    if(!(orgPage==="devices" || orgPage==="my-inventory")){
-      window.location.hash = 'not-found'
-    }
+    console.log(location.pathname.split('/')[1])
     // eslint-disable-next-line
   }, [])
 
@@ -560,7 +558,7 @@ const Details = () => {
 
     closePopUp()
     setIsRequestLoading(false)
-    window.location.hash = `/${orgPage}`
+    window.location.hash = `/${location.pathname.split('/')[1]}`
   }
 
   const postReturnDevice = async () => {

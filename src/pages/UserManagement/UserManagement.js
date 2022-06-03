@@ -1,7 +1,7 @@
 import axios from 'axios'
 import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
-import { TrashCan, MobileAdd, FlagFilled } from '@carbon/icons-react'
+import { TrashCan, UserFollow, Police, FaceCool, User } from '@carbon/icons-react'
 import {
   Button,
   DataTableSkeleton,
@@ -64,6 +64,7 @@ const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
 )
 
 const users = [{}]
+const userTypes = ['Admin','Focal','Security']; 
 
 const UserManagement = () => {
   const [loadingData, setLoadingData] = useState(true)
@@ -152,7 +153,7 @@ const UserManagement = () => {
             area: data[i].area,
             mngrName: data[i].mngrName,
             mngrEmail: data[i].mngrEmail,
-            userType: data[i].userType
+            userType: userTypes[data[i].userType]
           }
           users[i] = newRow
         }
@@ -208,7 +209,31 @@ const UserManagement = () => {
       return <a href={pathString}>{cell.value}</a>
     }
     if ('userType' === cell.id.split(':')[1]) {
-      return <div>{cell.value}</div>
+      if (cell.value === 'Admin') {
+        return (
+          <div>
+            <Tag renderIcon={FaceCool} size="md" className='icon-Admin'>
+              {cell.value}
+            </Tag>
+          </div>
+        )
+      } else if (cell.value === 'Focal' ) {
+        return (
+          <div>
+            <Tag renderIcon={User} size="md" className='icon-Focal'>
+              {cell.value}
+            </Tag>
+          </div>
+        )
+      } else if (cell.value === 'Security') {
+        return (
+          <div>
+            <Tag renderIcon={Police} size="md" className='icon-Security'>
+              {cell.value}
+            </Tag>
+          </div>
+        )
+      }
     }
     return cell.value
   }
@@ -300,7 +325,7 @@ const UserManagement = () => {
                     onInputChange(event)
                   }}
                 />
-                <Button href="#/users/new-user" renderIcon={MobileAdd}>
+                <Button href="#/users/new-user" renderIcon={UserFollow}>
                   Create User
                 </Button>
               </TableToolbarContent>
