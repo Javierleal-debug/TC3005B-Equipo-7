@@ -10,7 +10,6 @@ import {
   ButtonSet,
   Stack,
   TextInput,
-  TextArea,
   Dropdown,
   Modal,
   InlineLoading,
@@ -19,7 +18,7 @@ import {
 import { Misuse, Save } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
-import { checkAuth, getUserType, redirectIfUserTypeIsNot } from '../../util'
+import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 
 const userTypes = [
   'Admin',
@@ -54,6 +53,7 @@ const NewUser = () => {
   const [createUserPopUpOpen, setCreateUserPopUpOpen] = useState(false)
   const [isRequestLoading, setIsRequestLoading] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
+  const [isWarningNotificationActive, setIsWarningNotificationActive] = useState(false)
 
   const [isTypeNotSelected, setIsTypeNotSelected] = useState(false)
   const [isNameInvalid, setIsNameInvalid] = useState(false)
@@ -63,6 +63,7 @@ const NewUser = () => {
   const [isMngrNameInvalid, setIsMngrNameInvalid] = useState(false)
   const [isMngrEmailInvalid, setIsMngrEmailInvalid] = useState(false)
   const [isPwdInvalid, setIsPwdInvalid] = useState(false)
+  const [invalidPasswordText, setInvalidPasswordText] = useState(false)
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
@@ -74,7 +75,7 @@ const NewUser = () => {
 
   useEffect(() => {
     if (sessionData.userType) {
-      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'security')
+      redirectIfUserTypeIsNot(sessionData, 'admin')
     }
   }, [sessionData])
 
@@ -150,7 +151,12 @@ const NewUser = () => {
         setCreateUserPopUpOpen(false)
         setIsRequestLoading(false)
         console.log(data.message)
-        window.location.hash = '/users'
+        
+        if(data.message === "Email already registered"){
+          setIsWarningNotificationActive(true)
+        }else{
+          window.location.hash = '/users'
+        }
       })
       .catch((error) => {
         setCreateUserPopUpOpen(false)
@@ -174,6 +180,15 @@ const NewUser = () => {
         : 
         <div></div>
       }
+      {isWarningNotificationActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="warning"
+          lowContrast={true}
+          title="Already exists!"
+          onCloseButtonClick={()=>{setIsWarningNotificationActive(false)}}
+          subtitle="This user email is already registered"/>
+      </div> : <div></div>}
       <CreateUserPopUp
         open={createUserPopUpOpen}
         setOpen={setCreateUserPopUpOpen}
@@ -231,21 +246,28 @@ const NewUser = () => {
               labelText="Area"
               invalid={isAreaInvalid}
             />
-            <TextInput //Add .PasswordInput
-              id="Password"
-              onChange={(event)=>{
-                handlePwdChange(event)
-                if(!userData.pwd){
-                  setIsPwdInvalid(true)
-                }else{
-                  setIsPwdInvalid(false)
-                }
-              }}
-              className="cds--list-box__wrapper"
-              placeholder="Define User Password"
-              labelText="Password"
-              invalid={isPwdInvalid}
-            />
+            <div className="cds--list-box__wrapper cds--text-input-wrapper">
+              <TextInput.PasswordInput
+                type="password"
+                id="Password"
+                placeholder="Define User Password"
+                labelText="Password"
+                onChange={(event)=>{
+                  handlePwdChange(event)
+                  if(!userData.pwd){
+                    setIsPwdInvalid(true)
+                    setInvalidPasswordText("Please specify a password")
+                  }else if (!userData.pwd.match(/^[-.@_A-Za-z0-9 ]+$/)){
+                    setIsPwdInvalid(true)
+                    setInvalidPasswordText("No special characters, please!")
+                  }else{
+                    setIsPwdInvalid(false)
+                  }
+                }}
+                invalid={isPwdInvalid}
+                invalidText={invalidPasswordText}
+              />
+            </div>
           </Stack>
         </Column>
         <Column sm={4} md={8} lg={8}>
@@ -314,7 +336,7 @@ const NewUser = () => {
         </Column>
         <Column sm={4} md={8} lg={16}>
           <ButtonSet className="new-device-button-set">
-            <Button renderIcon={Misuse} kind="secondary" href="#/devices">
+            <Button renderIcon={Misuse} kind="secondary" href="#/users">
               Cancel
             </Button>
             <Button

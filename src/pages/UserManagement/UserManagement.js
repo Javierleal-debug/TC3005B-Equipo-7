@@ -29,7 +29,7 @@ import {
   ToastNotification,
 } from 'carbon-components-react'
 
-import { checkAuth, getDeviceStatus } from '../../util'
+import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
@@ -168,11 +168,8 @@ const UserManagement = () => {
   const location = useLocation()
 
   useEffect(() => {
-    if (sessionData.userType === 'requisitor') {
-      const newHeaders = headers.filter((header) => {
-        return header.key !== 'currentUser'
-      })
-      setHeaders(newHeaders)
+    if (sessionData.userType) {
+      redirectIfUserTypeIsNot(sessionData, 'admin')
     }
     try {
       JSON.parse(localStorage.getItem('UserInfo'))
@@ -182,7 +179,7 @@ const UserManagement = () => {
       window.location.hash = '/login'
     }
     // eslint-disable-next-line
-  }, [])
+  }, [sessionData])
 
   function handleChangeItemsPerPage(event) {
     itemsPerPage = event.pageSize
