@@ -26,7 +26,7 @@
   font-weight: bold;
 }
 
-.cell div {
+.cellValue div {
   text-align: center;
 }
 
@@ -34,12 +34,12 @@
   text-align: center;
 }
 
-.table-row .cell:nth-of-type(2) {
+.table-row a {
   color: #0f62fe;
   font-weight: bold;
 }
 
-.table-row .cell:nth-of-type(6) {
+.table-row span {
   font-weight: bold;
 }
 

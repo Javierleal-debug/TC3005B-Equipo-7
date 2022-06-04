@@ -130,16 +130,26 @@ const TutorialHeader = () => {
               >
                 <SideNavItems>
                   <HeaderSideNavItems>
+                    <HeaderMenuItem element={Link} to="/dashboard">
+                      Dashboard
+                    </HeaderMenuItem>
                     <HeaderMenuItem element={Link} to="/devices">
                       Devices
                     </HeaderMenuItem>
+                    {!(sessionData.userType === 'security') && (
+                      <HeaderMenuItem element={Link} to="/my-inventory">
+                        My Inventory
+                      </HeaderMenuItem>
+                    )}
+                    {(sessionData.userType === 'admin') && (
+                      <HeaderMenuItem element={Link} to="/users">
+                        Manage Users
+                      </HeaderMenuItem>
+                    )}
                   </HeaderSideNavItems>
                 </SideNavItems>
               </SideNav>
               <HeaderGlobalBar>
-                <HeaderGlobalAction aria-label="Notifications">
-                  <Notification size={20} />
-                </HeaderGlobalAction>
                 <HeaderGlobalAction
                   aria-label="Account"
                   onClick={() => {

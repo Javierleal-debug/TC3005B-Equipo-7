@@ -43,7 +43,7 @@ function App() {
       </Theme>
       <Content className="page-area">
         <Routes>
-          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/" element={<Devices />} />
           <Route exact path="/devices" element={<Devices />} />
           <Route exact path="/my-inventory" element={<MyInventory />} />
           <Route exact path="/:orgPage/new-device" element={<NewDevice />} />

@@ -68,7 +68,7 @@ const CreateDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
   >
     <p>
       By clicking "Create", you understand that this device will be visible to
-      users. <b>You will be redirected to the 'Device List' page.</b>
+      users.
     </p>
   </Modal>
 )
@@ -92,18 +92,17 @@ const NewDevice = () => {
   const { orgPage } = useParams()
 
   useEffect(() => {
-    checkAuth(sessionData, setSessionData, location.pathname)
-    // eslint-disable-next-line
-    if(!(orgPage==="devices" || orgPage==="my-inventory")){
-      window.location.hash = 'not-found'
+    try {
+      JSON.parse(localStorage.getItem('UserInfo'))
+      checkAuth(sessionData, setSessionData, location.pathname)
+      if(!(orgPage==="devices" || orgPage==="my-inventory")){
+        window.location.hash = 'not-found'
+      }
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal')
+    } catch (e) {
+      window.location.hash = '/login'
     }
-  }, [sessionData, setSessionData, location.pathname, orgPage])
-
-  useEffect(() => {
-    if (sessionData.userType) {
-      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'security')
-    }
-  }, [sessionData])
+  }, [])
 
   const handleTypeChange = (event) => {
     deviceData.type = event.selectedItem

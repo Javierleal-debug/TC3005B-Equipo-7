@@ -29,7 +29,8 @@ import {
   ToastNotification,
 } from 'carbon-components-react'
 
-import { checkAuth, getDeviceStatus } from '../../util'
+import { checkAuth, getDeviceStatus, redirectIfUserTypeIsNot } from '../../util'
+
 
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
@@ -183,11 +184,8 @@ const MyInventory = () => {
   const location = useLocation()
 
   useEffect(() => {
-    if (sessionData.userType === 'requisitor') {
-      const newHeaders = headers.filter((header) => {
-        return header.key !== 'currentUser'
-      })
-      setHeaders(newHeaders)
+    if (sessionData.userType) {
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal')
     }
     try {
       JSON.parse(localStorage.getItem('UserInfo'))
@@ -384,7 +382,7 @@ const MyInventory = () => {
                     <TableRow {...getRowProps({ row })} className="table-row">
                       <TableSelectRow {...getSelectionProps({ row })} />
                       {row.cells.map((cell) => (
-                        <TableCell key={cell.id} className="cell">
+                        <TableCell key={cell.id} className="cellValue">
                           {createCellOfType(cell, row)}
                         </TableCell>
                       ))}

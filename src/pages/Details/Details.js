@@ -9,7 +9,7 @@ import axios from 'axios'
 // mock data
 import device from '../../mock_data/device.json'
 
-import { getDeviceStatus } from '../../util'
+import { getDeviceStatus, redirectIfUserTypeIsNot } from '../../util'
 
 // Carbon Styling
 import {
@@ -306,6 +306,12 @@ const Details = () => {
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
     console.log(location.pathname.split('/')[1])
+    var orgPage= location.pathname.split("/")[1]
+    if(orgPage==="my-inventory"){
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal')
+    }else if(orgPage==="devices"){
+      redirectIfUserTypeIsNot(sessionData, 'admin', 'focal', 'security')
+    }
     // eslint-disable-next-line
   }, [])
 

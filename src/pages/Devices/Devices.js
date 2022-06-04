@@ -350,20 +350,23 @@ const Devices = () => {
                     onInputChange(event)
                   }}
                 />
-                <Button 
-                  onClick={()=>{
-                    window.location.hash = '/devices/new-device'
-                  }}
-                  renderIcon={MobileAdd}>
-                  New Device
-                </Button>
+                {(sessionData.userType === 'admin' ||
+                  sessionData.userType === 'focal') && (
+                  <Button 
+                    onClick={()=>{
+                      window.location.hash = '/devices/new-device'
+                    }}
+                    renderIcon={MobileAdd}>
+                    New Device
+                  </Button>
+                )}
               </TableToolbarContent>
             </TableToolbar>
 
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
-                  <TableSelectAll {...getSelectionProps()} />
+                  {(sessionData.userType === 'admin' || sessionData.userType === 'focal') && (<TableSelectAll {...getSelectionProps()} />)}
                   {headers.map((header) => (
                     <TableHeader
                       key={header.key}
@@ -381,9 +384,9 @@ const Devices = () => {
                 {rows.map((row) => (
                   <React.Fragment key={row.id}>
                     <TableRow {...getRowProps({ row })} className="table-row">
-                      <TableSelectRow {...getSelectionProps({ row })} />
+                      {(sessionData.userType === 'admin' || sessionData.userType === 'focal') && (<TableSelectRow {...getSelectionProps({ row })} />)}
                       {row.cells.map((cell) => (
-                        <TableCell key={cell.id} className="cell">
+                        <TableCell key={cell.id} className="cellValue">
                           {createCellOfType(cell, row)}
                         </TableCell>
                       ))}
