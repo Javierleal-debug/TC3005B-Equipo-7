@@ -257,7 +257,7 @@ const NewUser = () => {
                   if(!userData.pwd){
                     setIsPwdInvalid(true)
                     setInvalidPasswordText("Please specify a password")
-                  }else if (!userData.pwd.match(/^[-.@_A-Za-z0-9 ]+$/)){
+                  }else if (!userData.pwd.match(/^[-.@_A-Za-z0-9]+$/)){
                     setIsPwdInvalid(true)
                     setInvalidPasswordText("No special characters, please!")
                   }else{
