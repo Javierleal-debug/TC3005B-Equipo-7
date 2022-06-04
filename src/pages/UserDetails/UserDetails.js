@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSessionData } from '../../global-context'
 import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
-import { TrashCan, FaceCool, User, Police, Password } from '@carbon/icons-react'
+import { TrashCan, FaceCool, User, Police, UserSettings, Password, UserIdentification } from '@carbon/icons-react'
 import {
   Modal,
   TextInput,
@@ -21,7 +21,8 @@ import {
   Tag,
   SkeletonText,
   ButtonSkeleton,
-  DataTableSkeleton
+  DataTableSkeleton,
+  ComboBox
 } from 'carbon-components-react'
 
 const DeleteUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
@@ -45,7 +46,7 @@ const DeleteUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPwdChange, isPwdInvalid, invalidPasswordText }) => (
+const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPwdChange, isPwdInvalid, setIsPwdInvalid, invalidPasswordText }) => (
   <Modal
     open={open}
     modalLabel="User Management"
@@ -57,7 +58,13 @@ const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPw
     secondaryButtonText="Cancel"
     onSecondarySubmit={() => setOpen(false)}
     onRequestClose={() => setOpen(false)}
-    onRequestSubmit={submit}
+    onRequestSubmit={()=>{
+      if(!newPwd){
+        setIsPwdInvalid(true)
+      }else{
+        submit()
+      }
+    }}
   >
     <p>
       By clicking "Change Password", you understand that this user password will be changed.
@@ -76,18 +83,91 @@ const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPw
   </Modal>
 )
 
+const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUserTypeChange, isTypeNotSelected, setIsTypeNotSelected}) => (
+  <Modal
+    open={open}
+    modalLabel="User Management"
+    modalHeading="Change User Type"
+    primaryButtonDisabled={isDataLoading || isTypeNotSelected}
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Change User Type'
+    }
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={()=>{
+      if(!newUserType){
+        setIsTypeNotSelected(true)
+
+      }else{
+        submit()
+      }
+    }}
+  >
+    <p>
+      By clicking "Change User Type", you understand that this user features will be changed.
+    </p>
+    <ComboBox
+      id="Type"
+      onChange={(event) => {
+        handleNewUserTypeChange(event)
+      }}
+      label="Select User Type"
+      titleText="Type"
+      items={userTypes}
+      invalid={isTypeNotSelected}
+      invalidText={"Please select a user type"}
+    />
+  </Modal>
+)
+
+const ChangeMngrPopUp = ({ open, setOpen, submit, isDataLoading, handleMngrChange, isMngrNotSelected, setIsMngrNotSelected}) => (
+  <Modal
+    open={open}
+    modalLabel="User Management"
+    modalHeading="Change User Type"
+    primaryButtonDisabled={isDataLoading || isMngrNotSelected}
+    primaryButtonText={
+      isDataLoading ? <InlineLoading description="Loading..." /> : 'Change Manager'
+    }
+    secondaryButtonText="Cancel"
+    onSecondarySubmit={() => setOpen(false)}
+    onRequestClose={() => setOpen(false)}
+    onRequestSubmit={()=>{
+      if(!newMngr){
+        setIsMngrNotSelected(true)
+      } else {
+        submit()
+      }
+    }}
+  >
+    <p>
+      By clicking "Change Manager", you understand that user manager will be changed.
+    </p>
+    <ComboBox
+      id="MngrEmail"
+      onChange={(event) => {
+        handleMngrChange(event)
+      }}
+      label="Select Manager Email"
+      titleText="Manager Email"
+      items={mngrs}
+      invalid={isMngrNotSelected}
+      invalidText={"Prease select a Manager"}
+    />
+  </Modal>
+)
+
 var userData = {
   name: "",
   email: "",
   serial: "",
-  userType: "",
-  mngrName: "",
-  mngrEmail: "",
   area: ""
 }
 
 const userTypes = ['Admin','Focal','Security']
-var newPwd
+var mngrs = []
+var newPwd, newUserType, newMngr
 
 const UserDetails = () => {
   const [isDataLoading, setIsDataLoading] = useState(true)
@@ -95,11 +175,17 @@ const UserDetails = () => {
   const [deleteUserPopUpOpen, setDeleteUserPopUpOpen] = useState(false)
   const [changePasswordPopUpOpen, setChangePasswordPopUpOpen] = useState(false)
   const [changeUserTypePopUpOpen, setChangeUserTypePopUpOpen] = useState(false)
-  const [changeManagerPopUpOpen, setChangeManagerPopUpOpen] = useState(false)
+  const [changeMngrPopUpOpen, setChangeMngrPopUpOpen] = useState(false)
+  const [userType, setUserType] = useState("")
+  const [mngrName, setMngrName] = useState("")
+  const [mngrEmail, setMngrEmail] = useState("")
   const [isPwdInvalid, setIsPwdInvalid] = useState(false)
-  const [invalidPasswordText, setInvalidPasswordText] = useState(false)
+  const [invalidPasswordText, setInvalidPasswordText] = useState("Please specify a password")
+  const [isTypeNotSelected, setIsTypeNotSelected] = useState(false)
+  const [isMngrNotSelected, setIsMngrNotSelected] = useState(false)
 
   const [isRequestLoading, setIsRequestLoading] = useState(false)
+  const [isMngrRequestLoading, setMngrIsRequestLoading] = useState(true)
   const [notificationSuccessText, setNotificationSuccessText] = useState("")
   const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
@@ -120,6 +206,26 @@ const UserDetails = () => {
     }
   }
 
+  const handleNewUserTypeChange = (event) => {
+    newUserType = event.selectedItem
+    
+    if(!newUserType){
+      setIsTypeNotSelected(true)
+    }else{
+      setIsTypeNotSelected(false)
+    }
+  }
+
+  const handleMngrChange = (event) => {
+    newMngr = event.selectedItem
+    
+    if(!newMngr){
+      setIsMngrNotSelected(true)
+    }else{
+      setIsMngrNotSelected(false)
+    }
+  }
+
   const location = useLocation()
 
   const getItemRequest = () => {
@@ -134,22 +240,46 @@ const UserDetails = () => {
 
     axios
       .get(
-        `http://localhost:3001/user/${encodedEmail}`,
+        `https://peripheralsloanbackend.mybluemix.net/user/${encodedEmail}`,
         requestRowData
       )
       .then(({ data }) => {
-        console.log(data)
         userData.name = data.employeeName
         userData.email = data.employeeEmail
         userData.serial = data.serial
         userData.area = data.area
-        userData.mngrName = data.mngrName
-        userData.mngrEmail = data.mngrEmail
-        userData.userType = userTypes[data.userType]
+        setMngrName(data.mngrName)
+        setMngrEmail(data.mngrEmail)
+        setUserType(userTypes[data.userType])
         setIsDataLoading(false)
       })
       .catch((e) => {
         window.location.hash = 'not-found'
+      })
+  }
+
+  const getMngrEmailsAndNamesRequest = () => {
+    setMngrIsRequestLoading(true)
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    var requestRowData = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+      },
+    }
+
+    axios
+      .get(
+        'https://peripheralsloanbackend.mybluemix.net/user/',
+        requestRowData
+      )
+      .then(({ data }) => {
+        for (var i = 0; i < data.length; i++) {
+          mngrs[i] = data[i].employeeName + ", "+ data[i].employeeEmail
+        }
+        setMngrIsRequestLoading(false)
+      }).catch((error)=>{
+        setIsNotificationErrorActive(true)
+        setMngrIsRequestLoading(false)
       })
   }
 
@@ -158,8 +288,8 @@ const UserDetails = () => {
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     var requestData = {
       employeeEmail: userData.email,
-      mngrEmail: userData.mngrEmail,
-      mngrName: userData.mngrName
+      mngrEmail: mngrEmail,
+      mngrName: mngrName
     }
     var requestHeaders = {
       headers: {
@@ -169,12 +299,11 @@ const UserDetails = () => {
     
     axios
       .post(
-        'http://localhost:3001/user/deleteUser',
+        'https://peripheralsloanbackend.mybluemix.net/user/deleteUser',
         requestData,
         requestHeaders
       )
       .then(({ data }) => {
-        console.log(data.message)
         setDeleteUserPopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationSuccessActive(true)
@@ -182,7 +311,6 @@ const UserDetails = () => {
         window.location.hash = "/users"
       })
       .catch(function (error) {
-        console.log("error")
         setDeleteUserPopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationErrorActive(true)
@@ -192,7 +320,6 @@ const UserDetails = () => {
   const postChangePassword = async () => {
     setIsRequestLoading(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    console.log(newPwd)
     var requestData = {
       employeeEmail: userData.email,
       newPwd: newPwd
@@ -205,20 +332,17 @@ const UserDetails = () => {
     
     axios
       .post(
-        'http://localhost:3001/user/changePasswordAdmin',
+        'https://peripheralsloanbackend.mybluemix.net/user/changePasswordAdmin',
         requestData,
         requestHeaders
       )
       .then(({ data }) => {
-        console.log(data.message)
         setChangePasswordPopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationSuccessActive(true)
         setNotificationSuccessText("Password changed successfully")
       })
       .catch(function (error) {
-        console.log("error")
-        console.log(error)
         setChangePasswordPopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationErrorActive(true)
@@ -228,10 +352,9 @@ const UserDetails = () => {
   const postChangeUserType = async () => {
     setIsRequestLoading(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    console.log(newPwd)
     var requestData = {
       employeeEmail: userData.email,
-      userType: userType
+      userType: userTypes.indexOf(newUserType)
     }
     var requestHeaders = {
       headers: {
@@ -241,21 +364,53 @@ const UserDetails = () => {
     
     axios
       .post(
-        'http://localhost:3001/user/changeUserType',
+        'https://peripheralsloanbackend.mybluemix.net/user/changeUserType',
         requestData,
         requestHeaders
       )
       .then(({ data }) => {
-        console.log(data.message)
         setChangeUserTypePopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationSuccessActive(true)
         setNotificationSuccessText("User type changed successfully")
-        
+        setUserType(newUserType)
       })
       .catch(function (error) {
-        console.log("error")
-        console.log(error)
+        setChangeUserTypePopUpOpen(false)
+        setIsRequestLoading(false)
+        setIsNotificationErrorActive(true)
+      })
+  }
+
+  const postChangeMngr = async () => {
+    setIsRequestLoading(true)
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    var requestData = {
+      employeeEmail: userData.email,
+      mngrEmail: newMngr.split(", ")[1],
+      mngrName: newMngr.split(", ")[0]
+    }
+    var requestHeaders = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+      }
+    }
+    
+    axios
+      .post(
+        'https://peripheralsloanbackend.mybluemix.net/user/changeManager',
+        requestData,
+        requestHeaders
+      )
+      .then(({ data }) => {
+        setChangeMngrPopUpOpen(false)
+        setIsRequestLoading(false)
+        setIsNotificationSuccessActive(true)
+        setNotificationSuccessText("User's manager changed successfully")
+        setMngrEmail(newMngr.split(", ")[1])
+        setMngrName(newMngr.split(", ")[0])
+      })
+      .catch(function (error) {
         setChangeUserTypePopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationErrorActive(true)
@@ -263,17 +418,17 @@ const UserDetails = () => {
   }
 
   const createCellOfType = (userType) => {
-    if (userData.userType=== 'Admin') {
+    if (userType=== 'Admin') {
       return(<Tag renderIcon={FaceCool} size="md" className='icon-user'>
-        {userData.userType}
+        {userType}
       </Tag>)
-    } else if (userData.userType === 'Focal' ) {
+    } else if (userType === 'Focal' ) {
       return(<Tag renderIcon={User} size="md" className='icon-user'>
-        {userData.userType}
+        {userType}
       </Tag>)
-    } else if (userData.userType === 'Security') {
+    } else if (userType === 'Security') {
       return(<Tag renderIcon={Police} size="md" className='icon-user'>
-        {userData.userType}
+        {userType}
       </Tag>)
     }
   }
@@ -286,6 +441,7 @@ const UserDetails = () => {
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, "#/login")
+    getMngrEmailsAndNamesRequest()
     getItemRequest()
   }, [])
 
@@ -318,20 +474,27 @@ const UserDetails = () => {
         handleNewPwdChange={handleNewPwdChange}
         isDataLoading={isRequestLoading}
         isPwdInvalid={isPwdInvalid}
+        setIsPwdInvalid={setIsPwdInvalid}
         invalidPasswordText={invalidPasswordText}
       />
-      {/* <ChangeUserTypePopUp
+      <ChangeUserTypePopUp
         open={changeUserTypePopUpOpen}
         setOpen={setChangeUserTypePopUpOpen}
         submit={postChangeUserType}
+        handleNewUserTypeChange={handleNewUserTypeChange}
         isDataLoading={isRequestLoading}
+        isTypeNotSelected={isTypeNotSelected}
+        setIsTypeNotSelected={setIsTypeNotSelected}
       />
-      <ChangeManagerPopUp
-        open={changeManagerPopUpOpen}
-        setOpen={setChangeManagerPopUpOpen}
-        submit={postChangeManager}
+      <ChangeMngrPopUp
+        open={changeMngrPopUpOpen}
+        setOpen={setChangeMngrPopUpOpen}
+        submit={postChangeMngr}
         isDataLoading={isRequestLoading}
-      /> */}
+        handleMngrChange={handleMngrChange}
+        isMngrNotSelected={isMngrNotSelected}
+        setIsMngrNotSelected={setIsMngrNotSelected}
+      />
       {isNotificationErrorActive ? 
       <div className="error-notification">
         <ToastNotification
@@ -355,6 +518,21 @@ const UserDetails = () => {
         <Column sm={4} md={8} lg={4} className="actions-block">
           <h1>{userData.name}</h1>
           <ButtonSet stacked>
+            <Button
+              renderIcon={UserSettings}
+              kind={'secondary'}
+              onClick={() => setChangeUserTypePopUpOpen(true)}
+            >
+              Change User Type
+            </Button>
+            <Button
+              renderIcon={UserIdentification}
+              kind={'secondary'}
+              onClick={() => setChangeMngrPopUpOpen(true)}
+              disabled={isMngrRequestLoading}
+            >
+              {isMngrRequestLoading ? <InlineLoading description="Loading..." /> : 'Change Manager'}
+            </Button>
             <Button
               renderIcon={Password}
               kind={'secondary'}
@@ -395,7 +573,7 @@ const UserDetails = () => {
               <StructuredListRow tabIndex={0}>
               <StructuredListCell>Employee Type</StructuredListCell>
                 <StructuredListCell>{
-                  createCellOfType(userData.userType)
+                  createCellOfType(userType)
                 }</StructuredListCell>
               </StructuredListRow>
               <StructuredListRow tabIndex={0}>
@@ -404,11 +582,11 @@ const UserDetails = () => {
               </StructuredListRow>
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>Manager Name</StructuredListCell>
-                <StructuredListCell><div className='user-details-data'>{userData.mngrName}</div></StructuredListCell>
+                <StructuredListCell><div className='user-details-data'>{mngrName}</div></StructuredListCell>
               </StructuredListRow>
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>Manager Email</StructuredListCell>
-                <StructuredListCell><div className='user-details-data'>{userData.mngrEmail}</div></StructuredListCell>
+                <StructuredListCell><div className='user-details-data'>{mngrEmail}</div></StructuredListCell>
               </StructuredListRow>
             </StructuredListBody>
           </StructuredListWrapper>
