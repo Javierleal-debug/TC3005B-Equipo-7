@@ -16,7 +16,6 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  TableSelectRow,
   Pagination,
   SkeletonText,
   Tag,
@@ -132,19 +131,19 @@ const UserManagement = () => {
     if ('userType' === cell.id.split(':')[1]) {
       if (cell.value === 'Admin') {
         return (
-          <Tag renderIcon={FaceCool} size="md" className='icon-Admin'>
+          <Tag renderIcon={FaceCool} size="md" className='icon-user'>
             {cell.value}
           </Tag>
         )
       } else if (cell.value === 'Focal' ) {
         return (
-          <Tag renderIcon={User} size="md" className='icon-Focal'>
+          <Tag renderIcon={User} size="md" className='icon-user'>
             {cell.value}
           </Tag>
         )
       } else if (cell.value === 'Security') {
         return (
-          <Tag renderIcon={Police} size="md" className='icon-Security'>
+          <Tag renderIcon={Police} size="md" className='icon-user'>
             {cell.value}
           </Tag>
         )
