@@ -1,7 +1,7 @@
 import axios from 'axios'
 import tableHeaders from './headers.json'
 import React, { useState, useEffect } from 'react'
-import { TrashCan, UserFollow, Police, FaceCool, User } from '@carbon/icons-react'
+import { UserFollow, Police, FaceCool, User } from '@carbon/icons-react'
 import {
   Button,
   DataTableSkeleton,
@@ -16,16 +16,10 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  TableBatchActions,
-  TableBatchAction,
-  TableSelectAll,
   TableSelectRow,
   Pagination,
   SkeletonText,
   Tag,
-  Modal,
-  TextArea,
-  InlineLoading,
   ToastNotification,
 } from 'carbon-components-react'
 
@@ -34,34 +28,6 @@ import { checkAuth, redirectIfUserTypeIsNot } from '../../util'
 import { useSessionData } from '../../global-context'
 import { useLocation } from 'react-router-dom'
 
-const DeleteDevicePopUp = ({ open, setOpen, submit, isDataLoading }) => (
-  <Modal
-    open={open}
-    modalLabel="Peripheral device"
-    modalHeading="Delete"
-    primaryButtonDisabled={isDataLoading}
-    primaryButtonText={
-      isDataLoading ? <InlineLoading description="Loading..." /> : 'Delete'
-    }
-    secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
-    onRequestSubmit={submit}
-    danger
-  >
-    <p>
-      By clicking "Delete", you understand that this device(s) will no longer be
-      visible to users.
-    </p>
-    <TextArea
-      labelText="Comments (optional)"
-      helperText="Please add comments on why this device(s) is being deleted."
-      cols={50}
-      rows={4}
-      id="text-area-1"
-    />
-  </Modal>
-)
 
 const users = [{}]
 const userTypes = ['Admin','Focal','Security']; 
@@ -69,9 +35,6 @@ const userTypes = ['Admin','Focal','Security'];
 const UserManagement = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchingData, setSearchingData] = useState(false)
-  const [deleteDevicePopUpOpen, setDeleteDevicePopUpOpen] = useState(false)
-  const [isRequestLoading, setIsRequestLoading] = useState(false)
-  const [serialNumbersToDelete, setSerialNumbersToDelete] = useState([])
   const [headers, setHeaders] = useState(tableHeaders)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
   const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
@@ -82,37 +45,6 @@ const UserManagement = () => {
   let itemsPerPage = 10
   let pageNumber = 1
   const [pageConfig, setPageConfig] = useState([itemsPerPage, pageNumber])
-
-  const postDeleteDevices = async () => {
-    setIsRequestLoading(true)
-    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    var requestData = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-      },
-      data: {
-        array: serialNumbersToDelete,
-      },
-    }
-    axios
-      .delete(
-        'https://peripheralsloanbackend.mybluemix.net/peripheral/',
-        requestData
-      )
-      .then(({ data }) => {
-        console.log(data.message)
-        setDeleteDevicePopUpOpen(false)
-        setIsRequestLoading(false)
-        setIsNotificationSuccessActive(true)
-        getItemsRequest()
-      })
-      .catch(function (error) {
-        console.log("error")
-        setDeleteDevicePopUpOpen(false)
-        setIsRequestLoading(false)
-        setIsNotificationErrorActive(true)
-      })
-  }
 
   const loadRows = (
     firstItemIndex = itemsPerPage * (pageNumber - 1),
@@ -179,7 +111,7 @@ const UserManagement = () => {
       window.location.hash = '/login'
     }
     // eslint-disable-next-line
-  }, [sessionData])
+  }, [])
 
   function handleChangeItemsPerPage(event) {
     itemsPerPage = event.pageSize
@@ -188,47 +120,33 @@ const UserManagement = () => {
     loadRows()
   }
 
-  const batchActionClick = (selectedRows) => {
-    let serialNumbers = []
-    selectedRows.forEach((i) => {
-      let serialNumber = i.cells[3].value
-      serialNumbers.push(serialNumber)
-    })
-    setSerialNumbersToDelete(serialNumbers)
-
-    setDeleteDevicePopUpOpen(true)
-  }
-
   const createCellOfType = (cell, row) => {
     if ('name' === cell.id.split(':')[1]) {
       //var pathString = '#/users/' + row.cells[2].value //--> GetUser backend function not ready
-      let pathString = '#/devices'
+      const urlencoded = new URLSearchParams()
+      var email = row.cells[2].value
+      urlencoded.append('email', email)
+      let pathString = `#/users/${urlencoded}`
       return <a href={pathString}>{cell.value}</a>
     }
     if ('userType' === cell.id.split(':')[1]) {
       if (cell.value === 'Admin') {
         return (
-          <div>
-            <Tag renderIcon={FaceCool} size="md" className='icon-Admin'>
-              {cell.value}
-            </Tag>
-          </div>
+          <Tag renderIcon={FaceCool} size="md" className='icon-Admin'>
+            {cell.value}
+          </Tag>
         )
       } else if (cell.value === 'Focal' ) {
         return (
-          <div>
-            <Tag renderIcon={User} size="md" className='icon-Focal'>
-              {cell.value}
-            </Tag>
-          </div>
+          <Tag renderIcon={User} size="md" className='icon-Focal'>
+            {cell.value}
+          </Tag>
         )
       } else if (cell.value === 'Security') {
         return (
-          <div>
-            <Tag renderIcon={Police} size="md" className='icon-Security'>
-              {cell.value}
-            </Tag>
-          </div>
+          <Tag renderIcon={Police} size="md" className='icon-Security'>
+            {cell.value}
+          </Tag>
         )
       }
     }
@@ -271,12 +189,7 @@ const UserManagement = () => {
           subtitle="Devices 'deleted' successfully"/>
       </div> : <div></div>}
       
-      <DeleteDevicePopUp
-        open={deleteDevicePopUpOpen}
-        setOpen={setDeleteDevicePopUpOpen}
-        submit={postDeleteDevices}
-        isDataLoading={isRequestLoading}
-      />
+      
       <DataTable
         rows={rows}
         headers={headers}
@@ -284,9 +197,7 @@ const UserManagement = () => {
           rows,
           headers,
           getHeaderProps,
-          getSelectionProps,
           getToolbarProps,
-          getBatchActionProps,
           getRowProps,
           onInputChange,
           selectedRows,
@@ -295,17 +206,6 @@ const UserManagement = () => {
         }) => (
           <TableContainer title="User List" {...getTableContainerProps()}>
             <TableToolbar {...getToolbarProps()}>
-              <TableBatchActions {...getBatchActionProps()}>
-                <TableBatchAction
-                  renderIcon={TrashCan}
-                  iconDescription="Delete the selected rows"
-                  onClick={() => {
-                    batchActionClick(selectedRows)
-                  }}
-                >
-                  Delete
-                </TableBatchAction>
-              </TableBatchActions>
 
               <TableToolbarContent>
                 <TableToolbarSearch
@@ -331,7 +231,6 @@ const UserManagement = () => {
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
-                  <TableSelectAll {...getSelectionProps()} />
                   {headers.map((header) => (
                     <TableHeader
                       key={header.key}
@@ -349,9 +248,8 @@ const UserManagement = () => {
                 {rows.map((row) => (
                   <React.Fragment key={row.id}>
                     <TableRow {...getRowProps({ row })} className="table-row">
-                      <TableSelectRow {...getSelectionProps({ row })} />
                       {row.cells.map((cell) => (
-                        <TableCell key={cell.id} className="cell">
+                        <TableCell key={cell.id} className="user-cell">
                           {createCellOfType(cell, row)}
                         </TableCell>
                       ))}

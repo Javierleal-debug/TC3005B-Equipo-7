@@ -139,6 +139,7 @@ const NewDevice = () => {
       employeeName: deviceData.employeeName,
       employeeEmail: deviceData.employeeEmail,
       employeeSerial: deviceData.employeeSerial,
+      comment: deviceData.comment
     }
     let requestHeaders = {
       headers: {

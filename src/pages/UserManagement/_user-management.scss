@@ -1,20 +1,20 @@
 .icon-Admin {
-  fill: #000000;
-  color: #000000;
-  background-color: #d6d6d6;
-  font-weight: bold;
+  background-color: rgba(244, 244, 244, 0);
 }
 
 .icon-Focal {
-  fill: #000000;
-  color: #000000;
-  background-color: #d6d6d6;
-  font-weight: bold;
+  background-color: rgba(244, 244, 244, 0);
 }
 
 .icon-Security {
-  fill: #000000;
-  color: #ff0000;
-  background-color: #d6d6d6;
+  background-color: rgba(244, 244, 244, 0);
+}
+
+.table-row .user-cell:nth-of-type(2) {
+  color: #0f62fe;
+  font-weight: bold;
+}
+
+.table-row .user-cell:nth-of-type(6) {
   font-weight: bold;
 }

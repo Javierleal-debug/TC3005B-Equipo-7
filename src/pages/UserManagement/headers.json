@@ -1,4 +1,9 @@
 [
+
+  {
+    "key": "userType",
+    "header": "Type of User"
+  },
   {
     "key": "name",
     "header": "User Name"
@@ -22,9 +27,5 @@
   {
     "key": "mngrEmail",
     "header": "Manager Email"
-  },
-  {
-    "key": "userType",
-    "header": "Type of User"
   }
 ]

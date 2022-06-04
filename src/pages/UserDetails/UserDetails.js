@@ -7,3 +7,4 @@ const UserDetails = () => {
     <div></div>
   )
 }
+export default UserDetails
