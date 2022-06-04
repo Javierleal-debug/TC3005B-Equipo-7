@@ -123,10 +123,10 @@ const UserManagement = () => {
   const createCellOfType = (cell, row) => {
     if ('name' === cell.id.split(':')[1]) {
       //var pathString = '#/users/' + row.cells[2].value //--> GetUser backend function not ready
-      const urlencoded = new URLSearchParams()
       var email = row.cells[2].value
-      urlencoded.append('email', email)
-      let pathString = `#/users/${urlencoded}`
+      var encodedEmail = encodeURIComponent(email)
+      let pathString = "#/users/"+encodedEmail
+
       return <a href={pathString}>{cell.value}</a>
     }
     if ('userType' === cell.id.split(':')[1]) {
