@@ -14,7 +14,8 @@ import {
   Dropdown,
   Modal,
   InlineLoading,
-  ToastNotification
+  ToastNotification,
+  ComboBox
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
@@ -205,7 +206,7 @@ const NewDevice = () => {
         </Column>
         <Column sm={4} md={8} lg={8}>
           <Stack>
-            <Dropdown
+            <ComboBox
               id="Type"
               onChange={(event) => {
                 handleTypeChange(event)

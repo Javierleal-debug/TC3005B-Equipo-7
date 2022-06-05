@@ -51,7 +51,6 @@ function App() {
           <Route exact path="/my-inventory/:serialNumber" element={<Details />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path="/confirmation/:serialNumber" element={<UserAgreementConfirmation />} />
           <Route exact path="/confirmation/:serialNumberUrl" element={<UserAgreementConfirmation />} />
           <Route exact path="/users" element={<UserManagement />} />
           <Route exact path="/users/new-user" element={<NewUser />} />

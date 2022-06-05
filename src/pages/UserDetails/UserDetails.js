@@ -22,7 +22,9 @@ import {
   SkeletonText,
   ButtonSkeleton,
   DataTableSkeleton,
-  ComboBox
+  ComboBox,
+  Select,
+  SelectItem
 } from 'carbon-components-react'
 
 const DeleteUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
@@ -86,6 +88,7 @@ const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPw
 const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUserTypeChange, isTypeNotSelected, setIsTypeNotSelected}) => (
   <Modal
     open={open}
+    size='md'
     modalLabel="User Management"
     modalHeading="Change User Type"
     primaryButtonDisabled={isDataLoading || isTypeNotSelected}
@@ -112,11 +115,11 @@ const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUs
       onChange={(event) => {
         handleNewUserTypeChange(event)
       }}
-      label="Select User Type"
-      titleText="Type"
       items={userTypes}
       invalid={isTypeNotSelected}
       invalidText={"Please select a user type"}
+      label="Select User Type"
+      titleText="Type"
     />
   </Modal>
 )
@@ -124,6 +127,7 @@ const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUs
 const ChangeMngrPopUp = ({ open, setOpen, submit, isDataLoading, handleMngrChange, isMngrNotSelected, setIsMngrNotSelected}) => (
   <Modal
     open={open}
+    size='md'
     modalLabel="User Management"
     modalHeading="Change User Type"
     primaryButtonDisabled={isDataLoading || isMngrNotSelected}
@@ -207,7 +211,8 @@ const UserDetails = () => {
   }
 
   const handleNewUserTypeChange = (event) => {
-    newUserType = event.selectedItem
+    console.log(event.target.value)
+    newUserType = event.target.value
     
     if(!newUserType){
       setIsTypeNotSelected(true)

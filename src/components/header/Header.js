@@ -119,6 +119,9 @@ const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, isOldPwdInv
           }else if(newPwd.length<8 || newPwd.length>21){
             setIsNewPwdInvalid(true)
             setInvalidNewPwdText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
+          }else if(invalidConfirmPwdText === "Passwords do not match"){
+            setIsConfirmPwdInvalid(false)
+            setIsNewPwdInvalid(false)
           }else{
             setIsNewPwdInvalid(false)
           }
