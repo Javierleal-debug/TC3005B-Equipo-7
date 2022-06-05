@@ -251,6 +251,7 @@ const AccountInfo = ({ userData }) => {
         kind={'secondary'}
         className="openPopUp-changepwd-button"
         onClick={() => setChangePasswordPopUpOpen(true)}
+        disabled={(userData.email==="")}
       >
         Change Password
       </Button>
@@ -321,29 +322,43 @@ const TutorialHeader = () => {
 
   const { sessionData, setSessionData } = useSessionData()
 
-  const getUserInfoRequest = () => {
+  const getUserInfoRequest = async () => {
     const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    const requestRowData = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-      },
+    if(!userInfo){
+      return
     }
 
+    var qs = require('qs');
+    var requestData = qs.stringify({
+      'email': `${userInfo['email']}`
+    });
+
+    const requestHeaders = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
     axios
-      .get(
-        `https://peripheralsloanbackend.mybluemix.net/user/${encodeURIComponent(userInfo.email)}`,
-        requestRowData
+      .post(
+        `https://peripheralsloanbackend.mybluemix.net/user/name`,
+        requestData,
+        requestHeaders
       )
       .then(({ data }) => {
         setUserData({ email: data.employeeEmail, name: data.employeeName })
       })
       .catch((e) => {
-        window.location.hash = 'not-found'
+        
       })
   }
 
   useEffect(() => {
-    if (!sessionData.loggedIn){ window.location.hash = '/login'}
+    if(!sessionData.loggedIn){ 
+      window.location.hash = '/login'
+    }else{
+      getUserInfoRequest()
+    }
   }, [sessionData])
 
   // useEffect(() => {
@@ -369,7 +384,7 @@ const TutorialHeader = () => {
             Peripheral Loans
           </HeaderName>
 
-          {sessionData.loggedIn && localStorage.getItem('UserInfo') && getUserInfoRequest && (
+          {sessionData.loggedIn && localStorage.getItem('UserInfo') && (
             <>
               <SkipToContent />
               <HeaderMenuButton

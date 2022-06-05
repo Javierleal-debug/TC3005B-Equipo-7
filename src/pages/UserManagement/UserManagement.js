@@ -70,7 +70,7 @@ const UserManagement = () => {
 
     axios
       .get(
-        'http://peripheralsloanbackend.mybluemix.net/user/',
+        'https://peripheralsloanbackend.mybluemix.net/user/',
         requestRowData
       )
       .then(({ data }) => {

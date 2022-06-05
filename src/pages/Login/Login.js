@@ -84,7 +84,6 @@ const Login = () => {
         setIsPasswordIncorrect(true)
       }
     } catch (e) {
-      console.log(e)
       alert(e.message)
     } finally {
       setIsRequestLoading(false)
