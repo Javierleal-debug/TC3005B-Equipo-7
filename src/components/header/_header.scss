@@ -6,3 +6,24 @@
 .account-data-area {
   padding: 20px;
 }
+
+.account-data-area .account-user-data, .account-data-area .cds--tag {
+  padding-left: 0.25rem;
+  padding-top: 0.75rem;
+}
+
+.cds--body--with-modal-open .cds--tooltip, .cds--body--with-modal-open .cds--overflow-menu-options { //fix a litlle IBM bug
+  z-index: 900;
+}
+.cds--modal-content {
+  margin-bottom: 1rem;
+}
+
+.change-my-password-input-field {
+  padding-top: 1rem;
+}
+
+.account-data-area .openPopUp-changepwd-button {
+  width: 100%;
+  margin-top: 1rem;
+}
