@@ -150,7 +150,6 @@ const NewUser = () => {
       .then(({ data }) => {
         setCreateUserPopUpOpen(false)
         setIsRequestLoading(false)
-        console.log(data.message)
         
         if(data.message === "Email already registered"){
           setIsWarningNotificationActive(true)

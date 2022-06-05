@@ -14,12 +14,10 @@ function UserAgreementConfirmation() {
     setIsDataLoading(true)
 
     try {
-      console.log(serialNumberUrl)
       const res = await fetch(
         `https://peripheralsloanbackend.mybluemix.net/peripheral/accept/${serialNumberUrl}`
       )
       const resJSON = await res.json()
-      console.log(resJSON.message)
       setSerialNumber(resJSON.serialNumber)
       if (resJSON.message !== 'success') setSuccess(false)
     } catch (e) {

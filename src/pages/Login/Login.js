@@ -42,7 +42,6 @@ const Login = () => {
     if (sessionData.redirect && sessionData.redirect !== '/login')
       redirect = sessionData.redirect
 
-    console.log(redirect)
 
     if (sessionData.loggedIn && localStorage.getItem('UserInfo')) {
       checkAuth(sessionData, setSessionData, redirect)

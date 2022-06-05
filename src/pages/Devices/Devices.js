@@ -106,7 +106,6 @@ const Devices = () => {
         requestData
       )
       .then(({ data }) => {
-        console.log(data.message)
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationSuccessActive(true)
@@ -149,7 +148,6 @@ const Devices = () => {
         requestRowData
       )
       .then(({ data }) => {
-        console.log(data)
         devices = []
         for (var i = 0; i < data.length; i++) {
           var newRow = {

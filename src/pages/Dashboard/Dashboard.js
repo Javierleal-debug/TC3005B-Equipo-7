@@ -79,8 +79,6 @@ const Dashboard = () => {
   const getInsideOutDate = () => {
     setOutValue('')
     setInValue('')
-    console.log('date : ' + date)
-    console.log(Moment(startDate).format('YYYY-MM-DD'))
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -106,9 +104,6 @@ const Dashboard = () => {
       .then(({ data }) => {
         setInValue(data.valueIn)
         setOutValue(data.valueOut)
-        console.log(
-          'value In: ' + data.valueIn + ', value out: ' + data.valueOut
-        )
       })
   }
 
@@ -116,11 +111,8 @@ const Dashboard = () => {
   const [startDate, setStartDate] = useState(new Date())
 
   const handleDate = (dateChange) => {
-    console.log(startDate)
     setStartDate(dateChange)
     date = Moment(dateChange).format('YYYY-MM-DD')
-    console.log('value:' + Moment(dateChange).format('YYYY-MM-DD'))
-    console.log('value S:' + Moment(startDate).format('YYYY-MM-DD'))
     getInsideOutDate()
   }
 

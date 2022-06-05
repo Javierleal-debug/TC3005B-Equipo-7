@@ -107,7 +107,6 @@ const MyInventory = () => {
         requestData
       )
       .then(({ data }) => {
-        console.log(data.message)
         setDeleteDevicePopUpOpen(false)
         setIsRequestLoading(false)
         setIsNotificationSuccessActive(true)
@@ -150,7 +149,6 @@ const MyInventory = () => {
         requestRowData
       )
       .then(({ data }) => {
-        console.log(data)
         devices = []
         for (var i = 0; i < data.length; i++) {
           var newRow = {

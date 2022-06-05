@@ -192,7 +192,6 @@ const AccountInfo = ({ userData }) => {
           setIsOldPwdInvalid(true)
           setInvalidOldPwdText("Incorrect password...")
         }else{
-          console.log(data.message)
           setChangePasswordPopUpOpen(false)
           setIsRequestLoading(false)
           setIsNotificationSuccessActive(true)

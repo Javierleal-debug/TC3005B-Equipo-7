@@ -305,7 +305,6 @@ const Details = () => {
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
-    console.log(location.pathname.split('/')[1])
     var orgPage= location.pathname.split("/")[1]
     if(orgPage==="my-inventory"){
       redirectIfUserTypeIsNot(sessionData, 'admin', 'focal')
@@ -323,7 +322,6 @@ const Details = () => {
   // API Calls
   const getItemRequest = () => {
     //const serialNumber = window.location.pathname.split('/').slice(-1)[0];
-    console.log(serialNumber)
     setIsDataLoading(true)
     const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     const requestRowData = {
@@ -342,7 +340,6 @@ const Details = () => {
           window.location.hash = '/not-found'
           return
         }
-        console.log(data)
         device = {
           type: data[0],
           brand: data[1],
@@ -387,8 +384,6 @@ const Details = () => {
 
     setIsRequestLoading(true)
 
-    console.log(employeeSerial, employeeName, employeeEmail)
-
     /**
      * API Request Device
      */
@@ -404,7 +399,6 @@ const Details = () => {
     urlencoded.append('employeeEmail', employeeEmail)
     urlencoded.append('employeeSerial', employeeSerial)
 
-    console.log(urlencoded)
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -418,7 +412,6 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       console.log(e)
     }
@@ -464,7 +457,6 @@ const Details = () => {
         requestOptions
       )
       let responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       console.log(e)
     }
@@ -515,7 +507,6 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       console.log(e)
     }
@@ -557,7 +548,6 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       console.log(e)
     }
@@ -602,7 +592,6 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       console.log(e)
     }
@@ -637,7 +626,6 @@ const Details = () => {
         requestOptions
       )
       const responseJSON = await response.json()
-      console.log(responseJSON.message)
     } catch (e) {
       window.alert(e)
     }

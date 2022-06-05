@@ -154,7 +154,6 @@ const NewDevice = () => {
         requestHeaders
       )
       .then(({ data }) => {
-        console.log(data.message)
         setCreateDevicePopUpOpen(false)
         setIsRequestLoading(false)
         if(data.message === "SerialNumber is already registered"){
