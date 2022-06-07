@@ -146,45 +146,84 @@ const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading }) => {
   )
 }
 
-const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUserTypeChange, isTypeNotSelected, setIsTypeNotSelected}) => (
-  <Modal
-    open={open}
-    size='md'
-    modalLabel="User Management"
-    modalHeading="Change User Type"
-    primaryButtonDisabled={isDataLoading || isTypeNotSelected}
-    primaryButtonText={
-      isDataLoading ? <InlineLoading description="Loading..." /> : 'Change User Type'
-    }
-    secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
-    onRequestSubmit={()=>{
-      if(!newUserType){
-        setIsTypeNotSelected(true)
-
-      }else{
-        submit()
+const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, userType, isTypeNotSelected, setIsTypeNotSelected}) => {
+  const [selectedButton, setSelectedButton] = useState("0");
+  return(
+    <Modal
+      open={open}
+      size='md'
+      modalLabel="User Management"
+      modalHeading="Change User Type"
+      primaryButtonDisabled={isDataLoading || isTypeNotSelected}
+      primaryButtonText={
+        isDataLoading ? <InlineLoading description="Loading..." /> : 'Change User Type'
       }
-    }}
-  >
-    <p>
-      By clicking "Change User Type", you understand that this user features will be changed.
-    </p>
-    <ComboBox
-      id="Type"
-      className="combobox-popup"
-      onChange={(event) => {
-        handleNewUserTypeChange(event)
+      secondaryButtonText="Cancel"
+      onSecondarySubmit={() => setOpen(false)}
+      onRequestClose={() => setOpen(false)}
+      onRequestSubmit={()=>{
+        if(!newUserType){
+          setIsTypeNotSelected(true)
+
+        }else{
+          submit()
+        }
       }}
-      items={userTypes}
-      invalid={isTypeNotSelected}
-      invalidText={"Please select a user type"}
-      label="Select User Type"
-      titleText="Type"
-    />
-  </Modal>
-)
+    >
+      <p>
+        By clicking "Change User Type", you understand that this user features will be changed.
+      </p>
+      <ButtonSet className='center-icon-button-set'>
+        <div className='cds--list-box__wrapper'>
+          <Button
+            renderIcon={FaceCool}
+            iconDescription="Admin"
+            hasIconOnly
+            kind={selectedButton==="1"? "primary": "tertiary"}
+            tooltipAlignment='start'
+            onClick={()=>{
+              newUserType = "Admin"    
+              setIsTypeNotSelected(false)
+              setSelectedButton("1")
+            }}
+            disabled={userType==="Admin"? true : false}
+            />
+        </div>
+        <div className='cds--list-box__wrapper'>
+          <Button
+            renderIcon={User}
+            iconDescription="Focal"
+            hasIconOnly
+            kind={selectedButton==="2"? "primary": "tertiary"}
+            tooltipAlignment='center'
+            onClick={()=>{
+              newUserType = "Focal"    
+              setIsTypeNotSelected(false)
+              setSelectedButton("2")
+            }}
+            disabled={userType==="Focal"? true : false}
+            />
+        </div>
+        <div className='cds--list-box__wrapper'>
+          <Button
+            renderIcon={Police}
+            iconDescription="Security"
+            hasIconOnly
+            kind={selectedButton==="3"? "primary": "tertiary"}
+            tooltipAlignment='end'
+            onClick={()=>{
+              newUserType = "Security"    
+              setIsTypeNotSelected(false)
+              setSelectedButton("3")
+            }}
+            disabled={userType==="Security"? true : false}
+            />
+        </div>
+      </ButtonSet>
+      {isTypeNotSelected? (<div className="invalid-usertype-popup-text">Please select a user type</div>) : <></>}
+    </Modal>
+  )
+}
 
 const ChangeMngrPopUp = ({ open, setOpen, submit, isDataLoading, handleMngrChange, isMngrNotSelected, setIsMngrNotSelected}) => (
   <Modal
@@ -527,7 +566,7 @@ const UserDetails = () => {
         open={changeUserTypePopUpOpen}
         setOpen={setChangeUserTypePopUpOpen}
         submit={postChangeUserType}
-        handleNewUserTypeChange={handleNewUserTypeChange}
+        userType={userType}
         isDataLoading={isRequestLoading}
         isTypeNotSelected={isTypeNotSelected}
         setIsTypeNotSelected={setIsTypeNotSelected}
