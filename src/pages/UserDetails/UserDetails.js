@@ -211,8 +211,8 @@ const UserDetails = () => {
   }
 
   const handleNewUserTypeChange = (event) => {
-    console.log(event.target.value)
-    newUserType = event.target.value
+    console.log(event.selectedItem)
+    newUserType = event.selectedItem
     
     if(!newUserType){
       setIsTypeNotSelected(true)
@@ -507,6 +507,8 @@ const UserDetails = () => {
           lowContrast={true}
           title="Error"
           onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
+          onClose={()=>{setIsNotificationErrorActive(false)}}
+          timeout={5000}
           subtitle="Something went wrong, try it later"/>
       </div> : <div></div>}
       {isNotificationSuccessActive ? 
@@ -516,6 +518,8 @@ const UserDetails = () => {
           lowContrast={true}
           title="Success!"
           onCloseButtonClick={()=>{setIsNotificationSuccessActive(false)}}
+          onClose={()=>{setIsNotificationSuccessActive(false)}}
+          timeout={5000}
           subtitle={notificationSuccessText}/>
       </div> : <div></div>}
 

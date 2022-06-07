@@ -174,6 +174,8 @@ const NewUser = () => {
             lowContrast={true}
             title="Error"
             onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
+            onClose={()=>{setIsNotificationErrorActive(false)}}
+            timeout={5000}
             subtitle="Something went wrong, try it later"/>
         </div> 
         : 
@@ -186,6 +188,8 @@ const NewUser = () => {
           lowContrast={true}
           title="Already exists!"
           onCloseButtonClick={()=>{setIsWarningNotificationActive(false)}}
+          onClose={()=>{setIsWarningNotificationActive(false)}}
+          timeout={5000}
           subtitle="This user email is already registered"/>
       </div> : <div></div>}
       <CreateUserPopUp

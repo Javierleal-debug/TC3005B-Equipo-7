@@ -174,6 +174,8 @@ const Devices = () => {
           setIsNotificationEmptyActive(true);
         }
         loadRows()
+      }).catch((error)=>{
+        setIsNotificationErrorActive(true);
       })
   }
 
@@ -274,6 +276,8 @@ const Devices = () => {
           lowContrast={true}
           title="There are no peripherals registered!"
           onCloseButtonClick={()=>{setIsNotificationEmptyActive(false)}}
+          onClose={()=>{setIsNotificationEmptyActive(false)}}
+          timeout={5000}
           subtitle="When you create a new device, your Device List will grow."/>
       </div> : <div></div>}
       {isNotificationErrorActive ? 
@@ -283,6 +287,8 @@ const Devices = () => {
           lowContrast={true}
           title="Error"
           onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
+          onClose={()=>{setIsNotificationErrorActive(false)}}
+          timeout={5000}
           subtitle="Something went wrong, try it later"/>
       </div> : <div></div>}
 
@@ -293,6 +299,8 @@ const Devices = () => {
           lowContrast={true}
           title="Success!"
           onCloseButtonClick={()=>{setIsNotificationSuccessActive(false)}}
+          onClose={()=>{setIsNotificationSuccessActive(false)}}
+          timeout={5000}
           subtitle="Devices 'deleted' successfully"/>
       </div> : <div></div>}
       
