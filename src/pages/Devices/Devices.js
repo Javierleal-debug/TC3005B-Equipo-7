@@ -181,7 +181,7 @@ const Devices = () => {
   const location = useLocation()
 
   useEffect(() => {
-    if (sessionData.userType === 'requisitor') {
+    if (sessionData.userType === 'security') {
       const newHeaders = headers.filter((header) => {
         return header.key !== 'currentUser'
       })
@@ -192,7 +192,7 @@ const Devices = () => {
       checkAuth(sessionData, setSessionData, location.pathname)
       getItemsRequest()
     } catch (e) {
-      window.location.hash = '/login'
+      window.location.href = '/?#/login'
     }
     // eslint-disable-next-line
   }, [])

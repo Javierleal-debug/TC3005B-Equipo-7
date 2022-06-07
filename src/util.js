@@ -123,5 +123,5 @@ export function redirectIfUserTypeIsNot(sessionData, ...userTypes) {
     if (type === sessionData.userType) valid = true
   })
 
-  if (!valid) window.location.hash = '/'
+  if (!valid) window.location.href = '/?#/login'
 }

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 
-import { Grid, Column } from 'carbon-components-react'
 import { useSessionData } from '../../global-context'
 
 import { checkAuth } from '../../util'
@@ -11,7 +10,13 @@ const LandingPage = () => {
   const location = useLocation()
 
   useEffect(() => {
-    checkAuth(sessionData, setSessionData, location.pathname)
+    try {
+      JSON.parse(localStorage.getItem('UserInfo'))
+      checkAuth(sessionData, setSessionData, location.pathname)
+      window.location.href = '/?#/devices'
+    } catch (e) {
+      window.location.href = '/?#/login'
+    }
     // eslint-disable-next-line
   }, [])
 

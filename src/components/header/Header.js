@@ -325,39 +325,39 @@ const TutorialHeader = () => {
   const { sessionData, setSessionData } = useSessionData()
 
   const getUserInfoRequest = async () => {
-    const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
-    if(!userInfo){
+    try{
+      const userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+      var qs = require('qs');
+      var requestData = qs.stringify({
+        'email': `${userInfo['email']}`
+      });
+
+      const requestHeaders = {
+        headers: {
+          'x-access-token': `${userInfo['accessToken']}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      axios
+        .post(
+          `https://peripheralsloanbackend.mybluemix.net/user/name`,
+          requestData,
+          requestHeaders
+        )
+        .then(({ data }) => {
+          setUserData({ email: data.employeeEmail, name: data.employeeName })
+        })
+        .catch((e) => {
+          
+        })
+    }catch(e){
       return
     }
-
-    var qs = require('qs');
-    var requestData = qs.stringify({
-      'email': `${userInfo['email']}`
-    });
-
-    const requestHeaders = {
-      headers: {
-        'x-access-token': `${userInfo['accessToken']}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }
-    axios
-      .post(
-        `https://peripheralsloanbackend.mybluemix.net/user/name`,
-        requestData,
-        requestHeaders
-      )
-      .then(({ data }) => {
-        setUserData({ email: data.employeeEmail, name: data.employeeName })
-      })
-      .catch((e) => {
-        
-      })
   }
 
   useEffect(() => {
     if(!sessionData.loggedIn){ 
-      window.location.hash = '/login'
+      window.location.href = '/?#/login'
     }else{
       getUserInfoRequest()
     }
