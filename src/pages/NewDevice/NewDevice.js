@@ -221,7 +221,7 @@ const NewDevice = () => {
                   setIsTypeNotSelected(false)
                 }
               }}
-              label="Select Device Type"
+              placeholder="Select Device Type"
               titleText="Type"
               items={items}
               invalid={isTypeNotSelected}

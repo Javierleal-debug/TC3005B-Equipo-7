@@ -48,42 +48,103 @@ const DeleteUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
   </Modal>
 )
 
-const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading, handleNewPwdChange, isPwdInvalid, setIsPwdInvalid, invalidPasswordText }) => (
-  <Modal
-    open={open}
-    modalLabel="User Management"
-    modalHeading="Change Password"
-    primaryButtonDisabled={isDataLoading || isPwdInvalid}
-    primaryButtonText={
-      isDataLoading ? <InlineLoading description="Loading..." /> : 'Change Password'
-    }
-    secondaryButtonText="Cancel"
-    onSecondarySubmit={() => setOpen(false)}
-    onRequestClose={() => setOpen(false)}
-    onRequestSubmit={()=>{
-      if(!newPwd){
-        setIsPwdInvalid(true)
-      }else{
-        submit()
+const ChangePasswordPopUp = ({ open, setOpen, submit, isDataLoading }) => {
+  const [isNewPwdInvalid, setIsNewPwdInvalid] = useState(false)
+  const [invalidNewPwdText, setInvalidNewPwdText] = useState("Please specify a password")
+  const [isConfirmPwdInvalid, setIsConfirmPwdInvalid] = useState(false)
+  const [invalidConfirmPwdText, setInvalidConfirmPwdText] = useState("Please specify a password")
+
+  return(
+    <Modal
+      open={open}
+      modalLabel="User Management"
+      modalHeading="Change Password"
+      primaryButtonDisabled={isDataLoading || isNewPwdInvalid || isConfirmPwdInvalid}
+      primaryButtonText={
+        isDataLoading ? <InlineLoading description="Loading..." /> : 'Change Password'
       }
-    }}
-  >
-    <p>
-      By clicking "Change Password", you understand that this user password will be changed.
-    </p>
-    <TextInput.PasswordInput
-      type="password"
-      id="Password"
-      placeholder="Define User Password"
-      labelText="Password"
-      onChange={(event)=>{
-        handleNewPwdChange(event)
+      secondaryButtonText="Cancel"
+      onSecondarySubmit={() => setOpen(false)}
+      onRequestClose={() => setOpen(false)}
+      onRequestSubmit={()=>{
+        let allowRequest = true
+        if(!newPwd){
+          setIsNewPwdInvalid(true)
+          allowRequest = false
+        }
+        if(!confirmPwd){
+          setIsConfirmPwdInvalid(true)
+          allowRequest = false
+        }
+        if(newPwd!==confirmPwd){
+          setIsConfirmPwdInvalid(true)
+          setInvalidConfirmPwdText("Passwords do not match")
+          allowRequest = false
+        }
+        if(allowRequest){
+          submit()
+        }
       }}
-      invalid={isPwdInvalid}
-      invalidText={invalidPasswordText}
-    />
-  </Modal>
-)
+    >
+      <p>
+        By clicking "Change Password", you understand that this user password will be changed.
+      </p>
+      <div className="change-my-password-input-field">
+      <TextInput.PasswordInput
+        type="password"
+        id="newPassword"
+        placeholder=""
+        labelText="New password"
+        onChange={(event)=>{
+          newPwd = event.target.value
+          if(!newPwd){
+            setIsNewPwdInvalid(true)
+            setInvalidNewPwdText("Please specify a password")
+          }else if(!newPwd.match(/^[-.@_A-Za-z0-9]+$/)){
+            setIsNewPwdInvalid(true)
+            setInvalidNewPwdText("No special characters, please!")
+          }else if(newPwd.length<8 || newPwd.length>21){
+            setIsNewPwdInvalid(true)
+            setInvalidNewPwdText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
+          }else if(invalidConfirmPwdText === "Passwords do not match"){
+            setIsConfirmPwdInvalid(false)
+            setIsNewPwdInvalid(false)
+          }else{
+            setIsNewPwdInvalid(false)
+          }
+        }}
+        invalid={isNewPwdInvalid}
+        invalidText={invalidNewPwdText}
+      />
+    </div>
+    <div className="change-my-password-input-field">
+      <TextInput.PasswordInput
+        type="password"
+        id="repeatedNewPassword"
+        placeholder=""
+        labelText="Confirm new password"
+        onChange={(event)=>{
+          confirmPwd = event.target.value
+          if(!confirmPwd){
+            setIsConfirmPwdInvalid(true)
+            setInvalidConfirmPwdText("Please specify a password")
+          }else if(!confirmPwd.match(/^[-.@_A-Za-z0-9]+$/)){
+            setIsConfirmPwdInvalid(true)
+            setInvalidConfirmPwdText("No special characters, please!")
+          }else if(confirmPwd.length<8 || confirmPwd.length>21){
+            setIsConfirmPwdInvalid(true)
+            setInvalidConfirmPwdText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
+          }else{
+            setIsConfirmPwdInvalid(false)
+          }
+        }}
+        invalid={isConfirmPwdInvalid}
+        invalidText={invalidConfirmPwdText}
+      />
+    </div>
+    </Modal>
+  )
+}
 
 const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUserTypeChange, isTypeNotSelected, setIsTypeNotSelected}) => (
   <Modal
@@ -112,6 +173,7 @@ const ChangeUserTypePopUp = ({ open, setOpen, submit, isDataLoading, handleNewUs
     </p>
     <ComboBox
       id="Type"
+      className="combobox-popup"
       onChange={(event) => {
         handleNewUserTypeChange(event)
       }}
@@ -150,11 +212,12 @@ const ChangeMngrPopUp = ({ open, setOpen, submit, isDataLoading, handleMngrChang
     </p>
     <ComboBox
       id="MngrEmail"
+      className="combobox-popup"
       onChange={(event) => {
         handleMngrChange(event)
       }}
-      label="Select Manager Email"
-      titleText="Manager Email"
+      placeholder="Select a Manager"
+      titleText="Manager"
       items={mngrs}
       invalid={isMngrNotSelected}
       invalidText={"Prease select a Manager"}
@@ -171,7 +234,7 @@ var userData = {
 
 const userTypes = ['Admin','Focal','Security']
 var mngrs = []
-var newPwd, newUserType, newMngr
+var newPwd, confirmPwd, newUserType, newMngr
 
 const UserDetails = () => {
   const [isDataLoading, setIsDataLoading] = useState(true)
@@ -183,8 +246,6 @@ const UserDetails = () => {
   const [userType, setUserType] = useState("")
   const [mngrName, setMngrName] = useState("")
   const [mngrEmail, setMngrEmail] = useState("")
-  const [isPwdInvalid, setIsPwdInvalid] = useState(false)
-  const [invalidPasswordText, setInvalidPasswordText] = useState("Please specify a password")
   const [isTypeNotSelected, setIsTypeNotSelected] = useState(false)
   const [isMngrNotSelected, setIsMngrNotSelected] = useState(false)
 
@@ -193,22 +254,6 @@ const UserDetails = () => {
   const [notificationSuccessText, setNotificationSuccessText] = useState("")
   const [isNotificationSuccessActive, setIsNotificationSuccessActive] = useState(false)
   const [isNotificationErrorActive, setIsNotificationErrorActive] = useState(false)
-  
-  const handleNewPwdChange = (event) => {
-    newPwd = event.target.value
-    if(!newPwd){
-      setIsPwdInvalid(true)
-      setInvalidPasswordText("Please specify a password")
-    }else if(!newPwd.match(/^[-.@_A-Za-z0-9]+$/)){
-      setIsPwdInvalid(true)
-      setInvalidPasswordText("No special characters, please!")
-    }else if(newPwd.length<8 || newPwd.length>21){
-      setIsPwdInvalid(true)
-      setInvalidPasswordText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
-    }else{
-      setIsPwdInvalid(false)
-    }
-  }
 
   const handleNewUserTypeChange = (event) => {
     console.log(event.selectedItem)
@@ -476,11 +521,7 @@ const UserDetails = () => {
         open={changePasswordPopUpOpen}
         setOpen={setChangePasswordPopUpOpen}
         submit={postChangePassword}
-        handleNewPwdChange={handleNewPwdChange}
         isDataLoading={isRequestLoading}
-        isPwdInvalid={isPwdInvalid}
-        setIsPwdInvalid={setIsPwdInvalid}
-        invalidPasswordText={invalidPasswordText}
       />
       <ChangeUserTypePopUp
         open={changeUserTypePopUpOpen}

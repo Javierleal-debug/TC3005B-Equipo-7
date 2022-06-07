@@ -13,7 +13,8 @@ import {
   Dropdown,
   Modal,
   InlineLoading,
-  ToastNotification
+  ToastNotification,
+  ComboBox
 } from 'carbon-components-react'
 import { Misuse, Save } from '@carbon/icons-react'
 import { useSessionData } from '../../global-context'
@@ -48,6 +49,7 @@ const CreateUserPopUp = ({ open, setOpen, submit, isDataLoading }) => (
 )
 
 const userData = {}
+var mngrs = []
 
 const NewUser = () => {
   const [createUserPopUpOpen, setCreateUserPopUpOpen] = useState(false)
@@ -60,17 +62,21 @@ const NewUser = () => {
   const [isEmailInvalid, setIsEmailInvalid] = useState(false)
   const [isSerialInvalid, setIsSerialInvalid] = useState(false)
   const [isAreaInvalid, setIsAreaInvalid] = useState(false)
-  const [isMngrNameInvalid, setIsMngrNameInvalid] = useState(false)
-  const [isMngrEmailInvalid, setIsMngrEmailInvalid] = useState(false)
-  const [isPwdInvalid, setIsPwdInvalid] = useState(false)
-  const [invalidPasswordText, setInvalidPasswordText] = useState(false)
+  const [isMngrNotSelected, setIsMngrNotSelected] = useState(false)
+  const [isMngrRequestLoading, setMngrIsRequestLoading] = useState(true)
+
+  const [isNewPwdInvalid, setIsNewPwdInvalid] = useState(false)
+  const [invalidNewPwdText, setInvalidNewPwdText] = useState("Please specify a password")
+  const [isConfirmPwdInvalid, setIsConfirmPwdInvalid] = useState(false)
+  const [invalidConfirmPwdText, setInvalidConfirmPwdText] = useState("Please specify a password")
+
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
 
   useEffect(() => {
     checkAuth(sessionData, setSessionData, location.pathname)
-    // eslint-disable-next-line
+    getMngrEmailsAndNamesRequest()
   }, [])
 
   useEffect(() => {
@@ -95,12 +101,13 @@ const NewUser = () => {
     userData.serial = event.target.value
   }
 
-  const handleMngrNameChange = (event) => {
-    userData.mngrName = event.target.value
-  }
-
-  const handleMngrEmailChange = (event) => {
-    userData.mngrEmail = event.target.value
+  const handleMngrChange = (event) => {
+    userData.mngr = event.selectedItem
+    if(!userData.mngr){
+      setIsMngrNotSelected(true)
+    }else{
+      setIsMngrNotSelected(false)
+    }
   }
 
   const handlePwdChange = (event) => {
@@ -129,9 +136,9 @@ const NewUser = () => {
       email: userData.email,
       serial: userData.serial,
       area: userData.area,
-      mngrName: userData.mngrName,
-      mngrEmail: userData.mngrEmail,
-      pwd: userData.pwd,
+      mngrName: userData.mngr.split(", ")[1],
+      mngrEmail: userData.mngr.split(", ")[0],
+      pwd: userData.confirmPwd,
       userTypeId: `${getUserTypeId()}`
     }
     let requestHeaders = {
@@ -162,6 +169,31 @@ const NewUser = () => {
         setIsRequestLoading(false)
         console.error(`There was an error!`, error)
         setIsNotificationErrorActive(true)
+      })
+  }
+
+  const getMngrEmailsAndNamesRequest = () => {
+    setMngrIsRequestLoading(true)
+    var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
+    var requestRowData = {
+      headers: {
+        'x-access-token': `${userInfo['accessToken']}`,
+      },
+    }
+
+    axios
+      .get(
+        'https://peripheralsloanbackend.mybluemix.net/user/',
+        requestRowData
+      )
+      .then(({ data }) => {
+        for (var i = 0; i < data.length; i++) {
+          mngrs[i] = data[i].employeeName + ", "+ data[i].employeeEmail
+        }
+        setMngrIsRequestLoading(false)
+      }).catch((error)=>{
+        setIsNotificationErrorActive(true)
+        setMngrIsRequestLoading(false)
       })
   }
 
@@ -249,28 +281,15 @@ const NewUser = () => {
               labelText="Area"
               invalid={isAreaInvalid}
             />
-            <div className="cds--list-box__wrapper cds--text-input-wrapper">
-              <TextInput.PasswordInput
-                type="password"
-                id="Password"
-                placeholder="Define User Password"
-                labelText="Password"
-                onChange={(event)=>{
-                  handlePwdChange(event)
-                  if(!userData.pwd){
-                    setIsPwdInvalid(true)
-                    setInvalidPasswordText("Please specify a password")
-                  }else if (!userData.pwd.match(/^[-.@_A-Za-z0-9]+$/)){
-                    setIsPwdInvalid(true)
-                    setInvalidPasswordText("No special characters, please!")
-                  }else{
-                    setIsPwdInvalid(false)
-                  }
-                }}
-                invalid={isPwdInvalid}
-                invalidText={invalidPasswordText}
-              />
-            </div>
+            <ComboBox
+              id="MngrEmail"
+              className="cds--list-box__wrapper"
+              onChange={handleMngrChange}
+              placeholder="Select a Manager"
+              titleText="Manager"
+              items={mngrs}
+              invalid={isMngrNotSelected}
+            />
           </Stack>
         </Column>
         <Column sm={4} md={8} lg={8}>
@@ -305,36 +324,61 @@ const NewUser = () => {
               labelText="Email"
               invalid={isEmailInvalid}
             />
-            <TextInput
-              id="MngrName"
-              onChange={(event)=>{
-                handleMngrNameChange(event)
-                if(!userData.mngrName){
-                  setIsMngrNameInvalid(true)
-                }else{
-                  setIsMngrNameInvalid(false)
-                }
-              }}
-              className="cds--list-box__wrapper"
-              placeholder="User's Manager's Name"
-              labelText="Manager Name"
-              invalid={isMngrNameInvalid}
-            />
-            <TextInput
-              id="MngrEmail"
-              onChange={(event)=>{
-                handleMngrEmailChange(event)
-                if(!userData.mngrEmail){
-                  setIsMngrEmailInvalid(true)
-                }else{
-                  setIsMngrEmailInvalid(false)
-                }
-              }}
-              className="cds--list-box__wrapper"
-              placeholder="User's Manager's Email"
-              labelText="Manager Email"
-              invalid={isMngrEmailInvalid}
-            />
+             <div className="cds--list-box__wrapper cds--text-input-wrapper">
+               <TextInput.PasswordInput
+                type="password"
+                id="fdghgf"
+                className="cds--list-box__wrapper"
+                placeholder=""
+                labelText="New password"
+                onChange={(event)=>{
+                  userData.newPwd = event.target.value
+                  if(!userData.newPwd){
+                    setIsNewPwdInvalid(true)
+                    setInvalidNewPwdText("Please specify a password")
+                  }else if(!userData.newPwd.match(/^[-.@_A-Za-z0-9]+$/)){
+                    setIsNewPwdInvalid(true)
+                    setInvalidNewPwdText("No special characters, please!")
+                  }else if(userData.newPwd.length<8 || userData.newPwd.length>21){
+                    setIsNewPwdInvalid(true)
+                    setInvalidNewPwdText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
+                  }else if(invalidConfirmPwdText === "Passwords do not match"){
+                    setIsConfirmPwdInvalid(false)
+                    setIsNewPwdInvalid(false)
+                  }else{
+                    setIsNewPwdInvalid(false)
+                  }
+                }}
+                invalid={isNewPwdInvalid}
+                invalidText={invalidNewPwdText}
+              />
+            </div>
+            <div className="cds--list-box__wrapper cds--text-input-wrapper">
+              <TextInput.PasswordInput
+                type="password"
+                id="asdfasdf"
+                className="cds--list-box__wrapper"
+                placeholder=""
+                labelText="Confirm new password"
+                onChange={(event)=>{
+                  userData.confirmPwd = event.target.value
+                  if(!userData.confirmPwd){
+                    setIsConfirmPwdInvalid(true)
+                    setInvalidConfirmPwdText("Please specify a password")
+                  }else if(!userData.confirmPwd.match(/^[-.@_A-Za-z0-9]+$/)){
+                    setIsConfirmPwdInvalid(true)
+                    setInvalidConfirmPwdText("No special characters, please!")
+                  }else if(userData.confirmPwd.length<8 || userData.confirmPwd.length>21){
+                    setIsConfirmPwdInvalid(true)
+                    setInvalidConfirmPwdText("Passwords should have a minimum of 8 characters and a maximum of 21 characters")
+                  }else{
+                    setIsConfirmPwdInvalid(false)
+                  }
+                }}
+                invalid={isConfirmPwdInvalid}
+                invalidText={invalidConfirmPwdText}
+              />
+            </div>
           </Stack>
         </Column>
         <Column sm={4} md={8} lg={16}>
@@ -346,6 +390,7 @@ const NewUser = () => {
               renderIcon={Save}
               kind="primary"
               type="button"
+              disabled={isMngrRequestLoading}
               onClick={() => {
                 let allowPopUp = true
 
@@ -369,16 +414,21 @@ const NewUser = () => {
                   setIsAreaInvalid(true)
                   allowPopUp = false
                 }
-                if(!userData.pwd){
-                  setIsPwdInvalid(true)
+                if(!userData.newPwd){
+                  setIsNewPwdInvalid(true)
                   allowPopUp = false
                 }
-                if(!userData.mngrEmail){
-                  setIsMngrEmailInvalid(true)
+                if(!userData.confirmPwd){
+                  setIsConfirmPwdInvalid(true)
                   allowPopUp = false
                 }
-                if(!userData.mngrName){
-                  setIsMngrNameInvalid(true)
+                if(userData.newPwd!==userData.confirmPwd){
+                  setIsConfirmPwdInvalid(true)
+                  setInvalidConfirmPwdText("Passwords do not match")
+                  allowPopUp = false
+                }
+                if(!userData.mngr){
+                  setIsMngrNotSelected(true)
                   allowPopUp = false
                 }
 
