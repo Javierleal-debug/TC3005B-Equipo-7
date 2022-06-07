@@ -157,7 +157,7 @@ const Login = () => {
           </Stack>
 
           <ButtonSet className="login-btn-set">
-            <Button kind="ghost">Create an account</Button>
+            <Button kind="ghost">Forgot Password?<br/>(Notify an app admin)</Button>
             <Button
               type="submit"
               kind="primary"
