@@ -4,7 +4,8 @@ import {
   TextInput,
   InlineLoading,
   ButtonSet,
-  Stack
+  Stack,
+  ToastNotification
 } from 'carbon-components-react'
 import React, { useState, useEffect } from 'react'
 
@@ -18,6 +19,7 @@ const Login = () => {
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false)
   const [isEmailIncorrect, setIsEmailIncorrect] = useState(false)
   const [isPasswordIncorrect, setIsPasswordIncorrect] = useState(false)
+  const [isForgotPasswordNotificationActive,setIsForgotPasswordNotificationActive] = useState(false)
   
   const [input, setInput] = useState({
     email: '',
@@ -157,7 +159,7 @@ const Login = () => {
           </Stack>
 
           <ButtonSet className="login-btn-set">
-            <Button kind="ghost">Forgot Password?<br/>(Notify an app admin)</Button>
+            <Button kind="ghost" onClick={()=>setIsForgotPasswordNotificationActive(true)}>Forgot Password?</Button>
             <Button
               type="submit"
               kind="primary"
@@ -188,6 +190,17 @@ const Login = () => {
             </Button>
           </ButtonSet>
         </Form>
+      {isForgotPasswordNotificationActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="info"
+          lowContrast={true}
+          title="Password Change"
+          onCloseButtonClick={()=>{setIsForgotPasswordNotificationActive(false)}}
+          onClose={()=>{setIsForgotPasswordNotificationActive(false)}}
+          timeout={5000}
+          subtitle="Please contact an app admin for password change."/>
+      </div> : <div></div>}
       </div>
     </>
   )

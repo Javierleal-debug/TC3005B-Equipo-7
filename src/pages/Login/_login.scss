@@ -64,3 +64,11 @@ body {
 .form-header {
   padding: 20px;
 }
+
+.login-btn-set > .cds--btn--xl:not(.cds--btn--icon-only){
+  align-items: center;
+  padding-top: 0.7rem;
+  padding-right: 4rem;
+  padding-left: 1rem;
+  min-height: 4rem;
+}
