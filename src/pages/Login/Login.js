@@ -195,8 +195,7 @@ const Login = () => {
         <ToastNotification
           kind="info"
           lowContrast={true}
-          title="Password Change"
-          onCloseButtonClick={()=>{setIsForgotPasswordNotificationActive(false)}}
+          title="Can't Change Password"
           onClose={()=>{setIsForgotPasswordNotificationActive(false)}}
           timeout={5000}
           subtitle="Please contact an app admin for password change."/>

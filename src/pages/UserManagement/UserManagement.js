@@ -166,7 +166,6 @@ const UserManagement = () => {
           kind="info"
           lowContrast={true}
           title="There are no peripherals registered!"
-          onCloseButtonClick={()=>{setIsNotificationEmptyActive(false)}}
           onClose={()=>{setIsNotificationEmptyActive(false)}}
           timeout={5000}
           subtitle="When you create a new device, your Device List will grow."/>
@@ -177,7 +176,6 @@ const UserManagement = () => {
           kind="error"
           lowContrast={true}
           title="Error"
-          onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
           onClose={()=>{setIsNotificationErrorActive(false)}}
           timeout={5000}
           subtitle="Something went wrong, try it later"/>
@@ -189,7 +187,6 @@ const UserManagement = () => {
           kind="success"
           lowContrast={true}
           title="Success!"
-          onCloseButtonClick={()=>{setIsNotificationSuccessActive(false)}}
           onClose={()=>{setIsNotificationSuccessActive(false)}}
           timeout={5000}
           subtitle="Devices 'deleted' successfully"/>

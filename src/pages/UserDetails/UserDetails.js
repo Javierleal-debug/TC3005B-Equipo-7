@@ -586,7 +586,6 @@ const UserDetails = () => {
           kind="error"
           lowContrast={true}
           title="Error"
-          onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
           onClose={()=>{setIsNotificationErrorActive(false)}}
           timeout={5000}
           subtitle="Something went wrong, try it later"/>
@@ -597,7 +596,6 @@ const UserDetails = () => {
           kind="success"
           lowContrast={true}
           title="Success!"
-          onCloseButtonClick={()=>{setIsNotificationSuccessActive(false)}}
           onClose={()=>{setIsNotificationSuccessActive(false)}}
           timeout={5000}
           subtitle={notificationSuccessText}/>

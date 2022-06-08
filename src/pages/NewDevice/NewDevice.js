@@ -179,7 +179,6 @@ const NewDevice = () => {
             kind="warning"
             lowContrast={true}
             title="Already exists!"
-            onCloseButtonClick={()=>{setIsWarningNotificationActive(false)}}
             onClose={()=>{setIsWarningNotificationActive(false)}}
             timeout={5000}
             subtitle="This peripheral serial number is already registered"/>
@@ -191,7 +190,6 @@ const NewDevice = () => {
             kind="error"
             lowContrast={true}
             title="Error"
-            onCloseButtonClick={()=>{setIsNotificationErrorActive(false)}}
             onClose={()=>{setIsNotificationErrorActive(false)}}
             timeout={5000}
             subtitle="Something went wrong, try it later"/>
