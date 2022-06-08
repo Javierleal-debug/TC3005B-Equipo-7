@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import {
-  FormLabel,
-  Tile,
-  AspectRatio,
+  TextInputSkeleton,
   Grid,
   Column,
   Button,
   ButtonSet,
+  TextAreaSkeleton,
+  InlineLoading,
+  ToastNotification,
+  Stack,
+  ButtonSkeleton
 } from 'carbon-components-react'
-import { Download } from '@carbon/icons-react'
+import { Download, Calendar } from '@carbon/icons-react'
 import { DonutChart } from '@carbon/charts-react'
 import '@carbon/charts/styles.css'
 import axios from 'axios'
@@ -52,6 +55,10 @@ const Dashboard = () => {
 
   var [outValue, setOutValue] = useState(0)
   var [inValue, setInValue] = useState(0)
+  const [isLoadingData, setIsLoadingData] = useState(true)
+  const [isDownloadingPeripheralsData, setIsDownloadingPeripheralsData] = useState(false)
+  const [isDownloadingEventsHistory, setIsDownloadingEventsHistory] = useState(false)
+  const [isErrorNotificationActive, setIsErrorNotificationActive] = useState(false)
 
   const data = [
     {
@@ -65,6 +72,7 @@ const Dashboard = () => {
   ]
   var totalDevices = parseInt(outValue) + parseInt(inValue)
   const options = {
+    title: "Devices Distribution",
     resizable: true,
     donut: {
       center: {
@@ -104,6 +112,10 @@ const Dashboard = () => {
       .then(({ data }) => {
         setInValue(data.valueIn)
         setOutValue(data.valueOut)
+        setIsLoadingData(false)
+      }).catch(({ error }) => {
+        setIsErrorNotificationActive(true)
+        setIsLoadingData(false)
       })
   }
 
@@ -113,10 +125,12 @@ const Dashboard = () => {
   const handleDate = (dateChange) => {
     setStartDate(dateChange)
     date = Moment(dateChange).format('YYYY-MM-DD')
+    setIsLoadingData(true)
     getInsideOutDate()
   }
 
   function generateFilePeripheral() {
+    setIsDownloadingPeripheralsData(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -184,9 +198,14 @@ const Dashboard = () => {
         link.setAttribute('download', 'peripherals.csv')
         document.body.appendChild(link)
         link.click()
+        setIsDownloadingPeripheralsData(false)
+      }).catch(({ error }) => {
+        setIsErrorNotificationActive(true)
+        setIsDownloadingPeripheralsData(false)
       })
   }
   function generateFileRecord() {
+    setIsDownloadingEventsHistory(true)
     var userInfo = JSON.parse(localStorage.getItem('UserInfo'))
     if (date.length > 0) {
       var requestData = {
@@ -256,85 +275,123 @@ const Dashboard = () => {
         link.setAttribute('download', 'records.csv')
         document.body.appendChild(link)
         link.click()
+        setIsDownloadingEventsHistory(false)
+      })
+      .catch(({ error }) => {
+        setIsErrorNotificationActive(true)
+        setIsDownloadingEventsHistory(false)
       })
   }
 
   return (
     <>
-      <Tile className="titleDashboard">Dashboard</Tile>
-
-      <div className="background-dashboard">
-        <Grid className="bodyDashboard">
-          <Column sm={4} md={8} lg={16}>
-            <div className="btn-area-container">
-              <DatePicker
-                id="calendar"
-                selected={startDate}
-                onChange={handleDate}
-                maxDate={new Date(getDate())}
-                dateFormat="Y-MM-d"
-                showYearDropdown
-                scrollToYearDropdown
-                placeholderText="YYYY-MM-DD"
-              ></DatePicker>
-              <ButtonSet>
+      <Grid className="page-content">
+        <Column sm={4} md={8} lg={16} className="dashboard-title-column">
+          <h1 className="new-device-title">Dashboard</h1>
+        </Column>
+        <Column sm={4} md={8} lg={6}>
+          {isLoadingData?
+          <Stack>
+            <TextInputSkeleton className='dashboard-skeleton'/>
+            <TextInputSkeleton className='dashboard-skeleton'/>
+            <TextInputSkeleton className='dashboard-skeleton'/>
+            <div className='dashboard-skeleton'>
+              <ButtonSkeleton />
+              &nbsp;
+              <ButtonSkeleton size="sm" />
+            </div>
+          </Stack>
+          :
+          <Stack>
+            <div className="dashboard-date-picker-column">
+              <div className="dashboard-date-picker">
+                <p className="title">
+                  Date
+                </p>
+                <div className='wrapper1'>
+                  <div className="wrapper2">
+                    <DatePicker
+                      id="calendar"
+                      selected={startDate}
+                      onChange={handleDate}
+                      maxDate={new Date(getDate())}
+                      dateFormat="Y-MM-d"
+                      showYearDropdown
+                      scrollToYearDropdown
+                      placeholderText="YYYY-MM-DD"
+                    >
+                    </DatePicker>
+                    <Calendar className="calendar-icon"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="dashboard-info-column">
+              <Stack>
+                <div className="devices-in">
+                  <p className="title">
+                    Devices In
+                  </p>
+                  <div className='wrapper'>
+                    <div className='in-value'>
+                      <div>{inValue}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="devices-out">
+                  <p className="title">
+                    Devices Out
+                  </p>
+                  <div className='wrapper'>
+                    <div className='out-value'>
+                      <div>{outValue}</div>
+                    </div>
+                  </div>
+                </div>
+              </Stack>
+            </div>
+            <div className="dashboard-button-set-column">
+              <ButtonSet className="dashboard-button-set">
                 {(sessionData.userType === 'admin' ||
                   sessionData.userType === 'focal') && (
                   <Button
                     onClick={generateFilePeripheral}
+                    disabled={isDownloadingPeripheralsData}
                     renderIcon={Download}
                   >
-                    Download peripherals data
+                    {isDownloadingPeripheralsData ? <InlineLoading description="Downloading..."/> : 'Download peripherals data'}
                   </Button>
                 )}
                 {sessionData.userType === 'admin' && (
-                  <Button onClick={generateFileRecord} renderIcon={Download}>
-                    Download events history
+                  <Button 
+                  onClick={generateFileRecord} 
+                  disabled={isDownloadingEventsHistory}
+                  renderIcon={Download}
+                  >
+                    {isDownloadingEventsHistory ? <InlineLoading description="Downloading..."/> : 'Download events history'}
                   </Button>
                 )}
               </ButtonSet>
-            </div>
-          </Column>
-          <Column sm={1} md={3} lg={6}>
-            <AspectRatio ratio="16x9" className="devices">
-              <div id="deviceDistribution">
-                <FormLabel className="titleDevices">
-                  Devices Distribution
-                </FormLabel>
-              </div>
-              <AspectRatio ratio={'0.5x0.5'} className="chartDevices">
-                <DonutChart data={data} options={options}></DonutChart>
-              </AspectRatio>
-            </AspectRatio>
-          </Column>
+            </div> 
+          </Stack>}
+        </Column> 
+        <Column sm={4} md={8} lg={10} className="dashboard-chart-column">
+          {isLoadingData? <TextAreaSkeleton></TextAreaSkeleton>:
+          <DonutChart data={data} options={options}></DonutChart>}
+        </Column>
+        
+      </Grid>
 
-          <Column sm={1} md={3} lg={5}>
-            <AspectRatio ratio="16x9" className="devices">
-              <FormLabel className="titleDevices">Devices Out</FormLabel>
-
-              <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
-                <Grid>
-                  <Column sm={4} className="numberDevices">
-                    {outValue}
-                  </Column>
-                </Grid>
-              </AspectRatio>
-            </AspectRatio>
-          </Column>
-          <Column sm={1} md={3} lg={5}>
-            <AspectRatio ratio="16x9" className="devices">
-              <FormLabel className="titleDevices">Devices In</FormLabel>
-              <AspectRatio ratio={'0.5x0.5'} className="infoDevices">
-                <Grid>
-                  <Column sm={4} className="numberDevices">
-                    {inValue}
-                  </Column>
-                </Grid>
-              </AspectRatio>
-            </AspectRatio>
-          </Column>
-        </Grid>
-      </div>
+      {isErrorNotificationActive ? 
+      <div className="error-notification">
+        <ToastNotification
+          kind="error"
+          lowContrast={true}
+          title="Error"
+          onClose={()=>{setIsErrorNotificationActive(false)}}
+          timeout={5000}
+          subtitle="Something went wrong, try it later"/>
+      </div> : <div></div>}
     </>
   )
 }

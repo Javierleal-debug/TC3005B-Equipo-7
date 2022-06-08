@@ -260,7 +260,7 @@ const Devices = () => {
         return <div>{cell.value}</div>
       }
       if ('serialNumber' === cell.id.split(':')[1]) {
-        return <CodeSnippet type='inline' light className='copyButton'>{cell.value}</CodeSnippet>
+        return <CodeSnippet type='single' light className='copyButton'>{cell.value}</CodeSnippet>
       }
       return cell.value
     }

@@ -27,6 +27,7 @@ import {
   TextArea,
   InlineLoading,
   ToastNotification,
+  CodeSnippet
 } from 'carbon-components-react'
 
 import { checkAuth, getDeviceStatus, redirectIfUserTypeIsNot } from '../../util'
@@ -255,6 +256,9 @@ const MyInventory = () => {
       }
       if ('currentUser' === cell.id.split(':')[1]) {
         return <div>{cell.value}</div>
+      }
+      if ('serialNumber' === cell.id.split(':')[1]) {
+        return <CodeSnippet type='single' light className='copyButton'>{cell.value}</CodeSnippet>
       }
       return cell.value
     }
