@@ -136,8 +136,8 @@ const NewUser = () => {
       email: userData.email,
       serial: userData.serial,
       area: userData.area,
-      mngrName: userData.mngr.split(", ")[1],
-      mngrEmail: userData.mngr.split(", ")[0],
+      mngrName: userData.mngr.split(", ")[0],
+      mngrEmail: userData.mngr.split(", ")[1],
       pwd: userData.confirmPwd,
       userTypeId: `${getUserTypeId()}`
     }
