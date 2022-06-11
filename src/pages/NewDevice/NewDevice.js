@@ -87,6 +87,7 @@ const NewDevice = () => {
   const [isBrandInvalid, setIsBrandInvalid] = useState(false)
   const [isModelInvalid, setIsModelInvalid] = useState(false)
   const [isSerialInvalid, setIsSerialInvalid] = useState(false)
+  const [warningTitle, setWarningTitle] = useState("This peripheral serial number is already registered")
 
   const { sessionData, setSessionData } = useSessionData()
   const location = useLocation()
@@ -159,6 +160,10 @@ const NewDevice = () => {
         setIsRequestLoading(false)
         if(data.message === "SerialNumber is already registered"){
           setIsWarningNotificationActive(true)
+          setWarningTitle("This peripheral serial number is already registered")
+        }else if(data.message === "No special characters, please!"){
+          setIsWarningNotificationActive(true)
+          setWarningTitle("No special characters, please!")
         }else{
           window.location.hash = `/${orgPage}`
         }
@@ -181,7 +186,8 @@ const NewDevice = () => {
             title="Already exists!"
             onClose={()=>{setIsWarningNotificationActive(false)}}
             timeout={5000}
-            subtitle="This peripheral serial number is already registered"/>
+            subtitle={warningTitle}
+          />
         </div> : <div></div>
       }
       {isNotificationErrorActive ? 
