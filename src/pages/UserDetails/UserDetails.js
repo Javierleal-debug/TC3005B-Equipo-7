@@ -655,7 +655,7 @@ const UserDetails = () => {
               </StructuredListRow>
               <StructuredListRow tabIndex={0}>
               <StructuredListCell>Employee Serial</StructuredListCell>
-                <StructuredListCell><div className='user-details-data'>{userData.name}</div></StructuredListCell>
+                <StructuredListCell><div className='user-details-data'>{userData.serial}</div></StructuredListCell>
               </StructuredListRow>
               <StructuredListRow tabIndex={0}>
               <StructuredListCell>Employee Type</StructuredListCell>
